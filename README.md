@@ -16,7 +16,9 @@
 
     path
 
-**登录米哈游账号**：弹出扫码登录界面，并保存账号的Cookie信息（ *C:\Users\User\AppData\Local\SR-DMG\Token.json* ）
+**登录米哈游账号**：弹出扫码登录界面，并保存账号的Cookie信息
+
+*此信息位于：C:\Users\User\AppData\Local\SR-DMG\Token.json*
 
 *声明：本程序不会收集你的信息，该数据仅会保存在你的设备中，不要将该文本共享给任何人*
 
