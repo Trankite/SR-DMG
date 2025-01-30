@@ -1197,9 +1197,11 @@ namespace SR_DMG
 						else if (Rel.StartsWith("Internal")) { Mihomo.ErorrTip<int>(-105); return; }
 						using (JsonDocument Doc = JsonDocument.Parse(Rel))
 						{
+							JsonElement Player = Doc.RootElement.GetProperty("player");
 							Avts = new Avatars
 							{
-								UID = Doc.RootElement.GetProperty("player").GetProperty("uid").GetString(),
+								Name = Player.GetProperty("nickname").GetString(),
+								UID = Player.GetProperty("uid").GetString(),
 								Avatar_List = new List<Avatar>()
 							};
 							foreach (JsonElement Cat in Doc.RootElement.GetProperty("characters").EnumerateArray())

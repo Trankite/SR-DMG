@@ -5,6 +5,7 @@ namespace SR_DMG
 {
 	public class Avatars
 	{
+		public string Name { get; set; }
 		public string UID { get; set; }
 		public List<Avatar> Avatar_List { get; set; }
 	}

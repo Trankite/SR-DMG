@@ -383,7 +383,7 @@ namespace SR_DMG
 						return ErorrTip<string>(-1002, $"：{SR_DMG.App_Path[3]}");
 					}
 				}
-				Avatars Avatars = new Avatars { UID = Token.uid, Avatar_List = new List<Avatar>() };
+				Avatars Avatars = new Avatars { Name = Token.nickname, UID = Token.uid, Avatar_List = new List<Avatar>() };
 				foreach (JsonElement List in Doc.RootElement.GetProperty("data").GetProperty("avatar_list").EnumerateArray())
 				{
 					_Avatar _Avt = JsonSerializer.Deserialize<_Avatar>(List);
