@@ -43,7 +43,7 @@ namespace SR_DMG
 				if (File.Exists(App_Path[1]))
 				{
 					string[] Arr = File.ReadAllLines(App_Path[1]);
-					Group = Arr[38].Remove(0, Arr[38].IndexOf('=') + 1);
+					Group = Arr[39].Remove(0, Arr[39].IndexOf('：') + 1);
 					if (Group != "")
 					{
 						Flags[2] = true;
@@ -53,7 +53,7 @@ namespace SR_DMG
 					{
 						Group_List();
 					}
-					int i = int.Parse(Arr[39].Remove(0, Arr[39].IndexOf("=") + 1));
+					int i = int.Parse(Arr[40].Remove(0, Arr[40].IndexOf("：") + 1));
 					if (Flags[2] && i > 0 && i < Cob_Simple.Items.Count)
 					{
 						Cob_Simple.SelectedIndex = i;
@@ -61,9 +61,9 @@ namespace SR_DMG
 					else
 					{
 						string Tar = "";
-						foreach (string Str in Arr)
+						for (i = 0; i < 39; i++)
 						{
-							Tar += Str.Remove(0, Str.IndexOf('=') + 1) + ',';
+							Tar += Arr[i].Remove(0, Arr[i].IndexOf('：') + 1) + ',';
 						}
 						Roled = new Role(Tar);
 					}
@@ -94,48 +94,20 @@ namespace SR_DMG
 			}
 			try
 			{
-				using (StreamWriter Writ = new StreamWriter(App_Path[1]))
+				using (StreamWriter Wt = new StreamWriter(App_Path[1]))
 				{
-					Writ.WriteLine("Name=" + Roled.Name);
-					Writ.WriteLine("ATK=" + Roled.ATK);
-					Writ.WriteLine("HP=" + Roled.HP);
-					Writ.WriteLine("DEF=" + Roled.DEF);
-					Writ.WriteLine("ATK_Base=" + Roled.ATK_Base);
-					Writ.WriteLine("HP_Base=" + Roled.HP_Base);
-					Writ.WriteLine("DEF_Base=" + Roled.DEF_Base);
-					Writ.WriteLine("DMG_Equal_1=" + Roled.DMG_Equal_1);
-					Writ.WriteLine("DMG_Equal_2=" + Roled.DMG_Equal_2);
-					Writ.WriteLine("DMG_Equal_3=" + Roled.DMG_Equal_3);
-					Writ.WriteLine("DMG_Equal_4=" + Roled.DMG_Equal_4);
-					Writ.WriteLine("DMG_Equal_Tpye=" + Roled.DMG_Equal_Tpye);
-					Writ.WriteLine("DMG_Equal_Info=" + Roled.DMG_Equal_Info);
-					Writ.WriteLine("CRIT_Rate=" + Roled.CRIT_Rate);
-					Writ.WriteLine("CRIT_DMG=" + Roled.CRIT_DMG);
-					Writ.WriteLine("Character_Level=" + Roled.Character_Level);
-					Writ.WriteLine("Enemy_Level=" + Roled.Enemy_Level);
-					Writ.WriteLine("DEF_Reduced=" + Roled.DEF_Reduced);
-					Writ.WriteLine("DEF_Ignores=" + Roled.DEF_Ignores);
-					Writ.WriteLine("RES_Boost=" + Roled.RES_Boost);
-					Writ.WriteLine("RES_PEN=" + Roled.RES_PEN);
-					Writ.WriteLine("DMG_Boost=" + Roled.DMG_Boost);
-					Writ.WriteLine("DMG_Taken=" + Roled.DMG_Taken);
-					Writ.WriteLine("DMG_Reduction=" + Roled.DMG_Reduction);
-					Writ.WriteLine("Break_Equal=" + Roled.Break_Equal);
-					Writ.WriteLine("Break_Effect=" + Roled.Break_Effect);
-					Writ.WriteLine("Break_Efficiency=" + Roled.Break_Efficiency);
-					Writ.WriteLine("Break_Boost=" + Roled.Break_Boost);
-					Writ.WriteLine("Break_Type=" + Roled.Break_Type);
-					Writ.WriteLine("SPD=" + Roled.SPD);
-					Writ.WriteLine("SPD_Base=" + Roled.SPD_Base);
-					Writ.WriteLine("Toughness=" + Roled.Toughness);
-					Writ.WriteLine("Toughness_Reduction=" + Roled.Toughness_Reduction);
-					Writ.WriteLine("Effect_Hit_Rate=" + Roled.Effect_Hit_Rate);
-					Writ.WriteLine("Effect_RES=" + Roled.Effect_RES);
-					Writ.WriteLine("Energy_Regeneration_Rate=" + Roled.Energy_Regeneration_Rate);
-					Writ.WriteLine("Gain=[" + string.Join("-", Roled.Gain) + ']');
-					Writ.WriteLine("Transform=[" + string.Join("-", Roled.Transform) + ']');
-					Writ.WriteLine("Group=" + Group);
-					Writ.Write("History_Info=" + Cob_Simple.SelectedIndex);
+					int Start = 0;
+					int End = Role.Map_Mark.Count / 2;
+					Wt.WriteLine("名称：" + Roled.Name);
+					foreach (KeyValuePair<string, bool> Map in Role.Map_Mark)
+					{
+						if (++Start > End) break;
+						Wt.WriteLine($"{Map.Key}：{Roled.GetValue(Map.Key)}");
+					}
+					Wt.WriteLine("增益：[" + string.Join("-", Roled.Gain) + ']');
+					Wt.WriteLine("转化：[" + string.Join("-", Roled.Transform) + ']');
+					Wt.WriteLine("当前组：" + Group);
+					Wt.Write("历史记录：" + Cob_Simple.SelectedIndex);
 				}
 			}
 			catch
@@ -219,6 +191,22 @@ namespace SR_DMG
 				Pan_HP_DEF.Show();
 			}
 		}
+		private void Lab_Effect_MouseDown(object sender, MouseEventArgs e)
+		{
+			if (e.Button == MouseButtons.Right)
+			{
+				Pan_Effect.Hide();
+				Pan_Heal_Rate.Show();
+			}
+		}
+		private void Lab_Heal_Rate_MouseDown(object sender, MouseEventArgs e)
+		{
+			if (e.Button == MouseButtons.Right)
+			{
+				Pan_Heal_Rate.Hide();
+				Pan_Effect.Show();
+			}
+		}
 		private void Lab_DMG_Equal_2_MouseDown(object sender, MouseEventArgs e)
 		{
 			if (e.Button == MouseButtons.Right)
@@ -292,6 +280,9 @@ namespace SR_DMG
 			Lab_Area_6.Text = "伤害区：" + (Rel[0][5] * 100).ToString("0.#") + " %";
 			Lab_Area_7.Text = "击破区：" + Rel[0][6].ToString("F0");
 			Lab_Area_8.Text = "韧性区：" + (Rel[0][7] * 100).ToString("0.#") + " %";
+			float Crit = 2 * Roled.CRIT_Rate + Roled.CRIT_DMG;
+			Crit = Crit > 400 ? Crit - 100 : 100 + Crit * Crit / 800;
+			Lab_MaxCRIT.Text = $"期望极限：{Crit.ToString("0.#")} %";
 			if (Ceb_Note.Checked)
 			{
 				Improve(Lab_Vary_1, Rel[1][0], DMG[0]);
@@ -1542,6 +1533,7 @@ namespace SR_DMG
 			Tex_Effect_Hit_Rate.Text = role.Effect_Hit_Rate.ToString();
 			Tex_Effect_RES.Text = role.Effect_RES.ToString();
 			Tex_Energy_Regeneration_Rate.Text = role.Energy_Regeneration_Rate.ToString();
+			Tex_Heal_Rate.Text = role.Heal_Rate.ToString();
 			Flags[5] = Flags[6] = true;
 			Roled.Gain = new List<int>(role.Gain);
 			Roled.Transform = new List<int>(role.Transform);
@@ -2312,7 +2304,7 @@ namespace SR_DMG
 			}
 			else
 			{
-				Ceb.ForeColor = Color.White;
+				Ceb.ForeColor = this.ForeColor;
 				Flags[8] = false;
 			}
 		}
@@ -2325,7 +2317,7 @@ namespace SR_DMG
 				{
 					if (Flags[8])
 					{
-						Ceb.ForeColor = Color.White;
+						Ceb.ForeColor = this.ForeColor;
 					}
 					else
 					{

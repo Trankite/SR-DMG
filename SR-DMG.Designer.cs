@@ -167,6 +167,11 @@
 			Pan_SPD_Base = new System.Windows.Forms.Panel();
 			Lab_SPD_Base = new System.Windows.Forms.Label();
 			Tex_SPD_Base = new System.Windows.Forms.TextBox();
+			Pan_Effect = new System.Windows.Forms.Panel();
+			Pan_Heal_Rate = new System.Windows.Forms.Panel();
+			Tex_Heal_Rate = new System.Windows.Forms.TextBox();
+			Lab_Heal_Rate = new System.Windows.Forms.Label();
+			Lab_MaxCRIT = new System.Windows.Forms.Label();
 			Pan_ATK_Base.SuspendLayout();
 			Pan_ATK.SuspendLayout();
 			Pan_HP_DEF.SuspendLayout();
@@ -175,11 +180,14 @@
 			Pan_DMG_Equal_3.SuspendLayout();
 			Pan_SPD.SuspendLayout();
 			Pan_SPD_Base.SuspendLayout();
+			Pan_Effect.SuspendLayout();
+			Pan_Heal_Rate.SuspendLayout();
 			SuspendLayout();
 			// 
 			// Cob_Transform
 			// 
 			Cob_Transform.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+			Cob_Transform.FlatStyle = System.Windows.Forms.FlatStyle.System;
 			Cob_Transform.Location = new System.Drawing.Point(295, 133);
 			Cob_Transform.Name = "Cob_Transform";
 			Cob_Transform.Size = new System.Drawing.Size(330, 25);
@@ -191,6 +199,7 @@
 			// 
 			Cob_Gain.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
 			Cob_Gain.DropDownWidth = 300;
+			Cob_Gain.FlatStyle = System.Windows.Forms.FlatStyle.System;
 			Cob_Gain.Location = new System.Drawing.Point(632, 398);
 			Cob_Gain.Name = "Cob_Gain";
 			Cob_Gain.Size = new System.Drawing.Size(300, 25);
@@ -716,11 +725,11 @@
 			// 
 			Lab_CRIT_Rate.AutoSize = true;
 			Lab_CRIT_Rate.Font = new System.Drawing.Font("微软雅黑", 13.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, 134);
-			Lab_CRIT_Rate.Location = new System.Drawing.Point(244, 197);
+			Lab_CRIT_Rate.Location = new System.Drawing.Point(225, 197);
 			Lab_CRIT_Rate.Name = "Lab_CRIT_Rate";
-			Lab_CRIT_Rate.Size = new System.Drawing.Size(182, 25);
+			Lab_CRIT_Rate.Size = new System.Drawing.Size(201, 25);
 			Lab_CRIT_Rate.TabIndex = 0;
-			Lab_CRIT_Rate.Text = "暴率：                %";
+			Lab_CRIT_Rate.Text = "暴击率：                %";
 			Lab_CRIT_Rate.MouseUp += Tex_DMG_MouseUp;
 			// 
 			// Lab_Area_5
@@ -809,7 +818,7 @@
 			Tex_DMG_Taken.ContextMenuStrip = MenuStrip;
 			Tex_DMG_Taken.Font = new System.Drawing.Font("微软雅黑", 13.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, 134);
 			Tex_DMG_Taken.ImeMode = System.Windows.Forms.ImeMode.Off;
-			Tex_DMG_Taken.Location = new System.Drawing.Point(319, 329);
+			Tex_DMG_Taken.Location = new System.Drawing.Point(319, 357);
 			Tex_DMG_Taken.MaxLength = 6;
 			Tex_DMG_Taken.Name = "Tex_DMG_Taken";
 			Tex_DMG_Taken.Size = new System.Drawing.Size(80, 25);
@@ -825,7 +834,7 @@
 			// 
 			Lab_DMG_Taken.AutoSize = true;
 			Lab_DMG_Taken.Font = new System.Drawing.Font("微软雅黑", 13.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, 134);
-			Lab_DMG_Taken.Location = new System.Drawing.Point(244, 329);
+			Lab_DMG_Taken.Location = new System.Drawing.Point(244, 357);
 			Lab_DMG_Taken.Name = "Lab_DMG_Taken";
 			Lab_DMG_Taken.Size = new System.Drawing.Size(182, 25);
 			Lab_DMG_Taken.TabIndex = 0;
@@ -838,7 +847,7 @@
 			Tex_DMG_Boost.ContextMenuStrip = MenuStrip;
 			Tex_DMG_Boost.Font = new System.Drawing.Font("微软雅黑", 13.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, 134);
 			Tex_DMG_Boost.ImeMode = System.Windows.Forms.ImeMode.Off;
-			Tex_DMG_Boost.Location = new System.Drawing.Point(319, 299);
+			Tex_DMG_Boost.Location = new System.Drawing.Point(319, 327);
 			Tex_DMG_Boost.MaxLength = 6;
 			Tex_DMG_Boost.Name = "Tex_DMG_Boost";
 			Tex_DMG_Boost.Size = new System.Drawing.Size(80, 25);
@@ -854,7 +863,7 @@
 			// 
 			Lab_DMG_Boost.AutoSize = true;
 			Lab_DMG_Boost.Font = new System.Drawing.Font("微软雅黑", 13.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, 134);
-			Lab_DMG_Boost.Location = new System.Drawing.Point(244, 299);
+			Lab_DMG_Boost.Location = new System.Drawing.Point(244, 327);
 			Lab_DMG_Boost.Name = "Lab_DMG_Boost";
 			Lab_DMG_Boost.Size = new System.Drawing.Size(182, 25);
 			Lab_DMG_Boost.TabIndex = 0;
@@ -865,7 +874,7 @@
 			// 
 			Lab_Area_6.AutoSize = true;
 			Lab_Area_6.Font = new System.Drawing.Font("微软雅黑", 15F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, 134);
-			Lab_Area_6.Location = new System.Drawing.Point(224, 264);
+			Lab_Area_6.Location = new System.Drawing.Point(224, 292);
 			Lab_Area_6.Name = "Lab_Area_6";
 			Lab_Area_6.Size = new System.Drawing.Size(92, 27);
 			Lab_Area_6.TabIndex = 0;
@@ -878,7 +887,7 @@
 			Tex_DMG_Reduction.ContextMenuStrip = MenuStrip;
 			Tex_DMG_Reduction.Font = new System.Drawing.Font("微软雅黑", 13.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, 134);
 			Tex_DMG_Reduction.ImeMode = System.Windows.Forms.ImeMode.Off;
-			Tex_DMG_Reduction.Location = new System.Drawing.Point(319, 359);
+			Tex_DMG_Reduction.Location = new System.Drawing.Point(319, 387);
 			Tex_DMG_Reduction.MaxLength = 6;
 			Tex_DMG_Reduction.Name = "Tex_DMG_Reduction";
 			Tex_DMG_Reduction.Size = new System.Drawing.Size(80, 25);
@@ -894,7 +903,7 @@
 			// 
 			Lab_DMG_Reduction.AutoSize = true;
 			Lab_DMG_Reduction.Font = new System.Drawing.Font("微软雅黑", 13.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, 134);
-			Lab_DMG_Reduction.Location = new System.Drawing.Point(244, 359);
+			Lab_DMG_Reduction.Location = new System.Drawing.Point(244, 387);
 			Lab_DMG_Reduction.Name = "Lab_DMG_Reduction";
 			Lab_DMG_Reduction.Size = new System.Drawing.Size(182, 25);
 			Lab_DMG_Reduction.TabIndex = 0;
@@ -1072,7 +1081,7 @@
 			// 
 			Lab_Area_9.AutoSize = true;
 			Lab_Area_9.Font = new System.Drawing.Font("微软雅黑", 15F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, 134);
-			Lab_Area_9.Location = new System.Drawing.Point(233, 393);
+			Lab_Area_9.Location = new System.Drawing.Point(233, 421);
 			Lab_Area_9.Name = "Lab_Area_9";
 			Lab_Area_9.Size = new System.Drawing.Size(92, 27);
 			Lab_Area_9.TabIndex = 0;
@@ -1084,7 +1093,7 @@
 			Tex_Energy_Regeneration_Rate.ContextMenuStrip = MenuStrip;
 			Tex_Energy_Regeneration_Rate.Font = new System.Drawing.Font("微软雅黑", 13.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, 134);
 			Tex_Energy_Regeneration_Rate.ImeMode = System.Windows.Forms.ImeMode.Off;
-			Tex_Energy_Regeneration_Rate.Location = new System.Drawing.Point(343, 428);
+			Tex_Energy_Regeneration_Rate.Location = new System.Drawing.Point(114, 1);
 			Tex_Energy_Regeneration_Rate.MaxLength = 6;
 			Tex_Energy_Regeneration_Rate.Name = "Tex_Energy_Regeneration_Rate";
 			Tex_Energy_Regeneration_Rate.Size = new System.Drawing.Size(80, 25);
@@ -1100,11 +1109,12 @@
 			// 
 			Lab_Energy_Regeneration_Rate.AutoSize = true;
 			Lab_Energy_Regeneration_Rate.Font = new System.Drawing.Font("微软雅黑", 13.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, 134);
-			Lab_Energy_Regeneration_Rate.Location = new System.Drawing.Point(230, 428);
+			Lab_Energy_Regeneration_Rate.Location = new System.Drawing.Point(1, 1);
 			Lab_Energy_Regeneration_Rate.Name = "Lab_Energy_Regeneration_Rate";
 			Lab_Energy_Regeneration_Rate.Size = new System.Drawing.Size(220, 25);
 			Lab_Energy_Regeneration_Rate.TabIndex = 0;
 			Lab_Energy_Regeneration_Rate.Text = "充能效率：                %";
+			Lab_Energy_Regeneration_Rate.MouseDown += Lab_Heal_Rate_MouseDown;
 			Lab_Energy_Regeneration_Rate.MouseUp += Tex_DMG_MouseUp;
 			// 
 			// Tex_Effect_Hit_Rate
@@ -1113,7 +1123,7 @@
 			Tex_Effect_Hit_Rate.ContextMenuStrip = MenuStrip;
 			Tex_Effect_Hit_Rate.Font = new System.Drawing.Font("微软雅黑", 13.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, 134);
 			Tex_Effect_Hit_Rate.ImeMode = System.Windows.Forms.ImeMode.Off;
-			Tex_Effect_Hit_Rate.Location = new System.Drawing.Point(343, 458);
+			Tex_Effect_Hit_Rate.Location = new System.Drawing.Point(114, 1);
 			Tex_Effect_Hit_Rate.MaxLength = 6;
 			Tex_Effect_Hit_Rate.Name = "Tex_Effect_Hit_Rate";
 			Tex_Effect_Hit_Rate.Size = new System.Drawing.Size(80, 25);
@@ -1129,11 +1139,12 @@
 			// 
 			Lab_Effect_Hit_Rate.AutoSize = true;
 			Lab_Effect_Hit_Rate.Font = new System.Drawing.Font("微软雅黑", 13.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, 134);
-			Lab_Effect_Hit_Rate.Location = new System.Drawing.Point(230, 458);
+			Lab_Effect_Hit_Rate.Location = new System.Drawing.Point(1, 1);
 			Lab_Effect_Hit_Rate.Name = "Lab_Effect_Hit_Rate";
 			Lab_Effect_Hit_Rate.Size = new System.Drawing.Size(220, 25);
 			Lab_Effect_Hit_Rate.TabIndex = 0;
 			Lab_Effect_Hit_Rate.Text = "效果命中：                %";
+			Lab_Effect_Hit_Rate.MouseDown += Lab_Effect_MouseDown;
 			Lab_Effect_Hit_Rate.MouseUp += Tex_DMG_MouseUp;
 			// 
 			// Tex_Effect_RES
@@ -1142,7 +1153,7 @@
 			Tex_Effect_RES.ContextMenuStrip = MenuStrip;
 			Tex_Effect_RES.Font = new System.Drawing.Font("微软雅黑", 13.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, 134);
 			Tex_Effect_RES.ImeMode = System.Windows.Forms.ImeMode.Off;
-			Tex_Effect_RES.Location = new System.Drawing.Point(343, 488);
+			Tex_Effect_RES.Location = new System.Drawing.Point(114, 31);
 			Tex_Effect_RES.MaxLength = 6;
 			Tex_Effect_RES.Name = "Tex_Effect_RES";
 			Tex_Effect_RES.Size = new System.Drawing.Size(80, 25);
@@ -1158,11 +1169,12 @@
 			// 
 			Lab_Effect_RES.AutoSize = true;
 			Lab_Effect_RES.Font = new System.Drawing.Font("微软雅黑", 13.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, 134);
-			Lab_Effect_RES.Location = new System.Drawing.Point(230, 488);
+			Lab_Effect_RES.Location = new System.Drawing.Point(1, 31);
 			Lab_Effect_RES.Name = "Lab_Effect_RES";
 			Lab_Effect_RES.Size = new System.Drawing.Size(220, 25);
 			Lab_Effect_RES.TabIndex = 0;
 			Lab_Effect_RES.Text = "效果抵抗：                %";
+			Lab_Effect_RES.MouseDown += Lab_Effect_MouseDown;
 			Lab_Effect_RES.MouseUp += Tex_DMG_MouseUp;
 			// 
 			// Tex_SPD
@@ -1289,6 +1301,7 @@
 			// Cob_Simple
 			// 
 			Cob_Simple.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+			Cob_Simple.FlatStyle = System.Windows.Forms.FlatStyle.System;
 			Cob_Simple.Font = new System.Drawing.Font("微软雅黑", 10.5F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, 134);
 			Cob_Simple.Location = new System.Drawing.Point(57, 521);
 			Cob_Simple.Name = "Cob_Simple";
@@ -1464,6 +1477,7 @@
 			// Cob_DMG_Equal
 			// 
 			Cob_DMG_Equal.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+			Cob_DMG_Equal.FlatStyle = System.Windows.Forms.FlatStyle.System;
 			Cob_DMG_Equal.Font = new System.Drawing.Font("微软雅黑", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, 134);
 			Cob_DMG_Equal.Location = new System.Drawing.Point(19, 134);
 			Cob_DMG_Equal.Name = "Cob_DMG_Equal";
@@ -1917,7 +1931,7 @@
 			Lab_Tip.ForeColor = System.Drawing.SystemColors.MenuHighlight;
 			Lab_Tip.Location = new System.Drawing.Point(577, 497);
 			Lab_Tip.Name = "Lab_Tip";
-			Lab_Tip.Size = new System.Drawing.Size(68, 17);
+			Lab_Tip.Size = new System.Drawing.Size(56, 17);
 			Lab_Tip.TabIndex = 0;
 			Lab_Tip.Text = "未选择组";
 			Lab_Tip.Click += Lab_Tip_Click;
@@ -2000,13 +2014,78 @@
 			Tex_SPD_Base.Leave += Tex_DMG_Leave;
 			Tex_SPD_Base.MouseUp += Tex_DMG_MouseUp;
 			// 
+			// Pan_Effect
+			// 
+			Pan_Effect.Controls.Add(Tex_Effect_Hit_Rate);
+			Pan_Effect.Controls.Add(Tex_Effect_RES);
+			Pan_Effect.Controls.Add(Lab_Effect_Hit_Rate);
+			Pan_Effect.Controls.Add(Lab_Effect_RES);
+			Pan_Effect.Location = new System.Drawing.Point(225, 455);
+			Pan_Effect.Name = "Pan_Effect";
+			Pan_Effect.Size = new System.Drawing.Size(225, 65);
+			Pan_Effect.TabIndex = 0;
+			// 
+			// Pan_Heal_Rate
+			// 
+			Pan_Heal_Rate.Controls.Add(Tex_Heal_Rate);
+			Pan_Heal_Rate.Controls.Add(Lab_Heal_Rate);
+			Pan_Heal_Rate.Controls.Add(Tex_Energy_Regeneration_Rate);
+			Pan_Heal_Rate.Controls.Add(Lab_Energy_Regeneration_Rate);
+			Pan_Heal_Rate.Location = new System.Drawing.Point(225, 455);
+			Pan_Heal_Rate.Name = "Pan_Heal_Rate";
+			Pan_Heal_Rate.Size = new System.Drawing.Size(225, 65);
+			Pan_Heal_Rate.TabIndex = 0;
+			Pan_Heal_Rate.Visible = false;
+			// 
+			// Tex_Heal_Rate
+			// 
+			Tex_Heal_Rate.BorderStyle = System.Windows.Forms.BorderStyle.None;
+			Tex_Heal_Rate.ContextMenuStrip = MenuStrip;
+			Tex_Heal_Rate.Font = new System.Drawing.Font("微软雅黑", 13.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, 134);
+			Tex_Heal_Rate.ImeMode = System.Windows.Forms.ImeMode.Off;
+			Tex_Heal_Rate.Location = new System.Drawing.Point(114, 31);
+			Tex_Heal_Rate.MaxLength = 6;
+			Tex_Heal_Rate.Name = "Tex_Heal_Rate";
+			Tex_Heal_Rate.Size = new System.Drawing.Size(80, 25);
+			Tex_Heal_Rate.TabIndex = 0;
+			Tex_Heal_Rate.TabStop = false;
+			Tex_Heal_Rate.TextChanged += Tex_DMG_TextChanged;
+			Tex_Heal_Rate.Enter += Tex_DMG_Enter;
+			Tex_Heal_Rate.KeyPress += Tex_Legal_2_KeyPress;
+			Tex_Heal_Rate.Leave += Tex_DMG_Leave;
+			Tex_Heal_Rate.MouseUp += Tex_DMG_MouseUp;
+			// 
+			// Lab_Heal_Rate
+			// 
+			Lab_Heal_Rate.AutoSize = true;
+			Lab_Heal_Rate.Font = new System.Drawing.Font("微软雅黑", 13.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, 134);
+			Lab_Heal_Rate.Location = new System.Drawing.Point(1, 31);
+			Lab_Heal_Rate.Name = "Lab_Heal_Rate";
+			Lab_Heal_Rate.Size = new System.Drawing.Size(220, 25);
+			Lab_Heal_Rate.TabIndex = 0;
+			Lab_Heal_Rate.Text = "治疗提高：                %";
+			Lab_Heal_Rate.MouseDown += Lab_Heal_Rate_MouseDown;
+			Lab_Heal_Rate.MouseUp += Tex_DMG_MouseUp;
+			// 
+			// Lab_MaxCRIT
+			// 
+			Lab_MaxCRIT.AutoSize = true;
+			Lab_MaxCRIT.Font = new System.Drawing.Font("微软雅黑", 13.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, 134);
+			Lab_MaxCRIT.Location = new System.Drawing.Point(208, 258);
+			Lab_MaxCRIT.Name = "Lab_MaxCRIT";
+			Lab_MaxCRIT.Size = new System.Drawing.Size(107, 25);
+			Lab_MaxCRIT.TabIndex = 0;
+			Lab_MaxCRIT.Text = "期望极限：";
+			Lab_MaxCRIT.MouseUp += Lab_Area_MouseUp;
+			// 
 			// SR_DMG
 			// 
 			AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
 			BackColor = System.Drawing.SystemColors.Window;
 			ClientSize = new System.Drawing.Size(944, 561);
-			Controls.Add(Pan_SPD);
 			Controls.Add(Lab_Hint);
+			Controls.Add(Lab_MaxCRIT);
+			Controls.Add(Pan_SPD);
 			Controls.Add(Lab_Transform_Info);
 			Controls.Add(Lab_Tip);
 			Controls.Add(Tex_Cmd);
@@ -2060,12 +2139,6 @@
 			Controls.Add(Cob_Break_Type);
 			Controls.Add(Cob_Gain);
 			Controls.Add(Cob_Transform);
-			Controls.Add(Tex_Effect_RES);
-			Controls.Add(Lab_Effect_RES);
-			Controls.Add(Tex_Effect_Hit_Rate);
-			Controls.Add(Lab_Effect_Hit_Rate);
-			Controls.Add(Tex_Energy_Regeneration_Rate);
-			Controls.Add(Lab_Energy_Regeneration_Rate);
 			Controls.Add(Lab_Area_9);
 			Controls.Add(Tex_Break_Boost);
 			Controls.Add(Lab_Break_Boost);
@@ -2120,6 +2193,8 @@
 			Controls.Add(Pan_DMG_Equal_3);
 			Controls.Add(Pan_ATK_Base);
 			Controls.Add(Pan_SPD_Base);
+			Controls.Add(Pan_Heal_Rate);
+			Controls.Add(Pan_Effect);
 			Font = new System.Drawing.Font("微软雅黑", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, 134);
 			ForeColor = System.Drawing.SystemColors.WindowText;
 			FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
@@ -2150,6 +2225,10 @@
 			Pan_SPD.PerformLayout();
 			Pan_SPD_Base.ResumeLayout(false);
 			Pan_SPD_Base.PerformLayout();
+			Pan_Effect.ResumeLayout(false);
+			Pan_Effect.PerformLayout();
+			Pan_Heal_Rate.ResumeLayout(false);
+			Pan_Heal_Rate.PerformLayout();
 			ResumeLayout(false);
 			PerformLayout();
 		}
@@ -2292,6 +2371,11 @@
         private System.Windows.Forms.Panel Pan_SPD_Base;
         private System.Windows.Forms.Label Lab_SPD_Base;
         private System.Windows.Forms.TextBox Tex_SPD_Base;
-    }
+		private System.Windows.Forms.Panel Pan_Effect;
+		private System.Windows.Forms.Panel Pan_Heal_Rate;
+		private System.Windows.Forms.TextBox Tex_Heal_Rate;
+		private System.Windows.Forms.Label Lab_Heal_Rate;
+		private System.Windows.Forms.Label Lab_MaxCRIT;
+	}
 }
 

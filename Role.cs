@@ -70,86 +70,88 @@ namespace SR_DMG
 			408.12f, 451.79f, 494.68f, 536.82f, 578.22f, 618.92f, 658.91f, 698.23f, 736.89f, 774.90f, 871.06f, 964.87f, 1056.42f, 1145.79f, 1233.06f, 1318.30f, 1401.58f, 1482.96f, 1562.52f, 1640.31f,
 			1752.32f, 1861.90f, 1969.12f, 2074.07f, 2176.80f, 2277.39f, 2375.91f, 2472.42f, 2566.97f, 2659.64f, 2780.30f, 2898.60f, 3014.60f, 3128.37f, 3239.98f, 3349.47f, 3456.92f, 3562.38f, 3665.91f, 3767.55f
 		};
-		private static readonly Dictionary<string, bool> Map_Mark = new Dictionary<string, bool>
-	{
-		{ "攻击力", false },{ "ATK", false },
-		{ "生命值", false },{ "HP", false },
-		{ "防御力", false },{ "DEF", false },
-		{ "基础攻击", false },{ "ATK_Base", false },
-		{ "基础生命", false },{ "HP_Base", false },
-		{ "基础防御", false },{ "DEF_Base", false },
-		{ "攻击倍率", true },{ "DMG_Equal_1", true },
-		{ "特殊倍率", true },{ "DMG_Equal_2", true },
-		{ "固定数值", false },{ "DMG_Equal_3", false },
-		{ "独立乘区", true },{ "DMG_Equal_4", true },
-		{ "倍率类型", false },{ "DMG_Equal_Tpye", false },
-		{ "倍率标号", false },{ "DMG_Equal_Info", false },
-		{ "暴击率", true },{ "CRIT_Rate", true },
-		{ "暴击伤害", true },{ "CRIT_DMG", true },
-		{ "角色等级", false },{ "Character_Level", false },
-		{ "怪物等级", false },{ "Enemy_Level", false },
-		{ "减防", true },{ "DEF_Reduced", true },
-		{ "无视防御", true },{ "DEF_Ignores", true },
-		{ "抗性", true },{ "RES_Boost", true },
-		{ "穿透", true },{ "RES_PEN", true },
-		{ "增伤", true },{ "DMG_Boost", true },
-		{ "易伤", true },{ "DMG_Taken", true },
-		{ "免伤", true },{ "DMG_Reduction", true },
-		{ "超击破", true },{ "Break_Equal", true },
-		{ "击破特攻", true },{ "Break_Effect", true },
-		{ "击破效率", true },{ "Break_Efficiency", true },
-		{ "击破增伤", true },{ "Break_Boost", true },
-		{ "击破类型", false },{ "Break_Type", false },
-		{ "速度", false },{ "SPD", false },
-		{ "基础速度", false },{ "SPD_Base", false },
-		{ "韧性", false },{ "Toughness", false },
-		{ "削韧", false },{ "Toughness_Reduction", false },
-		{ "效果命中", true },{ "Effect_Hit_Rate", true },
-		{ "效果抵抗", true },{ "Effect_RES", true },
-		{ "充能效率", true },{ "Energy_Regeneration_Rate", true }
-	};
-		private static readonly Dictionary<string, string> Map_Name = new Dictionary<string, string>
-	{
-		{ "攻击力", "ATK" },{ "ATK", "攻击力" },
-		{ "生命值", "HP" },{ "HP", "生命值" },
-		{ "防御力", "DEF" },{ "DEF", "防御力" },
-		{ "基础攻击", "ATK_Base" },{ "ATK_Base", "基础攻击" },
-		{ "基础生命", "HP_Base" },{ "HP_Base", "基础生命" },
-		{ "基础防御", "DEF_Base" },{ "DEF_Base", "基础防御" },
-		{ "攻击倍率", "DMG_Equal_1" },{ "DMG_Equal_1", "攻击倍率" },
-		{ "特殊倍率", "DMG_Equal_2" },{ "DMG_Equal_2", "特殊倍率" },
-		{ "固定数值", "DMG_Equal_3" },{ "DMG_Equal_3", "固定数值" },
-		{ "独立乘区", "DMG_Equal_4" },{ "DMG_Equal_4", "独立乘区" },
-		{ "倍率类型", "DMG_Equal_Tpye" },{ "DMG_Equal_Tpye", "倍率类型" },
-		{ "倍率标号", "DMG_Equal_Info" },{ "DMG_Equal_Info", "倍率标号" },
-		{ "暴击率", "CRIT_Rate" },{ "CRIT_Rate", "暴击率" },
-		{ "暴击伤害", "CRIT_DMG" },{ "CRIT_DMG", "暴击伤害" },
-		{ "角色等级", "Character_Level" },{ "Character_Level", "角色等级" },
-		{ "怪物等级", "Enemy_Level" },{ "Enemy_Level", "怪物等级" },
-		{ "减防", "DEF_Reduced" },{ "DEF_Reduced", "减防" },
-		{ "无视防御", "DEF_Ignores" },{ "DEF_Ignores", "无视防御" },
-		{ "抗性", "RES_Boost" },{ "RES_Boost", "抗性" },
-		{ "穿透", "RES_PEN" },{ "RES_PEN", "穿透" },
-		{ "增伤", "DMG_Boost" },{ "DMG_Boost", "增伤" },
-		{ "易伤", "DMG_Taken" },{ "DMG_Taken", "易伤" },
-		{ "免伤", "DMG_Reduction" },{ "DMG_Reduction", "免伤" },
-		{ "超击破", "Break_Equal" },{ "Break_Equal", "超击破" },
-		{ "击破特攻", "Break_Effect" },{ "Break_Effect", "击破特攻" },
-		{ "击破效率", "Break_Efficiency" },{ "Break_Efficiency", "击破效率" },
-		{ "击破增伤", "Break_Boost" },{ "Break_Boost", "击破增伤" },
-		{ "击破类型", "Break_Type" },{ "Break_Type", "击破类型" },
-		{ "速度", "SPD" },{ "SPD", "速度" },
-		{ "基础速度", "SPD_Base" },{ "SPD_Base", "基础速度" },
-		{ "韧性", "Toughness" },{ "Toughness", "韧性" },
-		{ "削韧", "Toughness_Reduction" },{ "Toughness_Reduction", "削韧" },
-		{ "效果命中", "Effect_Hit_Rate" },{ "Effect_Hit_Rate", "效果命中" },
-		{ "效果抵抗", "Effect_RES" },{ "Effect_RES", "效果抵抗" },
-		{ "充能效率", "Energy_Regeneration_Rate" },{ "Energy_Regeneration_Rate", "充能效率" }
-	};
-		private static readonly Dictionary<string, PropertyInfo> Map_Property = new Dictionary<string, PropertyInfo>(70);
+		public static readonly Dictionary<string, bool> Map_Mark = new Dictionary<string, bool>(72)
+		{
+			{ "攻击力", false },
+			{ "生命值", false },
+			{ "防御力", false },
+			{ "基础攻击", false },
+			{ "基础生命", false },
+			{ "基础防御", false },
+			{ "攻击倍率", true },
+			{ "特殊倍率", true },
+			{ "固定数值", false },
+			{ "独立乘区", true },
+			{ "倍率类型", false },
+			{ "倍率标号", false },
+			{ "暴击率", true },
+			{ "暴击伤害", true },
+			{ "角色等级", false },
+			{ "怪物等级", false },
+			{ "减防", true },
+			{ "无视防御", true },
+			{ "抗性", true },
+			{ "穿透", true },
+			{ "增伤", true },
+			{ "易伤", true },
+			{ "免伤", true },
+			{ "超击破", true },
+			{ "击破特攻", true },
+			{ "击破效率", true },
+			{ "击破增伤", true },
+			{ "击破类型", false },
+			{ "速度", false },
+			{ "基础速度", false },
+			{ "韧性", false },
+			{ "削韧", false },
+			{ "效果命中", true },
+			{ "效果抵抗", true },
+			{ "充能效率", true },
+			{ "治疗提高", true }
+		};
+		private static readonly Dictionary<string, string> Map_Name = new Dictionary<string, string>(72)
+		{
+			{ "攻击力", "ATK" },
+			{ "生命值", "HP" },
+			{ "防御力", "DEF" },
+			{ "基础攻击", "ATK_Base" },
+			{ "基础生命", "HP_Base" },
+			{ "基础防御", "DEF_Base" },
+			{ "攻击倍率", "DMG_Equal_1" },
+			{ "特殊倍率", "DMG_Equal_2" },
+			{ "固定数值", "DMG_Equal_3" },
+			{ "独立乘区", "DMG_Equal_4" },
+			{ "倍率类型", "DMG_Equal_Tpye" },
+			{ "倍率标号", "DMG_Equal_Info" },
+			{ "暴击率", "CRIT_Rate" },
+			{ "暴击伤害", "CRIT_DMG" },
+			{ "角色等级", "Character_Level" },
+			{ "怪物等级", "Enemy_Level" },
+			{ "减防", "DEF_Reduced" },
+			{ "无视防御", "DEF_Ignores" },
+			{ "抗性", "RES_Boost" },
+			{ "穿透", "RES_PEN" },
+			{ "增伤", "DMG_Boost" },
+			{ "易伤", "DMG_Taken" },
+			{ "免伤", "DMG_Reduction" },
+			{ "超击破", "Break_Equal" },
+			{ "击破特攻", "Break_Effect" },
+			{ "击破效率", "Break_Efficiency" },
+			{ "击破增伤", "Break_Boost" },
+			{ "击破类型", "Break_Type" },
+			{ "速度", "SPD" },
+			{ "基础速度", "SPD_Base" },
+			{ "韧性", "Toughness" },
+			{ "削韧", "Toughness_Reduction" },
+			{ "效果命中", "Effect_Hit_Rate" },
+			{ "效果抵抗", "Effect_RES" },
+			{ "充能效率", "Energy_Regeneration_Rate" },
+			{ "治疗提高", "Heal_Rate" }
+		};
+		private static readonly Dictionary<string, PropertyInfo> Map_Property = new Dictionary<string, PropertyInfo>(72);
 
 		// 实例参数
-		public float[] Base = new float[35];
+		public float[] Base = new float[36];
 
 		// 名称
 		public string Name = "";
@@ -504,6 +506,16 @@ namespace SR_DMG
 			}
 		}
 
+		// 治疗提高
+		public float Heal_Rate
+		{
+			get { return Base[35]; }
+			set
+			{
+				Set("治疗提高", ref Base[35], value, 1);
+			}
+		}
+
 		// 转化更新器
 		private void Set(string name, ref float date, float value, int acc)
 		{
@@ -598,11 +610,20 @@ namespace SR_DMG
 		public static void Start(SR_DMG App)
 		{
 			Role.App = App;
-			foreach (PropertyInfo Info in
-				typeof(Role).GetProperties())
+			Dictionary<string, string> _Map_Name = new Dictionary<string, string>(Map_Name.Count);
+			foreach (KeyValuePair<string, string> data in Map_Name)
 			{
-				Map_Property.Add(Info.Name, Info);
-				Map_Property.Add(GetName(Info.Name), Info);
+				_Map_Name[data.Value] = data.Key;
+			}
+			foreach (KeyValuePair<string, string> data in _Map_Name)
+			{
+				Map_Name[data.Key] = data.Value;
+				Map_Mark[data.Key] = Map_Mark[data.Value];
+			}
+			foreach (PropertyInfo Info in typeof(Role).GetProperties())
+			{
+				Map_Property[Info.Name] = Info;
+				Map_Property[GetName(Info.Name)] = Info;
 			}
 		}
 		public static bool GetType(string str)

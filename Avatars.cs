@@ -18,23 +18,23 @@ namespace SR_DMG
 		public int Rank { set; get; }
 		public List<Propert> Properts { set; get; }
 		public Servant Servant { set; get; }
-		private static string[] Prop_Name = new string[15]
+		private static string[] Prop_Name = new string[16]
 {
 			"生命值","攻击力","防御力","速度","暴击率","暴击伤害",
-			"基础生命","基础攻击","基础防御","基础速度",
+			"治疗提高","基础生命","基础攻击","基础防御","基础速度",
 			"充能效率","效果命中","效果抵抗","伤害提高","击破特攻"
 };
 		public static List<Propert> Get_Propert(_Propert[] _Properts, string Ele)
 		{
-			string[] Value = new string[15];
+			string[] Value = new string[16];
 			List<Propert> Properts = new List<Propert>();
 			foreach (_Propert Prop in _Properts)
 			{
 				if (Prop.Final == "0" || Prop.Final == "0.0%") continue;
 				int index = Prop.Property_Type;
-				if (index > 6)
+				if (index > 7)
 				{
-					if (index > 24) Value[14] = Prop.Final;
+					if (index > 24) Value[15] = Prop.Final;
 					else if (index >= 12)
 					{
 						if (Ele switch
@@ -49,16 +49,16 @@ namespace SR_DMG
 
 						} == index)
 						{
-							Value[13] = Prop.Final;
+							Value[14] = Prop.Final;
 						}
 					}
-					else Value[index + 1] = Prop.Final;
+					else Value[index + 2] = Prop.Final;
 				}
 				else
 				{
 					Value[index - 1] = Prop.Final;
 					if (index > 4) continue;
-					Value[index + 5] = Prop.Base;
+					Value[index + 6] = Prop.Base;
 				}
 			}
 			for (int i = 0; i < Value.Length; i++)
