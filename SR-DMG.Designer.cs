@@ -725,11 +725,11 @@
 			// 
 			Lab_CRIT_Rate.AutoSize = true;
 			Lab_CRIT_Rate.Font = new System.Drawing.Font("微软雅黑", 13.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, 134);
-			Lab_CRIT_Rate.Location = new System.Drawing.Point(225, 197);
+			Lab_CRIT_Rate.Location = new System.Drawing.Point(244, 197);
 			Lab_CRIT_Rate.Name = "Lab_CRIT_Rate";
-			Lab_CRIT_Rate.Size = new System.Drawing.Size(201, 25);
+			Lab_CRIT_Rate.Size = new System.Drawing.Size(182, 25);
 			Lab_CRIT_Rate.TabIndex = 0;
-			Lab_CRIT_Rate.Text = "暴击率：                %";
+			Lab_CRIT_Rate.Text = "暴率：                %";
 			Lab_CRIT_Rate.MouseUp += Tex_DMG_MouseUp;
 			// 
 			// Lab_Area_5

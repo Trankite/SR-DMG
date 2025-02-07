@@ -53,8 +53,8 @@ namespace SR_DMG
 			Gain = Gain.Distinct().ToList();
 		}
 		private static SR_DMG App;
-		private static readonly float[] Break_Ratio = new float[14]
-		{
+		private static readonly float[] Break_Ratio =
+		[
 		4,4,
 		1,1.2f,
 		1,0,
@@ -62,15 +62,15 @@ namespace SR_DMG
 		2,2,
 		2,4,
 		3,2
-		};
-		private static readonly float[] Break_Factor = new float[81]
-		{
+		];
+		private static readonly float[] Break_Factor =
+		[
 			0, 54.00f, 58.00f, 62.00f, 67.53f, 70.51f, 73.52f, 76.57f, 79.64f, 82.74f, 85.87f, 91.49f, 97.07f, 102.59f, 108.06f, 113.47f, 118.84f, 124.15f, 129.41f, 134.62f, 139.77f,
 			149.33f, 158.80f, 168.18f, 177.46f, 186.65f, 195.75f, 204.75f, 213.66f, 222.48f, 231.20f, 246.43f, 261.18f, 275.47f, 289.32f, 302.73f, 315.71f, 328.29f, 340.47f, 352.26f, 363.67f,
 			408.12f, 451.79f, 494.68f, 536.82f, 578.22f, 618.92f, 658.91f, 698.23f, 736.89f, 774.90f, 871.06f, 964.87f, 1056.42f, 1145.79f, 1233.06f, 1318.30f, 1401.58f, 1482.96f, 1562.52f, 1640.31f,
 			1752.32f, 1861.90f, 1969.12f, 2074.07f, 2176.80f, 2277.39f, 2375.91f, 2472.42f, 2566.97f, 2659.64f, 2780.30f, 2898.60f, 3014.60f, 3128.37f, 3239.98f, 3349.47f, 3456.92f, 3562.38f, 3665.91f, 3767.55f
-		};
-		public static readonly Dictionary<string, bool> Map_Mark = new Dictionary<string, bool>(72)
+		];
+		public static readonly Dictionary<string, bool> Map_Mark = new(72)
 		{
 			{ "攻击力", false },
 			{ "生命值", false },
@@ -109,7 +109,7 @@ namespace SR_DMG
 			{ "充能效率", true },
 			{ "治疗提高", true }
 		};
-		private static readonly Dictionary<string, string> Map_Name = new Dictionary<string, string>(72)
+		private static readonly Dictionary<string, string> Map_Name = new(72)
 		{
 			{ "攻击力", "ATK" },
 			{ "生命值", "HP" },
@@ -148,7 +148,7 @@ namespace SR_DMG
 			{ "充能效率", "Energy_Regeneration_Rate" },
 			{ "治疗提高", "Heal_Rate" }
 		};
-		private static readonly Dictionary<string, PropertyInfo> Map_Property = new Dictionary<string, PropertyInfo>(72);
+		private static readonly Dictionary<string, PropertyInfo> Map_Property = new(72);
 
 		// 实例参数
 		public float[] Base = new float[36];
@@ -525,10 +525,10 @@ namespace SR_DMG
 		}
 
 		// 增益
-		public List<int> Gain = new List<int>();
+		public List<int> Gain = [];
 
 		// 转化
-		public List<int> Transform = new List<int>();
+		public List<int> Transform = [];
 
 		// 顺序插入
 		public void AddGain(int tar)
@@ -577,7 +577,7 @@ namespace SR_DMG
 		// 伤害计算
 		public float[][] DMG()
 		{
-			float[][] DMG = new float[2][] { new float[8], new float[6] };
+			float[][] DMG = [new float[8], new float[6]];
 			DMG[0][1] = (DMG_Equal_Tpye == 0 ? 0 : DMG_Equal_Tpye == 1 ? HP : DEF) * DMG_Equal_2 * 0.01f;
 			DMG[0][0] = ATK * DMG_Equal_1 * 0.01f + DMG[0][1];
 			DMG[0][2] = (Character_Level * 10 + 200) / ((Character_Level * 10 + 200) +
@@ -610,7 +610,7 @@ namespace SR_DMG
 		public static void Start(SR_DMG App)
 		{
 			Role.App = App;
-			Dictionary<string, string> _Map_Name = new Dictionary<string, string>(Map_Name.Count);
+			Dictionary<string, string> _Map_Name = new(Map_Name.Count);
 			foreach (KeyValuePair<string, string> data in Map_Name)
 			{
 				_Map_Name[data.Value] = data.Key;

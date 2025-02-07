@@ -18,17 +18,17 @@ namespace SR_DMG
 		public int Rank { set; get; }
 		public List<Propert> Properts { set; get; }
 		public Servant Servant { set; get; }
-		private static string[] Prop_Name = new string[16]
-{
+		private static readonly string[] Prop_Name =
+		[
 			"生命值","攻击力","防御力","速度","暴击率","暴击伤害",
 			"治疗提高","基础生命","基础攻击","基础防御","基础速度",
 			"充能效率","效果命中","效果抵抗","伤害提高","击破特攻"
-};
-		public static List<Propert> Get_Propert(_Propert[] _Properts, string Ele)
+		];
+		public static List<Propert> Get_Propert(TPropert[] _Properts, string Ele)
 		{
 			string[] Value = new string[16];
-			List<Propert> Properts = new List<Propert>();
-			foreach (_Propert Prop in _Properts)
+			List<Propert> Properts = [];
+			foreach (TPropert Prop in _Properts)
 			{
 				if (Prop.Final == "0" || Prop.Final == "0.0%") continue;
 				int index = Prop.Property_Type;
@@ -99,17 +99,17 @@ namespace SR_DMG
 		public List<Propert> Properts { set; get; }
 	}
 
-	public class _Avatar
+	public class TAvatar
 	{
 		[JsonPropertyName("name")] public string Name { set; get; }
 		[JsonPropertyName("level")] public int Level { set; get; }
 		[JsonPropertyName("element")] public string Element { set; get; }
 		[JsonPropertyName("rank")] public int Rank { set; get; }
-		[JsonPropertyName("properties")] public _Propert[] _Properts { set; get; }
-		[JsonPropertyName("servant_detail")] public _Servant _Servant { set; get; }
+		[JsonPropertyName("properties")] public TPropert[] Properts { set; get; }
+		[JsonPropertyName("servant_detail")] public TServant Servant { set; get; }
 	}
 
-	public class _Propert
+	public class TPropert
 	{
 		[JsonPropertyName("property_type")] public int Property_Type { set; get; }
 		[JsonPropertyName("base")] public string Base { set; get; }
@@ -117,10 +117,10 @@ namespace SR_DMG
 		[JsonPropertyName("final")] public string Final { set; get; }
 	}
 
-	public class _Servant
+	public class TServant
 	{
 		[JsonPropertyName("servant_name")] public string Name { set; get; }
-		[JsonPropertyName("servant_properties")] public _Propert[] _Properts { set; get; }
+		[JsonPropertyName("servant_properties")] public TPropert[] Properts { set; get; }
 	}
 
 }
