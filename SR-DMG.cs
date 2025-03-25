@@ -43,7 +43,7 @@ namespace SR_DMG
 				if (File.Exists(App_Path[1]))
 				{
 					string[] Arr = File.ReadAllLines(App_Path[1]);
-					Group = Arr[39].Remove(0, Arr[39].IndexOf('：') + 1);
+					Group = Arr[39][(Arr[39].IndexOf('：') + 1)..];
 					if (Group != "")
 					{
 						Flags[2] = true;
@@ -53,7 +53,7 @@ namespace SR_DMG
 					{
 						Group_List();
 					}
-					int i = int.Parse(Arr[40].Remove(0, Arr[40].IndexOf('：') + 1));
+					int i = int.Parse(Arr[40][(Arr[40].IndexOf('：') + 1)..]);
 					if (Flags[2] && i > 0 && i < Cob_Simple.Items.Count)
 					{
 						Cob_Simple.SelectedIndex = i;
@@ -63,7 +63,7 @@ namespace SR_DMG
 						string Tar = "";
 						for (i = 0; i < 39; i++)
 						{
-							Tar += Arr[i].Remove(0, Arr[i].IndexOf('：') + 1) + ',';
+							Tar += Arr[i][(Arr[i].IndexOf('：') + 1)..] + ',';
 						}
 						Roled = new Role(Tar);
 					}
@@ -72,7 +72,7 @@ namespace SR_DMG
 			}
 			catch
 			{
-				Mihomo.ErorrTip<int>(-1001, $"：{App_Path[1]}");
+				Mihomo.ErorrTip(-1001, $"：{App_Path[1]}");
 			}
 			finally
 			{
@@ -242,11 +242,11 @@ namespace SR_DMG
 		private void Tex_DMG_TextChanged(object sender, EventArgs e)
 		{
 			TextBox Tex = sender as TextBox;
-			Roled.SetValue(Tex.Name.Remove(0, 4), ToFloat(Tex.Text));
+			Roled.SetValue(Tex.Name[4..], ToFloat(Tex.Text));
 			if (!Flags[0])
 			{
 				DMG_Compute();
-				string Tar = "[" + Role.GetName(Tex.Name.Remove(0, 4)) + "]";
+				string Tar = "[" + Role.GetName(Tex.Name[4..]) + "]";
 				if (Tex_Transform.Text.LastIndexOf(Tar) > 0)
 				{
 					Tex_Transform_TextChanged(null, null);
@@ -302,23 +302,23 @@ namespace SR_DMG
 				string Str = Cob_Transform.Items[Cob_Transform.SelectedIndex].ToString();
 				if (Str.StartsWith('□'))
 				{
-					Str = "√" + Str.Remove(0, 1);
+					Str = "√" + Str[1..];
 					Roled.AddTransform(Cob_Transform.SelectedIndex);
 				}
 				else
 				{
-					Str = "□" + Str.Remove(0, 1);
+					Str = "□" + Str[1..];
 					Roled.Transform.Remove(Cob_Transform.SelectedIndex);
 				}
 				if (Str.Contains('：'))
 				{
 					SetTexFont(Tex_Name_4, Str[2..Str.IndexOf('：')]);
-					Tex_Transform.Text = Str.Remove(0, Str.IndexOf('：') + 1);
+					Tex_Transform.Text = Str[(Str.IndexOf('：') + 1)..];
 				}
 				else
 				{
 					SetTexFont(Tex_Name_4, null);
-					Tex_Transform.Text = Str.Remove(0, 2);
+					Tex_Transform.Text = Str[2..];
 				}
 				Cob_Transform.Items[Cob_Transform.SelectedIndex] = Str;
 				Transform(Str, Roled, true);
@@ -347,7 +347,7 @@ namespace SR_DMG
 				}
 				else Tex_Transform.Text = Arr[0] + ':' + Equ;
 				Lab_Transform_Info.Text = Val == 0 ? "" : (Role.GetType(Arr[0].Trim('[', ']')) ?
-					(Val * 100).ToString("0.#") + "%" : Val.ToString());
+					(Val * 100).ToString("0.#") + "%" : Val.ToString("F0"));
 				Tex_Transform.SelectionStart = Arr[0].Length + Loc + 1;
 				Tex_Transform.Refresh();
 			}
@@ -465,24 +465,29 @@ namespace SR_DMG
 		}
 		private void Transform(string Str, Role role, bool Info)
 		{
-			string[] Arr = Str.Remove(0, Str.IndexOf('：') + 1).Split(':', '<');
-			Arr[0] = Arr[0].Remove(0, Arr[0].IndexOf('[') + 1).Trim(']');
+			string[] Arr = Str[(Str.IndexOf('：') + 1)..].Split(':', '<');
+			Arr[0] = Arr[0][(Arr[0].IndexOf('[') + 1)..].Trim(']');
 			float Max = Arr.Length > 2 ? Arr[2].Contains('%') ?
-				float.Parse(Arr[2].Remove(Arr[2].IndexOf('%'))) * 0.01f
+				float.Parse(Arr[2][..Arr[2].IndexOf('%')]) * 0.01f
 				: float.Parse(Arr[2]) : float.MaxValue;
 			float Tar = (float)Compute(Arr[1], role).Val;
-			if (Tar > Max) Tar = Max;
-			if (Role.GetType(Arr[0])) Tar *= 100;
-			if (Str.StartsWith('□')) Tar *= -1;
-			role.SetValue(Arr[0], role.GetValue(Arr[0]) + Tar);
-			if (Info)
+			if (Tar > 0)
 			{
-				GetTextBox("Tex_" + Role.GetName(Arr[0])).Text =
-					role.GetValue(Arr[0]).ToString();
+				if (Tar > Max) Tar = Max;
+				if (Role.GetType(Arr[0])) Tar *= 100;
+				if (Str.StartsWith('□')) Tar *= -1;
+				Tar = (float)Math.Round(Tar, Role.GetType(Arr[0]) ? 1 : 0);
+				role.SetValue(Arr[0], role.GetValue(Arr[0]) + Tar);
+				if (Info)
+				{
+					GetTextBox("Tex_" + Role.GetName(Arr[0])).Text =
+						role.GetValue(Arr[0]).ToString();
+				}
 			}
 		}
 		public void TranUpdate(string tar, Role role, bool Info)
 		{
+			if (Flags[0]) return;
 			foreach (int id in role.Transform)
 			{
 				if (id >= Cob_Transform.Items.Count) continue;
@@ -503,23 +508,23 @@ namespace SR_DMG
 				string Str = Cob_Gain.Items[Cob_Gain.SelectedIndex].ToString();
 				if (Str.StartsWith('□'))
 				{
-					Str = "√" + Str.Remove(0, 1);
+					Str = "√" + Str[1..];
 					Roled.AddGain(Cob_Gain.SelectedIndex);
 				}
 				else
 				{
-					Str = "□" + Str.Remove(0, 1);
+					Str = "□" + Str[1..];
 					Roled.Gain.Remove(Cob_Gain.SelectedIndex);
 				}
 				if (Str.Contains('：'))
 				{
 					SetTexFont(Tex_Name_3, Str[2..Str.IndexOf('：')]);
-					Tex_Gain.Text = Str.Remove(0, Str.IndexOf('：') + 1);
+					Tex_Gain.Text = Str[(Str.IndexOf('：') + 1)..];
 				}
 				else
 				{
 					SetTexFont(Tex_Name_3, null);
-					Tex_Gain.Text = Str.Remove(0, 2);
+					Tex_Gain.Text = Str[2..];
 				}
 				Cob_Gain.Items[Cob_Gain.SelectedIndex] = Str;
 				Gain(Cob_Gain.Text, Roled, true);
@@ -626,8 +631,8 @@ namespace SR_DMG
 		}
 		private void Gain(string Str, Role role, bool Info)
 		{
-			string[] Arr = Str.Remove(0, Str.IndexOf('：') + 1).Split(':');
-			Arr[0] = Arr[0].Remove(0, Arr[0].IndexOf('[') + 1).Trim(']');
+			string[] Arr = Str[(Str.IndexOf('：') + 1)..].Split(':');
+			Arr[0] = Arr[0][(Arr[0].IndexOf('[') + 1)..].Trim(']');
 			float Tar = Arr[1].Contains('%') ?
 				float.Parse(Arr[1].TrimEnd('%')) * 0.01f
 				: float.Parse(Arr[1]);
@@ -653,7 +658,7 @@ namespace SR_DMG
 				}
 				else
 				{
-					Group = Cob_Simple.Text.Remove(0, 2);
+					Group = Cob_Simple.Text[2..];
 					Flags[2] = true;
 					LoadDate();
 					Cob_Simple.DroppedDown = true;
@@ -786,8 +791,8 @@ namespace SR_DMG
 				string[] Arr = Cob_DMG_Equal.Text.Split('+');
 				if (Arr[0].Contains('：'))
 				{
-					SetTexFont(Tex_Name_2, Arr[0].Remove(Arr[0].IndexOf('：')));
-					Arr[0] = Arr[0].Remove(0, Arr[0].IndexOf('：') + 1);
+					SetTexFont(Tex_Name_2, Arr[0][..Arr[0].IndexOf('：')]);
+					Arr[0] = Arr[0][(Arr[0].IndexOf('：') + 1)..];
 				}
 				bool[] Info = new bool[3];
 				for (int i = 0; i < Arr.Length; i++)
@@ -795,13 +800,13 @@ namespace SR_DMG
 					if (Arr[i].Contains('['))
 					{
 						Info[0] = true;
-						Cob_DMG_Equal_Tpye.SelectedIndex = Arr[i].Remove(0, Arr[i].IndexOf('[') + 1).Trim(' ', ']') switch
+						Cob_DMG_Equal_Tpye.SelectedIndex = Arr[i][(Arr[i].IndexOf('[') + 1)..].Trim(' ', ']') switch
 						{
 							"生命值" => 1,
 							"防御力" => 2,
 							_ => 0,
 						};
-						Tex_DMG_Equal_2.Text = Arr[i].Remove(Arr[i].IndexOf('%')).Trim(' ');
+						Tex_DMG_Equal_2.Text = Arr[i][..Arr[i].IndexOf('%')].Trim(' ');
 					}
 					else if (Arr[i].Contains('%'))
 					{
@@ -893,7 +898,7 @@ namespace SR_DMG
 		{
 			if (Flags[7]) return;
 			TextBox Tex = sender as TextBox;
-			TGUpdate(Role.GetName(Tex.Name.Remove(0, 4)), Roled, false);
+			TGUpdate(Role.GetName(Tex.Name[4..]), Roled, false);
 			if (Tex.Text == "0")
 			{
 				Tex.Text = "";
@@ -903,7 +908,7 @@ namespace SR_DMG
 		{
 			if (Flags[7]) return;
 			TextBox Tex = sender as TextBox;
-			TGUpdate(Role.GetName(Tex.Name.Remove(0, 4)), Roled, true);
+			TGUpdate(Role.GetName(Tex.Name[4..]), Roled, true);
 			if (Tex.Text == "")
 			{
 				Tex.Text = "0";
@@ -933,8 +938,8 @@ namespace SR_DMG
 		private void Tex_DMG_MouseUp(object sender, MouseEventArgs e)
 		{
 			if (e.Button == MouseButtons.Right) return;
-			TextBox Tex = sender as TextBox ?? GetTextBox("Tex" + (sender as Label).Name.Remove(0, 3));
-			string Str = Tex.Name.Remove(0, 4);
+			TextBox Tex = sender as TextBox ?? GetTextBox("Tex" + (sender as Label).Name[3..]);
+			string Str = Tex.Name[4..];
 			if (Ceb_Gain.Checked || Ceb_Transform.Checked)
 			{
 				TextBox Tar = Ceb_Gain.Checked ? Tex_Gain : Tex_Transform;
@@ -986,7 +991,7 @@ namespace SR_DMG
 			{
 				if (Ceb_Cal_1.Checked || Ceb_Cal_2.Checked || Ceb_Cal_3.Checked)
 				{
-					float Val = ToFloat(Tex_Calculator.Text.Remove(0, Tex_Calculator.Text.LastIndexOf('=') + 1));
+					float Val = ToFloat(Tex_Calculator.Text[(Tex_Calculator.Text.LastIndexOf('=') + 1)..]);
 					if (sender.GetType() == typeof(Label))
 					{
 						if (Role.GetType(Str)) Val *= 100;
@@ -1149,206 +1154,38 @@ namespace SR_DMG
 				case "path":
 					Open(App_Path[0], false);
 					break;
+				case "login":
+					Mihomo.Login();
+					break;
 				case "uid":
 					LoadUID(Tar);
 					break;
-				case "star":
-					Transition();
+				case "note":
+					Note();
 					break;
-				case "login":
-					Mihomo.Login();
+				case "sign":
+					Sign();
 					break;
 				default:
 					Tip("无法识别：" + str);
 					break;
 			}
 		}
-		// 获取 角色信息
+		// 获取角色信息
 		private async void LoadUID(string[] Tar)
 		{
 			if (Tar.Length > 1)
 			{
-				if (Flags[2] == false) { Tip("未创建组"); return; }
 				Avatars Avts;
+				if (Flags[2] == false) { Tip("未创建组"); return; }
 				string path = $"{App_Path[4]}{Tar[1]}.json";
 				if (int.TryParse(Tar[1], out int Uid) && Uid >= 100000000)
 				{
 					if (!File.Exists(path) || Tar[0] == "UID")
 					{
 						Tar[0] = "云端";
-						string Rel = await Mihomo.HttpGet($"https://api.mihomo.me/sr_info_parsed/{Uid}?lang=cn");
-						if (Rel == null) { Mihomo.ErorrTip<int>(-1005); return; }
-						using JsonDocument Doc = JsonDocument.Parse(Rel);
-						if (Doc.RootElement.TryGetProperty("player", out JsonElement Player))
-						{
-							Avts = new Avatars
-							{
-								Name = Player.GetProperty("nickname").GetString(),
-								UID = Player.GetProperty("uid").GetString(),
-								Avatar_List = []
-							};
-						}
-						else { Mihomo.ErorrTip<int>(-103, $"：{Uid}"); return; }
-						foreach (JsonElement Cat in Doc.RootElement.GetProperty("characters").EnumerateArray())
-						{
-							Avatar Avt = new()
-							{
-								Name = Cat.GetProperty("name").GetString(),
-								Level = Cat.GetProperty("level").GetInt32(),
-								Element = Cat.GetProperty("element").GetProperty("name").GetString(),
-								Rank = Cat.GetProperty("rank").GetInt32(),
-								Properts = [],
-								Servant = new Servant
-								{
-									Name = "",
-									Properts = []
-								}
-							};
-							float[] Vals = new float[6];
-							foreach (JsonElement Atr in Cat.GetProperty("attributes").EnumerateArray())
-							{
-								switch (Atr.GetProperty("name").GetString())
-								{
-									case "生命值":
-										Vals[0] = Atr.GetProperty("value").GetSingle();
-										Avt.Properts.Add(new Propert
-										{
-											Name = "基础生命",
-											Value = $"{(int)Vals[0]}"
-										});
-										break;
-									case "攻击力":
-										Vals[1] = Atr.GetProperty("value").GetSingle();
-										Avt.Properts.Add(new Propert
-										{
-											Name = "基础攻击",
-											Value = $"{(int)Vals[1]}"
-										});
-										break;
-									case "防御力":
-										Vals[2] = Atr.GetProperty("value").GetSingle();
-										Avt.Properts.Add(new Propert
-										{
-											Name = "基础防御",
-											Value = $"{(int)Vals[2]}"
-										});
-										break;
-									case "速度":
-										Vals[3] = Atr.GetProperty("value").GetSingle();
-										Avt.Properts.Add(new Propert
-										{
-											Name = "基础速度",
-											Value = $"{(int)Vals[3]}"
-										});
-										break;
-									case "暴击率":
-										Vals[4] = Atr.GetProperty("value").GetSingle() * 100;
-										break;
-									case "暴击伤害":
-										Vals[5] = Atr.GetProperty("value").GetSingle() * 100;
-										break;
-								}
-							}
-							foreach (JsonElement Adt in Cat.GetProperty("additions").EnumerateArray())
-							{
-								switch (Adt.GetProperty("name").GetString())
-								{
-									case "生命值":
-										Vals[0] += Adt.GetProperty("value").GetSingle();
-										break;
-									case "攻击力":
-										Vals[1] += Adt.GetProperty("value").GetSingle();
-										break;
-									case "防御力":
-										Vals[2] += Adt.GetProperty("value").GetSingle();
-										break;
-									case "速度":
-										Vals[3] += Adt.GetProperty("value").GetSingle();
-										break;
-									case "暴击率":
-										Vals[4] += Adt.GetProperty("value").GetSingle() * 100;
-										break;
-									case "暴击伤害":
-										Vals[5] += Adt.GetProperty("value").GetSingle() * 100;
-										break;
-									case "能量恢复效率":
-										Avt.Properts.Add(new Propert
-										{
-											Name = "充能效率",
-											Value = $"{Adt.GetProperty("value").GetSingle() * 100 + 100:0.#}%"
-										});
-										break;
-									case "效果命中":
-										Avt.Properts.Add(new Propert
-										{
-											Name = "效果命中",
-											Value = $"{Adt.GetProperty("value").GetSingle() * 100:0.#}%"
-										});
-										break;
-									case "效果抵抗":
-										Avt.Properts.Add(new Propert
-										{
-											Name = "效果抵抗",
-											Value = $"{Adt.GetProperty("value").GetSingle() * 100:0.#}%"
-										});
-										break;
-									case "击破特攻":
-										Avt.Properts.Add(new Propert
-										{
-											Name = "击破特攻",
-											Value = $"{Adt.GetProperty("value").GetSingle() * 100:0.#}%"
-										});
-										break;
-									default:
-										if (Adt.GetProperty("name").GetString().StartsWith(Avt.Element))
-										{
-											Avt.Properts.Add(new Propert
-											{
-												Name = "伤害提高",
-												Value = $"{Adt.GetProperty("value").GetSingle() * 100:0.#}%"
-											});
-										}
-										break;
-								}
-							}
-							Avt.Properts.Add(new Propert
-							{
-								Name = "生命值",
-								Value = $"{(int)Vals[0]}"
-							});
-							Avt.Properts.Add(new Propert
-							{
-								Name = "攻击力",
-								Value = $"{(int)Vals[1]}"
-							}); Avt.Properts.Add(new Propert
-							{
-								Name = "防御力",
-								Value = $"{(int)Vals[2]}"
-							}); Avt.Properts.Add(new Propert
-							{
-								Name = "速度",
-								Value = $"{(int)Vals[3]}"
-							});
-							Avt.Properts.Add(new Propert
-							{
-								Name = "暴击率",
-								Value = $"{Vals[4]:0.#}%"
-							});
-							Avt.Properts.Add(new Propert
-							{
-								Name = "暴击伤害",
-								Value = $"{Vals[5]:0.#}%"
-							});
-							Avts.Avatar_List.Add(Avt);
-						}
-						try
-						{
-							File.WriteAllText(path, JsonSerializer.Serialize(Avts, Mihomo.JsonSopt()));
-						}
-						catch
-						{
-							Mihomo.ErorrTip<int>(-1002, $"：{path}"); return;
-						}
+						Avts = await Mihomo.Get_Roles(Uid);
+						if (Avts == null) return;
 					}
 					else
 					{
@@ -1359,7 +1196,7 @@ namespace SR_DMG
 						}
 						catch
 						{
-							Mihomo.ErorrTip<int>(-1001, $"：{path}"); return;
+							Mihomo.ErorrTip(-1001, $"：{path}"); return;
 						}
 					}
 				}
@@ -1367,40 +1204,31 @@ namespace SR_DMG
 				{
 					if (File.Exists(App_Path[3]))
 					{
-						try
+						Token Token = Mihomo.Get_Token();
+						path = $"{App_Path[4]}{Token.Uid}.json";
+						if (!File.Exists(path) || Tar[0] == "UID")
 						{
-							Token Token = JsonSerializer.Deserialize<Token>(
-								File.ReadAllText(App_Path[3]));
-							path = $"{App_Path[4]}{Token.Uid}.json";
-							if (!File.Exists(path) || Tar[0] == "UID")
-							{
-								Tar[0] = "云端";
-								string Rel = await Mihomo.Get_Roles(Token);
-								if (Rel == null) return;
-								Avts = JsonSerializer.Deserialize<Avatars>(Rel);
-							}
-							else
-							{
-								try
-								{
-									Tar[0] = "本地";
-									Avts = JsonSerializer.Deserialize<Avatars>(File.ReadAllText(path));
-								}
-								catch
-								{
-									Mihomo.ErorrTip<int>(-1002, $"：{path}"); return;
-								}
-							}
+							Tar[0] = "云端";
+							string Rel = await Mihomo.Get_Roles(Token);
+							if (Rel == null) return;
+							Avts = JsonSerializer.Deserialize<Avatars>(Rel);
 						}
-						catch
+						else
 						{
-							Mihomo.ErorrTip<int>(-1001, $"：{App_Path[3]}");
-							return;
+							try
+							{
+								Tar[0] = "本地";
+								Avts = JsonSerializer.Deserialize<Avatars>(File.ReadAllText(path));
+							}
+							catch
+							{
+								Mihomo.ErorrTip(-1002, $"：{path}"); return;
+							}
 						}
 					}
 					else { Tip("请先登录"); return; }
 				}
-				else { Tip("参数错误：UID"); return; };
+				else { Tip("参数错误：UID"); return; }
 				Form Form = new()
 				{
 					Text = $"{Tar[0]}数据",
@@ -1455,13 +1283,21 @@ namespace SR_DMG
 			}
 			else Tip("缺少参数：UID");
 		}
-		// 获取 跃迁记录
-		private async void Transition()
+		// 实时便筏
+		private static async void Note()
 		{
-			string Url = await Mihomo.Get_GachaLog();
-			if (Url == null) return;
-			Clipboard.SetText(Url);
-			Tip("已复制跃迁记录URL");
+			int[] Val = await Mihomo.Get_Note();
+			if (Val == null) return;
+			DateTime Now_Date = DateTime.Today;
+			DateTime Full_Time = DateTimeOffset.FromUnixTimeSeconds(Val[3]).LocalDateTime;
+			string Str = Now_Date.Day == Full_Time.Day ? "今天" : Now_Date.AddDays(1).Day == Full_Time.Day ? "明天" : "后天";
+			Str += $" {Full_Time:HH:mm}\n剩余：{(Val[2] / 3600).ToString().PadLeft(2, '0')} 时 {(Val[2] % 3600 / 60).ToString().PadLeft(2, '0')} 分";
+			Mihomo.ErorrTip(0, $"开拓力：{Val[0]} / {Val[1]}\n回满：{Str}", "实时便筏");
+		}
+		// 每日签到
+		private static async void Sign()
+		{
+			Mihomo.ErorrTip(0, await Mihomo.DoSign(), "每日签到");
 		}
 		// 打开文件
 		public static void Open(string path, bool flag)
@@ -1519,28 +1355,28 @@ namespace SR_DMG
 			Tex_Energy_Regeneration_Rate.Text = role.Energy_Regeneration_Rate.ToString();
 			Tex_Heal_Rate.Text = role.Heal_Rate.ToString();
 			Flags[5] = Flags[6] = true;
-			Roled.Gain = new List<int>(role.Gain);
-			Roled.Transform = new List<int>(role.Transform);
+			Roled.Gain = [.. role.Gain];
+			Roled.Transform = [.. role.Transform];
 			for (int i = 1; i < Cob_Gain.Items.Count; i++)
 			{
-				Cob_Gain.Items[i] = "□" + Cob_Gain.Items[i].ToString().Remove(0, 1);
+				Cob_Gain.Items[i] = "□" + Cob_Gain.Items[i].ToString()[1..];
 			}
 			foreach (int i in role.Gain)
 			{
 				if (i < Cob_Gain.Items.Count)
 				{
-					Cob_Gain.Items[i] = "√" + Cob_Gain.Items[i].ToString().Remove(0, 1);
+					Cob_Gain.Items[i] = "√" + Cob_Gain.Items[i].ToString()[1..];
 				}
 			}
 			for (int i = 1; i < Cob_Transform.Items.Count; i++)
 			{
-				Cob_Transform.Items[i] = "□" + Cob_Transform.Items[i].ToString().Remove(0, 1);
+				Cob_Transform.Items[i] = "□" + Cob_Transform.Items[i].ToString()[1..];
 			}
 			foreach (int i in role.Transform)
 			{
 				if (i < Cob_Transform.Items.Count)
 				{
-					Cob_Transform.Items[i] = "√" + Cob_Transform.Items[i].ToString().Remove(0, 1);
+					Cob_Transform.Items[i] = "√" + Cob_Transform.Items[i].ToString()[1..];
 				}
 			}
 			Tex_Calculator_TextChanged(null, null);
@@ -1578,16 +1414,16 @@ namespace SR_DMG
 										Roles.Add(role);
 										break;
 									case '&':
-										Cob_DMG_Equal.Items.Add(Arr[i].Remove(0, 2));
+										Cob_DMG_Equal.Items.Add(Arr[i][2..]);
 										break;
 									case '#':
 										if (Arr[i].IndexOf(':') < Arr[i].LastIndexOf('['))
 										{
-											Cob_Transform.Items.Add("□" + Arr[i].Remove(0, 1));
+											Cob_Transform.Items.Add("□" + Arr[i][1..]);
 										}
 										else
 										{
-											Cob_Gain.Items.Add("□" + Arr[i].Remove(0, 1));
+											Cob_Gain.Items.Add("□" + Arr[i][1..]);
 										}
 										break;
 								}
@@ -1618,12 +1454,12 @@ namespace SR_DMG
 			try
 			{
 				string[] Arr = File.Exists(App_Path[2]) ? File.ReadAllLines(App_Path[2]) : [];
-				List<string> Info = [Group.Remove(0, Group.IndexOf(' ') + 1) + '$'];
+				List<string> Info = [Group[(Group.IndexOf(' ') + 1)..] + '$'];
 				for (int i = 0; i < Arr.Length; i++)
 				{
 					if (Arr[i].StartsWith('G') && Arr[i] != Group)
 					{
-						Info.Add(Arr[i].Remove(0, Arr[i].IndexOf(' ') + 1) + '$' + i);
+						Info.Add(Arr[i][(Arr[i].IndexOf(' ') + 1)..] + '$' + i);
 					}
 				}
 				if (Info.Count > 1) Info.Sort();
@@ -1644,7 +1480,7 @@ namespace SR_DMG
 					}
 					else
 					{
-						Group = "G-" + (i + 1) + " " + Group.Remove(0, Group.IndexOf(' ') + 1);
+						Group = "G-" + (i + 1) + " " + Group[(Group.IndexOf(' ') + 1)..];
 						for (k = 0; k < Roles.Count; k++)
 						{
 							Writ.WriteLine(Roles[k].ToString(k));
@@ -1655,11 +1491,11 @@ namespace SR_DMG
 						}
 						for (k = 1; k < Cob_Transform.Items.Count; k++)
 						{
-							Writ.WriteLine("# " + Cob_Transform.Items[k].ToString().Remove(0, 2));
+							Writ.WriteLine("# " + Cob_Transform.Items[k].ToString()[2..]);
 						}
 						for (k = 1; k < Cob_Gain.Items.Count; k++)
 						{
-							Writ.WriteLine("# " + Cob_Gain.Items[k].ToString().Remove(0, 2));
+							Writ.WriteLine("# " + Cob_Gain.Items[k].ToString()[2..]);
 						}
 					}
 					if (i < Info.Count - 1) Writ.WriteLine();
@@ -1709,7 +1545,7 @@ namespace SR_DMG
 						{
 							if (i != tar)
 							{
-								Writ.WriteLine($"G-{seq++} " + Arr[i].Remove(0, Arr[i].IndexOf(' ') + 1));
+								Writ.WriteLine($"G-{seq++} " + Arr[i][(Arr[i].IndexOf(' ') + 1)..]);
 							}
 							else end = seq;
 						}
@@ -1735,7 +1571,7 @@ namespace SR_DMG
 			string Str = Tex_Calculator.Text;
 			if (Str.Contains('='))
 			{
-				Str = Str.Remove(Str.LastIndexOf('='));
+				Str = Str[..Str.LastIndexOf('=')];
 			}
 			if (string.IsNullOrWhiteSpace(Str))
 			{
@@ -1834,7 +1670,7 @@ namespace SR_DMG
 							{
 								if (i < Loc) _Loc--;
 							}
-							string[] Bra = Bracket(Str.Remove(0, i));
+							string[] Bra = Bracket(Str[i..]);
 							Pend = Bra[0][1..^1];
 							var Cop = Compute(Pend, role, Loc - i - 1);
 							Cou[Ord] = Cop.Val;
@@ -1876,10 +1712,10 @@ namespace SR_DMG
 								}
 								else if (i < Loc) _Loc--;
 							}
-							Pend = Str.Remove(0, i + 1);
+							Pend = Str[(i + 1)..];
 							if (Pend.Contains(']'))
 							{
-								Pend = Pend.Remove(Pend.IndexOf(']'));
+								Pend = Pend[..Pend.IndexOf(']')];
 								i += Pend.Length;
 								if (i + 1 < Loc) _Loc++;
 								if (Info[2])
@@ -2161,7 +1997,7 @@ namespace SR_DMG
 						}
 						else
 						{
-							return [str.Remove(i + 1), "0"];
+							return [str[..(i + 1)], "0"];
 						}
 					}
 					else if (info < 0)

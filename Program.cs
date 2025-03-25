@@ -24,11 +24,11 @@ namespace SR_DMG
 			bool Flag = true;
 			foreach (string Str in Stk)
 			{
-				string Tar = Str.Remove(Str.IndexOf('('));
+				string Tar = Str[..Str.IndexOf('(')];
 				if (Flag || Tar.Contains("SR_DMG"))
 				{
 					if (Flag && Tar.Contains("SR_DMG")) Flag = false;
-					Error = Error.Insert(Ins, "\n in " + Tar.Remove(0, Tar.LastIndexOf('.') + 1));
+					Error = Error.Insert(Ins, "\n in " + Tar[(Tar.LastIndexOf('.') + 1)..]);
 				}
 				else break;
 			}

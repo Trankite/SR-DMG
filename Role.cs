@@ -20,14 +20,14 @@ namespace SR_DMG
 		public Role(Role role)
 		{
 			Name = role.Name;
-			Gain = new List<int>(role.Gain);
-			Transform = new List<int>(role.Transform);
+			Gain = [.. role.Gain];
+			Transform = [.. role.Transform];
 			Array.Copy(role.Base, Base, Base.Length);
 		}
 		public Role(string str)
 		{
 			string[] Arr = str.Split(',');
-			Name = Arr[0].Remove(0, Arr[0].IndexOf(" ") + 1);
+			Name = Arr[0][(Arr[0].IndexOf(' ') + 1)..];
 			int i = 0;
 			while (i < Base.Length)
 			{
@@ -49,19 +49,19 @@ namespace SR_DMG
 					Transform.Add(int.Parse(Info[k]));
 				}
 			}
-			Transform = Transform.Distinct().ToList();
-			Gain = Gain.Distinct().ToList();
+			Transform = [.. Transform.Distinct()];
+			Gain = [.. Gain.Distinct()];
 		}
 		private static SR_DMG App;
 		private static readonly float[] Break_Ratio =
 		[
-		4,4,
-		1,1.2f,
-		1,0,
-		4,2,
-		2,2,
-		2,4,
-		3,2
+			4,4,
+			1,1.2f,
+			1,0,
+			4,2,
+			2,2,
+			2,4,
+			3,2
 		];
 		private static readonly float[] Break_Factor =
 		[
