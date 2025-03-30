@@ -32,7 +32,7 @@
     <PlatformTarget>x64</PlatformTarget>
   </PropertyGroup>
   <PropertyGroup>
-    <ApplicationIcon>SR_DMG.ico</ApplicationIcon>
+    <ApplicationIcon>SR-DMG.ico</ApplicationIcon>
   </PropertyGroup>
   <PropertyGroup>
     <SignAssembly>False</SignAssembly>
@@ -86,7 +86,7 @@
     <Deterministic>False</Deterministic>
   </PropertyGroup>
   <ItemGroup>
-    <Content Include="SR_DMG.ico" />
+    <Content Include="SR-DMG.ico" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include=".NETFramework,Version=v4.8">
@@ -115,7 +115,7 @@
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </None>
-    <None Update="SR_DMG.ico">
+    <None Update="SR-DMG.ico">
       <Pack>True</Pack>
       <PackagePath>\</PackagePath>
     </None>

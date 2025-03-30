@@ -21,13 +21,8 @@ namespace SR_DMG
 
 		public SR_DMG()
 		{
+			DoInit();
 			InitializeComponent();
-			Group = "";
-			App_Path[0] = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData) + "\\SR-DMG\\";
-			App_Path[1] = App_Path[0] + "App.config";
-			App_Path[2] = App_Path[0] + "SR-DMG.csv";
-			App_Path[3] = App_Path[0] + "Token.json";
-			App_Path[4] = App_Path[0] + "Data\\";
 			Role.Start(this);
 			Cob_Simple_Clear();
 			Cob_DMG_Equal_Clear();
@@ -35,6 +30,16 @@ namespace SR_DMG
 			Cob_Gain_Clear();
 		}
 
+		// 初始化
+		private void DoInit()
+		{
+			Group = "";
+			App_Path[0] = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData) + "\\SR-DMG\\";
+			App_Path[1] = App_Path[0] + "App.config";
+			App_Path[2] = App_Path[0] + "SR-DMG.csv";
+			App_Path[3] = App_Path[0] + "Token.json";
+			App_Path[4] = App_Path[0] + "Data\\";
+		}
 		// 程序加载及关闭
 		private void SR_DMG_Load(object sender, EventArgs e)
 		{
@@ -1151,24 +1156,13 @@ namespace SR_DMG
 			string[] Tar = str.Split(' ');
 			switch (Tar[0].ToLower())
 			{
-				case "path":
-					Open(App_Path[0], false);
-					break;
-				case "login":
-					Mihomo.Login();
-					break;
-				case "uid":
-					LoadUID(Tar);
-					break;
-				case "note":
-					Note();
-					break;
-				case "sign":
-					Sign();
-					break;
-				default:
-					Tip("无法识别：" + str);
-					break;
+				case "path": Open(App_Path[0], false); break;
+				case "login": Mihomo.Login(); break;
+				case "uid": LoadUID(Tar); break;
+				case "note": Note(); break;
+				case "sign": Sign(); break;
+				case "coin": Coin(); break;
+				default: Tip("无法识别：" + str); break;
 			}
 		}
 		// 获取角色信息
@@ -1297,7 +1291,16 @@ namespace SR_DMG
 		// 每日签到
 		private static async void Sign()
 		{
-			Mihomo.ErorrTip(0, await Mihomo.DoSign(), "每日签到");
+			string Str = await Mihomo.DoSign();
+			if (Str == null) return;
+			Mihomo.ErorrTip(0, Str, "每日签到");
+		}
+		// 米游币任务
+		private static async void Coin()
+		{
+			string Rel = await Mihomo.DoCoin();
+			if (Rel == null) return;
+			Mihomo.ErorrTip(0, Rel, "米游币任务");
 		}
 		// 打开文件
 		public static void Open(string path, bool flag)

@@ -2203,7 +2203,7 @@
 			MaximizeBox = false;
 			Name = "SR_DMG";
 			StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-			Text = "Star Rail Optimizer";
+			Text = "Star Rail Damage Calculator";
 			Activated += SR_DMG_Activated;
 			FormClosing += SR_DMG_FormClosing;
 			Load += SR_DMG_Load;
