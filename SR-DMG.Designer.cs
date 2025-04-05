@@ -124,7 +124,7 @@
 			Ceb_Cal_4 = new System.Windows.Forms.CheckBox();
 			Ceb_Cal_5 = new System.Windows.Forms.CheckBox();
 			Lab_DMG_Equal_Info = new System.Windows.Forms.Label();
-			Cob_DMG_Equal = new System.Windows.Forms.ComboBox();
+			Cob_DMG_Equal_Info = new System.Windows.Forms.ComboBox();
 			Tex_Name_2 = new System.Windows.Forms.TextBox();
 			Btn_Del_2 = new System.Windows.Forms.Button();
 			Btn_Save_2 = new System.Windows.Forms.Button();
@@ -1392,6 +1392,7 @@
 			Tex_Name_1.Enter += Tex_Name_Enter;
 			Tex_Name_1.KeyPress += Tex_Name_KeyPress;
 			Tex_Name_1.Leave += Tex_Name_Leave;
+			Tex_Name_1.MouseUp += Tex_Calculator_MouseUp;
 			// 
 			// Ceb_Cal_1
 			// 
@@ -1474,17 +1475,17 @@
 			Lab_DMG_Equal_Info.TabIndex = 0;
 			Lab_DMG_Equal_Info.MouseUp += Lab_Area_MouseUp;
 			// 
-			// Cob_DMG_Equal
+			// Cob_DMG_Equal_Info
 			// 
-			Cob_DMG_Equal.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-			Cob_DMG_Equal.FlatStyle = System.Windows.Forms.FlatStyle.System;
-			Cob_DMG_Equal.Font = new System.Drawing.Font("微软雅黑", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, 134);
-			Cob_DMG_Equal.Location = new System.Drawing.Point(19, 134);
-			Cob_DMG_Equal.Name = "Cob_DMG_Equal";
-			Cob_DMG_Equal.Size = new System.Drawing.Size(175, 25);
-			Cob_DMG_Equal.TabIndex = 0;
-			Cob_DMG_Equal.TabStop = false;
-			Cob_DMG_Equal.SelectedIndexChanged += Cob_DMG_Equal_SelectedIndexChanged;
+			Cob_DMG_Equal_Info.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+			Cob_DMG_Equal_Info.FlatStyle = System.Windows.Forms.FlatStyle.System;
+			Cob_DMG_Equal_Info.Font = new System.Drawing.Font("微软雅黑", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, 134);
+			Cob_DMG_Equal_Info.Location = new System.Drawing.Point(19, 134);
+			Cob_DMG_Equal_Info.Name = "Cob_DMG_Equal_Info";
+			Cob_DMG_Equal_Info.Size = new System.Drawing.Size(175, 25);
+			Cob_DMG_Equal_Info.TabIndex = 0;
+			Cob_DMG_Equal_Info.TabStop = false;
+			Cob_DMG_Equal_Info.SelectedIndexChanged += Cob_DMG_Equal_Info_SelectedIndexChanged;
 			// 
 			// Tex_Name_2
 			// 
@@ -1502,6 +1503,7 @@
 			Tex_Name_2.Enter += Tex_Name_Enter;
 			Tex_Name_2.KeyPress += Tex_Name_KeyPress;
 			Tex_Name_2.Leave += Tex_Name_Leave;
+			Tex_Name_2.MouseUp += Tex_Calculator_MouseUp;
 			// 
 			// Btn_Del_2
 			// 
@@ -1575,6 +1577,7 @@
 			Tex_Name_4.Enter += Tex_Name_Enter;
 			Tex_Name_4.KeyPress += Tex_Name_KeyPress;
 			Tex_Name_4.Leave += Tex_Name_Leave;
+			Tex_Name_4.MouseUp += Tex_Calculator_MouseUp;
 			// 
 			// Tex_Transform
 			// 
@@ -1912,6 +1915,7 @@
 			Tex_Cmd.TabStop = false;
 			Tex_Cmd.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
 			Tex_Cmd.KeyPress += Tex_Cmd_KeyPress;
+			Tex_Cmd.MouseUp += Tex_Calculator_MouseUp;
 			// 
 			// Lab_Cmd
 			// 
@@ -1934,7 +1938,7 @@
 			Lab_Tip.Size = new System.Drawing.Size(56, 17);
 			Lab_Tip.TabIndex = 0;
 			Lab_Tip.Text = "未选择组";
-			Lab_Tip.Click += Lab_Tip_Click;
+			Lab_Tip.MouseUp += Lab_Tip_MouseUp;
 			// 
 			// Lab_Transform_Info
 			// 
@@ -2121,7 +2125,7 @@
 			Controls.Add(Btn_Del_2);
 			Controls.Add(Btn_Save_2);
 			Controls.Add(Tex_Name_2);
-			Controls.Add(Cob_DMG_Equal);
+			Controls.Add(Cob_DMG_Equal_Info);
 			Controls.Add(Cob_DMG_Equal_Tpye);
 			Controls.Add(Ceb_Cal_5);
 			Controls.Add(Ceb_Cal_4);
@@ -2327,7 +2331,7 @@
         private System.Windows.Forms.CheckBox Ceb_Cal_4;
         private System.Windows.Forms.CheckBox Ceb_Cal_5;
         private System.Windows.Forms.Label Lab_DMG_Equal_Info;
-        private System.Windows.Forms.ComboBox Cob_DMG_Equal;
+        private System.Windows.Forms.ComboBox Cob_DMG_Equal_Info;
         private System.Windows.Forms.TextBox Tex_Name_2;
         private System.Windows.Forms.Button Btn_Del_2;
         private System.Windows.Forms.Button Btn_Save_2;

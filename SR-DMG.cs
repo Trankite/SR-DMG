@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Diagnostics;
 using System.Drawing;
 using System.IO;
@@ -15,7 +16,7 @@ namespace SR_DMG
 		private string Group;
 		private Role Roled = new();
 		private float[] DMG = new float[6];
-		private readonly bool[] Flags = new bool[9];
+		private readonly bool[] Flags = new bool[10];
 		public static readonly string[] App_Path = new string[5];
 		private readonly List<Role> Roles = [];
 
@@ -77,7 +78,7 @@ namespace SR_DMG
 			}
 			catch
 			{
-				Mihomo.ErorrTip(-1001, $"：{App_Path[1]}");
+				Mihomo.ErorrTip(-1001, App_Path[1]);
 			}
 			finally
 			{
@@ -112,6 +113,7 @@ namespace SR_DMG
 				Wt.WriteLine("转化：[" + string.Join("-", Roled.Transform) + ']');
 				Wt.WriteLine("当前组：" + Group);
 				Wt.Write("历史记录：" + Cob_Simple.SelectedIndex);
+				Mihomo.Http?.Dispose();
 			}
 			catch
 			{
@@ -485,7 +487,7 @@ namespace SR_DMG
 				role.SetValue(Arr[0], role.GetValue(Arr[0]) + Tar);
 				if (Info)
 				{
-					GetTextBox("Tex_" + Role.GetName(Arr[0])).Text =
+					GetControl<TextBox>("Tex_" + Role.GetName(Arr[0])).Text =
 						role.GetValue(Arr[0]).ToString();
 				}
 			}
@@ -646,7 +648,7 @@ namespace SR_DMG
 			role.SetValue(Arr[0], role.GetValue(Arr[0]) + Tar);
 			if (Info)
 			{
-				GetTextBox("Tex_" + Role.GetName(Arr[0])).Text =
+				GetControl<TextBox>("Tex_" + Role.GetName(Arr[0])).Text =
 					role.GetValue(Arr[0]).ToString();
 			}
 		}
@@ -787,13 +789,13 @@ namespace SR_DMG
 		}
 
 		// 倍率切换
-		private void Cob_DMG_Equal_SelectedIndexChanged(object sender, EventArgs e)
+		private void Cob_DMG_Equal_Info_SelectedIndexChanged(object sender, EventArgs e)
 		{
-			Roled.DMG_Equal_Info = Cob_DMG_Equal.SelectedIndex;
+			Roled.DMG_Equal_Info = Cob_DMG_Equal_Info.SelectedIndex;
 			if (Flags[3]) return;
-			if (Cob_DMG_Equal.SelectedIndex > 0)
+			if (Cob_DMG_Equal_Info.SelectedIndex > 0)
 			{
-				string[] Arr = Cob_DMG_Equal.Text.Split('+');
+				string[] Arr = Cob_DMG_Equal_Info.Text.Split('+');
 				if (Arr[0].Contains('：'))
 				{
 					SetTexFont(Tex_Name_2, Arr[0][..Arr[0].IndexOf('：')]);
@@ -841,9 +843,9 @@ namespace SR_DMG
 		}
 		private void Cob_DMG_Equal_Clear()
 		{
-			Cob_DMG_Equal.Items.Clear();
-			Cob_DMG_Equal.Items.Add("切换技能倍率（ AEQ ）");
-			Cob_DMG_Equal.SelectedIndex = 0;
+			Cob_DMG_Equal_Info.Items.Clear();
+			Cob_DMG_Equal_Info.Items.Add("切换技能倍率（ AEQ ）");
+			Cob_DMG_Equal_Info.SelectedIndex = 0;
 		}
 		private void Btn_Save_2_Click(object sender, EventArgs e)
 		{
@@ -872,24 +874,24 @@ namespace SR_DMG
 			else
 			{
 				Save_Info = true;
-				Cob_Insert(Cob_DMG_Equal, Equal);
+				Cob_Insert(Cob_DMG_Equal_Info, Equal);
 			}
 			Flags[3] = false;
 		}
 		private void Btn_Del_2_Click(object sender, EventArgs e)
 		{
-			if (Cob_DMG_Equal.SelectedIndex > 0)
+			if (Cob_DMG_Equal_Info.SelectedIndex > 0)
 			{
 				Save_Info = true;
-				Cob_DMG_Equal.Items.RemoveAt(Cob_DMG_Equal.SelectedIndex);
-				Cob_DMG_Equal.SelectedIndex = 0;
+				Cob_DMG_Equal_Info.Items.RemoveAt(Cob_DMG_Equal_Info.SelectedIndex);
+				Cob_DMG_Equal_Info.SelectedIndex = 0;
 			}
 		}
 
 		// 取消保存
-		private void Lab_Tip_Click(object sender, EventArgs e)
+		private void Lab_Tip_MouseUp(object sender, MouseEventArgs e)
 		{
-			if (Save_Info)
+			if (Save_Info && e.Button == MouseButtons.Right)
 			{
 				if (MessageBox.Show("是否取消此次保存计划？", "取消保存",
 					MessageBoxButtons.OKCancel, MessageBoxIcon.Information) == DialogResult.OK)
@@ -943,7 +945,7 @@ namespace SR_DMG
 		private void Tex_DMG_MouseUp(object sender, MouseEventArgs e)
 		{
 			if (e.Button == MouseButtons.Right) return;
-			TextBox Tex = sender as TextBox ?? GetTextBox("Tex" + (sender as Label).Name[3..]);
+			TextBox Tex = sender as TextBox ?? GetControl<TextBox>("Tex" + (sender as Label).Name[3..]);
 			string Str = Tex.Name[4..];
 			if (Ceb_Gain.Checked || Ceb_Transform.Checked)
 			{
@@ -1148,21 +1150,38 @@ namespace SR_DMG
 		{
 			if (e.Button == MouseButtons.Right)
 			{
-				Command(Tex_Cmd.Text);
+				if (Tex_Cmd.Text.Length > 0)
+				{
+					Command(Tex_Cmd.Text);
+				}
+				else
+				{
+					(int Index, string SeletText) = ListWindow("指令提示", "指令列表", ["Path", "Login", "Uid Me", "Note", "Sign", "Coin"]);
+					if (Index > -1) Command(SeletText);
+				}
 			}
 		}
 		private void Command(string str)
 		{
-			string[] Tar = str.Split(' ');
-			switch (Tar[0].ToLower())
+			if (Flags[9])
 			{
-				case "path": Open(App_Path[0], false); break;
-				case "login": Mihomo.Login(); break;
-				case "uid": LoadUID(Tar); break;
-				case "note": Note(); break;
-				case "sign": Sign(); break;
-				case "coin": Coin(); break;
-				default: Tip("无法识别：" + str); break;
+				Tip("请等待指令执行完成！"); return;
+			}
+			else
+			{
+				Flags[9] = true;
+				string[] Tar = str.Split(' ');
+				switch (Tar[0].ToLower())
+				{
+					case "path": Open(App_Path[0]); break;
+					case "login": Mihomo.Login(); break;
+					case "uid": LoadUID(Tar); break;
+					case "note": Note(); break;
+					case "sign": Sign(); break;
+					case "coin": Coin(); break;
+					default: Tip("无法识别：" + str); break;
+				}
+				Flags[9] = false;
 			}
 		}
 		// 获取角色信息
@@ -1190,98 +1209,71 @@ namespace SR_DMG
 						}
 						catch
 						{
-							Mihomo.ErorrTip(-1001, $"：{path}"); return;
+							Mihomo.ErorrTip(-1001, path); return;
 						}
 					}
 				}
 				else if (Tar[1].Equals("ME", StringComparison.CurrentCultureIgnoreCase))
 				{
-					if (File.Exists(App_Path[3]))
+					Mihomo.Token Token = Mihomo.Get_Token();
+					if (Token == null) return;
+					path = $"{App_Path[4]}{Token.Uid}.json";
+					if (!File.Exists(path) || Tar[0] == "UID")
 					{
-						Token Token = Mihomo.Get_Token();
-						path = $"{App_Path[4]}{Token.Uid}.json";
-						if (!File.Exists(path) || Tar[0] == "UID")
+						Tar[0] = "云端";
+						string Rel = await Mihomo.Get_Roles(Token);
+						if (Rel == null) return;
+						Avts = JsonSerializer.Deserialize<Avatars>(Rel);
+					}
+					else
+					{
+						try
 						{
-							Tar[0] = "云端";
-							string Rel = await Mihomo.Get_Roles(Token);
-							if (Rel == null) return;
-							Avts = JsonSerializer.Deserialize<Avatars>(Rel);
+							Tar[0] = "本地";
+							Avts = JsonSerializer.Deserialize<Avatars>(File.ReadAllText(path));
 						}
-						else
+						catch
 						{
-							try
-							{
-								Tar[0] = "本地";
-								Avts = JsonSerializer.Deserialize<Avatars>(File.ReadAllText(path));
-							}
-							catch
-							{
-								Mihomo.ErorrTip(-1002, $"：{path}"); return;
-							}
+							Mihomo.ErorrTip(-1002, path); return;
 						}
 					}
-					else { Tip("请先登录"); return; }
 				}
 				else { Tip("参数错误：UID"); return; }
-				Form Form = new()
+				List<string> ListText = [];
+				foreach (Avatar Item in Avts.Avatar_List)
 				{
-					Text = $"{Tar[0]}数据",
-					Size = new Size(300, 300),
-					FormBorderStyle = FormBorderStyle.FixedSingle,
-					StartPosition = FormStartPosition.CenterScreen,
-					MaximizeBox = false
-				};
-				ListView Lew = new()
-				{
-					Size = new Size(260, 260),
-					Location = new Point(10, 10),
-					Font = new Font(this.Font.Name, 15),
-					BackColor = Form.BackColor,
-					ForeColor = Form.ForeColor,
-					FullRowSelect = true,
-					View = View.Details,
-					GridLines = false
-				};
-				Lew.Columns.Add($"角色列表", 245, HorizontalAlignment.Center);
-				foreach (Avatar Avt in Avts.Avatar_List)
-				{
-					Lew.Items.Add(Avt.Name);
-					if (Avt.Servant.Name == "") continue;
-					Lew.Items.Add(Avt.Servant.Name);
+					ListText.Add(Item.Name);
+					if (Item.Servant.Name == "") continue;
+					ListText.Add(Item.Servant.Name);
 				}
-				Lew.SelectedIndexChanged += (sender, e) =>
+				(int Index, string SeletText) = ListWindow($"{Tar[0]}数据", "角色列表", ListText);
+				if (Index < 0) return;
+				Role role = new()
 				{
-					Role role = new()
-					{
-						Name = Lew.SelectedItems[0].Text
-					};
-					Avatar Avt = Avts.Avatar_List.Where(Avt
-						=> Avt.Name == role.Name || Avt.Servant.Name == role.Name).First();
-					if (Avt.Properts.Count > 0)
-					{
-						role.Break_Type = Cob_Break_Type.Items.IndexOf(Avt.Element.PadLeft(2));
-						foreach (Propert Prop in (Avt.Name == role.Name ? Avt.Properts : Avt.Servant.Properts))
-						{
-							role.SetValue(Prop.Name, float.Parse(Prop.Value.TrimEnd('%')));
-						}
-						Roles.Add(role);
-						Tip($"已载入：{role.Name}");
-						Cob_Simple_Update();
-						Save_Info = true;
-					}
-					else Tip("未载入空数据");
-					Form.Close();
+					Name = SeletText
 				};
-				Form.Controls.Add(Lew);
-				Form.ShowDialog();
+				Avatar Avt = Avts.Avatar_List.Where(Avt => Avt.Name == role.Name || Avt.Servant.Name == role.Name).First();
+				if (Avt.Properts.Count > 0)
+				{
+					role.Break_Type = Cob_Break_Type.Items.IndexOf(Avt.Element.PadLeft(2));
+					foreach (Propert Prop in (Avt.Name == role.Name ? Avt.Properts : Avt.Servant.Properts))
+					{
+						role.SetValue(Prop.Name, float.Parse(Prop.Value.TrimEnd('%')));
+					}
+					Roles.Add(role);
+					Tip($"已载入：{role.Name}");
+					Cob_Simple_Update();
+					Save_Info = true;
+				}
+				else Tip("未载入空数据");
 			}
 			else Tip("缺少参数：UID");
 		}
 		// 实时便筏
-		private static async void Note()
+		private async void Note()
 		{
 			int[] Val = await Mihomo.Get_Note();
-			if (Val == null) return;
+			if (Val == null) { Tip("请求失败：登陆状态失效"); return; }
 			DateTime Now_Date = DateTime.Today;
 			DateTime Full_Time = DateTimeOffset.FromUnixTimeSeconds(Val[3]).LocalDateTime;
 			string Str = Now_Date.Day == Full_Time.Day ? "今天" : Now_Date.AddDays(1).Day == Full_Time.Day ? "明天" : "后天";
@@ -1289,21 +1281,21 @@ namespace SR_DMG
 			Mihomo.ErorrTip(0, $"开拓力：{Val[0]} / {Val[1]}\n回满：{Str}", "实时便筏");
 		}
 		// 每日签到
-		private static async void Sign()
+		private async void Sign()
 		{
 			string Str = await Mihomo.DoSign();
-			if (Str == null) return;
+			if (Str == null) { Tip("请求失败：登陆状态失效"); return; }
 			Mihomo.ErorrTip(0, Str, "每日签到");
 		}
 		// 米游币任务
-		private static async void Coin()
+		private async void Coin()
 		{
 			string Rel = await Mihomo.DoCoin();
-			if (Rel == null) return;
+			if (Rel == null) { Tip("请求失败：登陆状态失效"); return; }
 			Mihomo.ErorrTip(0, Rel, "米游币任务");
 		}
 		// 打开文件
-		public static void Open(string path, bool flag)
+		public static void Open(string path, bool flag = false)
 		{
 			if (flag || Directory.Exists(path))
 			{
@@ -1314,79 +1306,90 @@ namespace SR_DMG
 				Process.Start("explorer", $"/select,\"{path}\"");
 			}
 		}
+		// 列表选择 窗口
+		private (int Index, string SeletText) ListWindow(string Title, string ListName, List<string> ListText)
+		{
+			int Index = -1;
+			string SeletText = null;
+			Form Form = new()
+			{
+				Text = Title,
+				Size = new Size(300, 300),
+				FormBorderStyle = FormBorderStyle.FixedSingle,
+				StartPosition = FormStartPosition.CenterScreen,
+				MaximizeBox = false
+			};
+			ListView Lew = new()
+			{
+				Size = new Size(260, 260),
+				Location = new Point(10, 10),
+				Font = new Font(this.Font.Name, 15),
+				BackColor = Form.BackColor,
+				ForeColor = Form.ForeColor,
+				FullRowSelect = true,
+				View = View.Details,
+				MultiSelect = false,
+				GridLines = false
+			};
+			Lew.Columns.Add(ListName, 245, HorizontalAlignment.Center);
+			foreach (string str in ListText)
+			{
+				Lew.Items.Add(str);
+			}
+			Lew.SelectedIndexChanged += (sender, e) =>
+			{
+				Index = Lew.SelectedIndices[0];
+				SeletText = Lew.SelectedItems[0].Text;
+				Form.Close();
+			};
+			Form.Controls.Add(Lew);
+			Form.ShowDialog();
+			return (Index, SeletText);
+		}
 
 		// 载入数据
 		private void LoadRole(Role role)
 		{
-			Flags[0] = true;
+			Flags[0] = Flags[5] = Flags[6] = true;
 			SetTexFont(Tex_Name_1, role.Name);
 			Roled.Name = role.Name;
-			Tex_ATK.Text = role.ATK.ToString();
-			Tex_HP.Text = role.HP.ToString();
-			Tex_DEF.Text = role.DEF.ToString();
-			Tex_ATK_Base.Text = role.ATK_Base.ToString();
-			Tex_HP_Base.Text = role.HP_Base.ToString();
-			Tex_DEF_Base.Text = role.DEF_Base.ToString();
-			Tex_DMG_Equal_1.Text = role.DMG_Equal_1.ToString();
-			Tex_DMG_Equal_2.Text = role.DMG_Equal_2.ToString();
-			Tex_DMG_Equal_3.Text = role.DMG_Equal_3.ToString();
-			Tex_DMG_Equal_4.Text = role.DMG_Equal_4.ToString();
-			Cob_DMG_Equal.SelectedIndex = (int)role.DMG_Equal_Info;
-			Cob_DMG_Equal_Tpye.SelectedIndex = (int)role.DMG_Equal_Tpye;
-			Tex_CRIT_Rate.Text = role.CRIT_Rate.ToString();
-			Tex_CRIT_DMG.Text = role.CRIT_DMG.ToString();
-			Tex_Character_Level.Text = role.Character_Level.ToString();
-			Tex_Enemy_Level.Text = role.Enemy_Level.ToString();
-			Tex_DEF_Reduced.Text = role.DEF_Reduced.ToString();
-			Tex_DEF_Ignores.Text = role.DEF_Ignores.ToString();
-			Tex_RES_Boost.Text = role.RES_Boost.ToString();
-			Tex_RES_PEN.Text = role.RES_PEN.ToString();
-			Tex_DMG_Boost.Text = role.DMG_Boost.ToString();
-			Tex_DMG_Taken.Text = role.DMG_Taken.ToString();
-			Tex_DMG_Reduction.Text = role.DMG_Reduction.ToString();
-			Tex_Break_Equal.Text = role.Break_Equal.ToString();
-			Tex_Break_Effect.Text = role.Break_Effect.ToString();
-			Tex_Break_Efficiency.Text = role.Break_Efficiency.ToString();
-			Tex_Break_Boost.Text = role.Break_Boost.ToString();
-			Cob_Break_Type.SelectedIndex = (int)role.Break_Type;
-			Tex_SPD.Text = role.SPD.ToString();
-			Tex_SPD_Base.Text = role.SPD_Base.ToString();
-			Tex_Toughness.Text = role.Toughness.ToString();
-			Tex_Toughness_Reduction.Text = role.Toughness_Reduction.ToString();
-			Tex_Effect_Hit_Rate.Text = role.Effect_Hit_Rate.ToString();
-			Tex_Effect_RES.Text = role.Effect_RES.ToString();
-			Tex_Energy_Regeneration_Rate.Text = role.Energy_Regeneration_Rate.ToString();
-			Tex_Heal_Rate.Text = role.Heal_Rate.ToString();
-			Flags[5] = Flags[6] = true;
+			int Start = 0;
+			int End = Role.Map_Name.Count / 2;
+			foreach (KeyValuePair<string, string> Map in Role.Map_Name)
+			{
+				if (++Start > End) break;
+				TextBox Tex = GetControl<TextBox>($"Tex_{Map.Value}");
+				if (Tex == null)
+				{
+					GetControl<ComboBox>($"Cob_{Map.Value}").SelectedIndex = (int)role.GetValue(Map.Key);
+				}
+				else
+				{
+					Tex.Text = role.GetValue(Map.Key).ToString();
+				}
+			}
 			Roled.Gain = [.. role.Gain];
+			TG_Set(Cob_Gain, role.Gain);
 			Roled.Transform = [.. role.Transform];
-			for (int i = 1; i < Cob_Gain.Items.Count; i++)
-			{
-				Cob_Gain.Items[i] = "□" + Cob_Gain.Items[i].ToString()[1..];
-			}
-			foreach (int i in role.Gain)
-			{
-				if (i < Cob_Gain.Items.Count)
-				{
-					Cob_Gain.Items[i] = "√" + Cob_Gain.Items[i].ToString()[1..];
-				}
-			}
-			for (int i = 1; i < Cob_Transform.Items.Count; i++)
-			{
-				Cob_Transform.Items[i] = "□" + Cob_Transform.Items[i].ToString()[1..];
-			}
-			foreach (int i in role.Transform)
-			{
-				if (i < Cob_Transform.Items.Count)
-				{
-					Cob_Transform.Items[i] = "√" + Cob_Transform.Items[i].ToString()[1..];
-				}
-			}
+			TG_Set(Cob_Transform, role.Transform);
 			Tex_Calculator_TextChanged(null, null);
 			Tex_Transform_TextChanged(null, null);
-			Flags[5] = Flags[6] = false;
-			Flags[0] = false;
+			Flags[0] = Flags[5] = Flags[6] = false;
 			DMG_Compute();
+		}
+		private static void TG_Set(ComboBox Cob, List<int> list)
+		{
+			for (int i = 1; i < Cob.Items.Count; i++)
+			{
+				Cob.Items[i] = "□" + Cob.Items[i].ToString()[1..];
+			}
+			foreach (int i in list)
+			{
+				if (i < Cob.Items.Count)
+				{
+					Cob.Items[i] = "√" + Cob.Items[i].ToString()[1..];
+				}
+			}
 		}
 		// 读取数据文件
 		private void LoadDate()
@@ -1417,7 +1420,7 @@ namespace SR_DMG
 										Roles.Add(role);
 										break;
 									case '&':
-										Cob_DMG_Equal.Items.Add(Arr[i][2..]);
+										Cob_DMG_Equal_Info.Items.Add(Arr[i][2..]);
 										break;
 									case '#':
 										if (Arr[i].IndexOf(':') < Arr[i].LastIndexOf('['))
@@ -1488,9 +1491,9 @@ namespace SR_DMG
 						{
 							Writ.WriteLine(Roles[k].ToString(k));
 						}
-						for (k = 1; k < Cob_DMG_Equal.Items.Count; k++)
+						for (k = 1; k < Cob_DMG_Equal_Info.Items.Count; k++)
 						{
-							Writ.WriteLine("& " + Cob_DMG_Equal.Items[k]);
+							Writ.WriteLine("& " + Cob_DMG_Equal_Info.Items[k]);
 						}
 						for (k = 1; k < Cob_Transform.Items.Count; k++)
 						{
@@ -2067,9 +2070,9 @@ namespace SR_DMG
 			}
 		}
 		// 获取控件目标
-		private TextBox GetTextBox(string Str)
+		private T GetControl<T>(string Str) where T : Control
 		{
-			return Controls.Find(Str, true)[0] as TextBox;
+			return Controls.Find(Str, true).OfType<T>().FirstOrDefault();
 		}
 		// 插入ComboBox
 		private static void Cob_Insert(ComboBox Cob, string Str)

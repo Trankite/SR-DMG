@@ -32,11 +32,7 @@ namespace SR_DMG
 				}
 				else break;
 			}
-			if (MessageBox.Show(Error, "程序崩溃",
-				MessageBoxButtons.RetryCancel, MessageBoxIcon.Error) != DialogResult.Retry)
-			{
-				Environment.Exit(0);
-			}
+			MessageBox.Show(Error, "程序崩溃", MessageBoxButtons.OK, MessageBoxIcon.Error);
 		}
 
 	}

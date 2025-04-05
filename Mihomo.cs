@@ -10,6 +10,7 @@ using System.Text;
 using System.Text.Encodings.Web;
 using System.Text.Json;
 using System.Text.Json.Nodes;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
@@ -17,6 +18,7 @@ namespace SR_DMG
 {
 	internal class Mihomo
 	{
+		public static HttpClient Http;
 		const string APP_VERSION = "2.71.1";
 		const string APP_ID = "bll8iq97cem8";
 		const string ACT_ID = "e202304121516551";
@@ -40,8 +42,8 @@ namespace SR_DMG
 			{
 				Token Token = new();
 				(string device_id, string qr_url, string ticket) = await Get_QR_URL();
-				(Token.Aid, Token.Mid, Token.Stoken) = await Check_Login(device_id, qr_url, ticket);
-				if (Token.Stoken == null) { ErorrTip(-1003); return; }
+				(Token.Aid, Token.Mid, Token.Stoken) = Check_Login(device_id, qr_url, ticket);
+				if (Token.Stoken == null) { ErorrTip(-1003, "请重新尝试扫码登录"); return; }
 				else
 				{
 					Token.Ltoken = await Get_LToken(Token);
@@ -56,13 +58,13 @@ namespace SR_DMG
 					}
 					catch
 					{
-						ErorrTip(-1002, $"：{SR_DMG.App_Path[3]}", "Token");
+						ErorrTip(-1002, SR_DMG.App_Path[3], "Token");
 					}
 				}
 			}
 			catch
 			{
-				ErorrTip(-1005, "\n请求Token失败", "Token");
+				ErorrTip(-1005, "请求Token失败", "Token");
 			}
 		}
 
@@ -131,40 +133,7 @@ namespace SR_DMG
 		}
 
 		// 检查二维码登录状态
-		private static async Task<(string aid, string mid, string stoken)> Check_Login(string device_id, string qr_url, string ticket)
-		{
-			Form Form = Show_Qrcode(qr_url);
-			while (true)
-			{
-				await Task.Delay(1000);
-				if (Form.IsDisposed) return (null, null, null);
-				string Rel = await HttpPost($"{PASS_URL}ma-cn-passport/app/queryQRLoginStatus",
-					JsonSerializer.Serialize(new { ticket }),
-					[
-						"x-rpc-device_id", device_id,
-						"x-rpc-app_id", APP_ID
-					]);
-				if (Rel == null) { Form.Close(); return (null, null, null); }
-				using JsonDocument Doc = JsonDocument.Parse(Rel);
-				JsonElement Data = Doc.RootElement.GetProperty("data");
-				if (Data.ValueKind == JsonValueKind.Null)
-				{
-					return (null, null, null);
-				}
-				else if (Data.GetProperty("status").GetString() == "Confirmed")
-				{
-					Form.Close();
-					JsonElement User_Info = Data.GetProperty("user_info");
-					string aid = User_Info.GetProperty("aid").GetString();
-					string mid = User_Info.GetProperty("mid").GetString();
-					string stoken = Data.GetProperty("tokens").EnumerateArray().First().GetProperty("token").GetString();
-					return (aid, mid, stoken);
-				}
-			}
-		}
-
-		// 显示二维码
-		private static Form Show_Qrcode(string qr_url)
+		private static (string aid, string mid, string stoken) Check_Login(string device_id, string qr_url, string ticket)
 		{
 			Form Form = new()
 			{
@@ -174,12 +143,42 @@ namespace SR_DMG
 				StartPosition = FormStartPosition.CenterScreen,
 				BackgroundImageLayout = ImageLayout.Center,
 				BackgroundImage = new Bitmap(new QRCode(new QRCodeGenerator().CreateQrCode(
-					qr_url, QRCodeGenerator.ECCLevel.Q)).GetGraphic(20), 200, 200),
+						qr_url, QRCodeGenerator.ECCLevel.Q)).GetGraphic(20), 200, 200),
 				MaximizeBox = false,
 				TopMost = true
 			};
-			Form.Show();
-			return Form;
+			string aid = null, mid = null, stoken = null;
+			Form.Shown += (sender, e) =>
+			{
+				Task.Run(() =>
+				{
+					while (true)
+					{
+						Thread.Sleep(1000);
+						string Rel = HttpPost($"{PASS_URL}ma-cn-passport/app/queryQRLoginStatus",
+							JsonSerializer.Serialize(new { ticket }),
+							[
+								"x-rpc-device_id", device_id,
+							"x-rpc-app_id", APP_ID
+							]).Result;
+						if (Rel == null) break;
+						using JsonDocument Doc = JsonDocument.Parse(Rel);
+						JsonElement Data = Doc.RootElement.GetProperty("data");
+						if (Data.ValueKind == JsonValueKind.Null) break;
+						else if (Data.GetProperty("status").GetString() == "Confirmed")
+						{
+							JsonElement User_Info = Data.GetProperty("user_info");
+							aid = User_Info.GetProperty("aid").GetString();
+							mid = User_Info.GetProperty("mid").GetString();
+							stoken = Data.GetProperty("tokens").EnumerateArray().First().GetProperty("token").GetString();
+							break;
+						}
+					}
+					Form.Close();
+				});
+			};
+			Form.ShowDialog();
+			return (aid, mid, stoken);
 		}
 
 		// 获取 Cookie Token
@@ -203,10 +202,7 @@ namespace SR_DMG
 			{
 				return Doc.RootElement.GetProperty("data").GetProperty("token").GetProperty("token").GetString();
 			}
-			else
-			{
-				ErorrTip(-102); return null;
-			}
+			else return null;
 		}
 
 		// 获取 LToken
@@ -248,7 +244,7 @@ namespace SR_DMG
 		}
 
 		// 获取 Fp
-		private static async Task<string> Get_Fp()
+		public static async Task<string> Get_Fp()
 		{
 			string device = RadString(12);
 			string product = RadString(6);
@@ -260,26 +256,26 @@ namespace SR_DMG
 				{ "deviceName", device },
 				{ "productName", product },
 				{ "romRemain", "512" },
-				{ "hostname", "dg02-pool03-kvm87" },
+				{ "hostname", "Android-XiaoMi" },
 				{ "screenSize", "900x1600" },
 				{ "isTablet", 0 },
 				{ "aaid", string.Empty },
 				{ "model", device },
 				{ "brand", "XiaoMi" },
-				{ "hardware", "qcom" },
-				{ "deviceType", "OP5913L1" },
+				{ "hardware", "XiaoMi" },
+				{ "deviceType", product },
 				{ "devId", "REL" },
 				{ "serialNumber", "unknown" },
-				{ "sdCapacity", 512215 },
-				{ "buildTime", "1693626947000" },
+				{ "sdCapacity", 512000 },
+				{ "buildTime", "1600000000000" },
 				{ "buildUser", "android-build" },
 				{ "simState", 5 },
-				{ "ramRemain", "239814" },
+				{ "ramRemain", "128000" },
 				{ "appUpdateTimeDiff", 1600000000000 },
 				{ "deviceInfo", "XiaoMi" },
 				{ "vaid", string.Empty },
 				{ "buildType", "user" },
-				{ "sdkVersion", "34" },
+				{ "sdkVersion", "32" },
 				{ "ui_mode", "UI_MODE_TYPE_NORMAL" },
 				{ "isMockLocation", 0 },
 				{ "cpuType", "arm64-v8a" },
@@ -289,9 +285,9 @@ namespace SR_DMG
 				{ "manufacturer", "XiaoMi" },
 				{ "emulatorStatus", 0 },
 				{ "appMemory", "512" },
-				{ "osVersion", "14" },
+				{ "osVersion", "12" },
 				{ "vendor", "unknown" },
-				{ "accelerometer", "1.4883357x7.1712894x6.2847486" },
+				{ "accelerometer", "0.10000000x9.800000x0.2000000" },
 				{ "sdRemain",  240000 },
 				{ "buildTags", "release-keys" },
 				{ "packageName", "com.mihoyo.hyperion" },
@@ -299,25 +295,25 @@ namespace SR_DMG
 				{ "oaid", string.Empty },
 				{ "debugStatus", 1 },
 				{ "ramCapacity", "460000" },
-				{ "magnetometer", "20.081251x-27.487501x2.1937501" },
-				{ "display", $"{product}_13.1.0.181(CN01)" },
+				{ "magnetometer", "15.000x-28.00x-32.000" },
+				{ "display", $"{product} release-keys" },
 				{ "appInstallTimeDiff", 1600000000000 },
-				{ "packageVersion", "2.20.1" },
-				{ "gyroscope", "0.030226856x0.014647375x0.010652636" },
+				{ "packageVersion", "2.35.0" },
+				{ "gyroscope", "0.0x0.0x0.0" },
 				{ "batteryStatus", 100 },
 				{ "hasKeyboard", 0 },
-				{ "board", "taro" },
+				{ "board", device}
 			};
 			string device_id = RadString(16);
 			string seed_id = Guid.NewGuid().ToString();
-			string platform = "2";
 			string seed_time = $"{DateTimeOffset.UtcNow.ToUnixTimeMilliseconds()}";
-			string ext_fields = JsonSerializer.Serialize(extend);
-			string app_name = "bbs_cn";
-			string bbs_device_id = Guid.NewGuid().ToString();
+			string platform = "2";
 			string device_fp = RadString(13);
+			string app_name = "bbs_cn";
+			string ext_fields = JsonSerializer.Serialize(extend);
+			string bbs_device_id = Guid.NewGuid().ToString();
 			string Rel = await HttpPost(FP_URL, JsonSerializer.Serialize(
-				new { device_id, seed_id, platform, seed_time, ext_fields, app_name, bbs_device_id, device_fp }));
+				new { device_id, seed_id, seed_time, platform, device_fp, app_name, ext_fields, bbs_device_id }));
 			if (Rel == null) return null;
 			using JsonDocument Doc = JsonDocument.Parse(Rel);
 			return Doc.RootElement.GetProperty("data").GetProperty("device_fp").GetString();
@@ -370,7 +366,7 @@ namespace SR_DMG
 			if (Rel == null) return null;
 			using JsonDocument Doc = JsonDocument.Parse(Rel);
 			int code = Doc.RootElement.GetProperty("retcode").GetInt32();
-			if (code != 0) { ErorrTip(-102); return null; }
+			if (code != 0) return null;
 			Avatars Avatars = new() { Name = Token.Nickname, UID = Token.Uid, Avatar_List = [] };
 			foreach (JsonElement List in Doc.RootElement.GetProperty("data").GetProperty("avatar_list").EnumerateArray())
 			{
@@ -407,7 +403,7 @@ namespace SR_DMG
 				}
 				catch
 				{
-					ErorrTip(-1002, $"：{Pat}{Token.Uid}"); return null;
+					ErorrTip(-1002, $"{Pat}{Token.Uid}"); return null;
 				}
 			}
 			return Rel;
@@ -429,7 +425,7 @@ namespace SR_DMG
 					Avatar_List = []
 				};
 			}
-			else { ErorrTip(-103, $"：{uid}"); return null; }
+			else { ErorrTip(-102, uid.ToString()); return null; }
 			foreach (JsonElement Cat in Doc.RootElement.GetProperty("characters").EnumerateArray())
 			{
 				Avatar Avt = new()
@@ -589,7 +585,7 @@ namespace SR_DMG
 			}
 			catch
 			{
-				ErorrTip(-1002, $"：{path}"); return null;
+				ErorrTip(-1002, path); return null;
 			}
 			return Avts;
 		}
@@ -620,10 +616,7 @@ namespace SR_DMG
 				int Full_Ts = Data.GetProperty("stamina_full_ts").GetInt32();
 				return [Stamina, Max_Stamina, Recover_Time, Full_Ts];
 			}
-			else
-			{
-				ErorrTip(-102); return null;
-			}
+			else return null;
 		}
 
 		// 每日签到
@@ -649,14 +642,14 @@ namespace SR_DMG
 				(int Sign_Day, int Today) = await Get_Sign_Info(Token);
 				Rel = $"已签到 {Sign_Day} / {Today} 天";
 				if (Code == -5003) Rel += " ( 已领取 )";
-				if (Sign_Day <= Sign_Home.Count + 1) Rel += $"\n今日奖励：{Sign_Home[Sign_Day - 1]}";
-				if (Sign_Day <= Sign_Home.Count - 1) Rel += $"\n明日奖励：{Sign_Home[Sign_Day]}";
+				if (Sign_Day > 0)
+				{
+					if (Sign_Day <= Sign_Home.Count) Rel += $"\n今日奖励：{Sign_Home[Sign_Day - 1]}";
+					if (Sign_Day < Sign_Home.Count) Rel += $"\n明日奖励：{Sign_Home[Sign_Day]}";
+				}
 				return Rel;
 			}
-			else
-			{
-				ErorrTip(-102); return null;
-			}
+			else return null;
 		}
 		// 签到奖励 列表
 		private static async Task<List<string>> Get_Sign_Home()
@@ -674,10 +667,7 @@ namespace SR_DMG
 				}
 				return Sign_Home;
 			}
-			else
-			{
-				ErorrTip(-102); return null;
-			}
+			else return null;
 		}
 		// 签到信息
 		private static async Task<(int Sign_Day, int Today)> Get_Sign_Info(Token Token)
@@ -696,16 +686,14 @@ namespace SR_DMG
 				int Today = DateTime.Parse(Data.GetProperty("today").GetString()).Day;
 				return (Sign_Day, Today);
 			}
-			else
-			{
-				ErorrTip(-102); return (-1, -1);
-			}
+			else return (-1, -1);
 		}
 
 		// 米游币任务
 		public static async Task<string> DoCoin()
 		{
 			Token Token = Get_Token();
+			if (Token == null) return null;
 			int[] State = await Get_State(Token);
 			if (State == null) return null;
 			if (State[0] < 1 && !await DoSignIn(Token)) return null;
@@ -736,15 +724,17 @@ namespace SR_DMG
 			}
 			if (State[6] > 0)
 			{
+				await Task.Delay(500);
 				State = await Get_State(Token);
 				if (State == null) return null;
 			}
-			return $"任务进度：{(State[6] > 0 ? "未完成" : "已完成")}"
+			return $"米游币：{State[5]}"
+				+ $"\n今日奖励：{State[4]}"
+				+ $"\n任务进度：{(State[6] > 0 ? "未完成" : "已完成")}"
 				+ $"\n· 打卡：{State[0]} / 1"
 				+ $"\n· 浏览：{State[1]} / 3"
 				+ $"\n· 点赞：{State[2]} / 5"
-				+ $"\n· 分享：{State[3]} / 1"
-				+ $"\n米游币：{State[5]} (+{State[4]})";
+				+ $"\n· 分享：{State[3]} / 1";
 		}
 		// 任务进度
 		private static async Task<int[]> Get_State(Token Token)
@@ -773,10 +763,7 @@ namespace SR_DMG
 				State[6] = Data.GetProperty("can_get_points").GetInt32();
 				return State;
 			}
-			else
-			{
-				ErorrTip(-102); return null;
-			}
+			else return null;
 		}
 		// 板块签到
 		private static async Task<bool> DoSignIn(Token Token)
@@ -797,10 +784,7 @@ namespace SR_DMG
 			using JsonDocument Doc = JsonDocument.Parse(Rel);
 			int Code = Doc.RootElement.GetProperty("retcode").GetInt32();
 			if (Code == 0 || Code == 1008) return true;
-			else
-			{
-				ErorrTip(-102); return false;
-			}
+			else return false;
 		}
 		// 最新帖子 列表
 		private static async Task<List<string>> Get_News_List()
@@ -831,10 +815,7 @@ namespace SR_DMG
 			using JsonDocument Doc = JsonDocument.Parse(Rel);
 			int Code = Doc.RootElement.GetProperty("retcode").GetInt32();
 			if (Code == 0) return true;
-			else
-			{
-				ErorrTip(-102); return false;
-			}
+			else return false;
 		}
 		// 点赞
 		private static async Task<bool> DoUpvote(Token Token, string Entity_id, bool Upvote_Type)
@@ -858,15 +839,12 @@ namespace SR_DMG
 			using JsonDocument Doc = JsonDocument.Parse(Rel);
 			int Code = Doc.RootElement.GetProperty("retcode").GetInt32();
 			if (Code == 0) return true;
-			else
-			{
-				ErorrTip(-102); return false;
-			}
+			else return false;
 		}
 		// 浏览
 		private static async Task<bool> Get_Page(Token Token, string Entity_id)
 		{
-			string Rel = await HttpGet($"{BBS_URL}post/api/getPostFull?post_id={Entity_id}&csm_source=official",
+			string Rel = await HttpGet($"{BBS_URL}post/api/getPostFull?post_id={Entity_id}",
 				[
 					"Referer", REF_URL,
 					"x-rpc-app_version", APP_VERSION,
@@ -878,50 +856,44 @@ namespace SR_DMG
 			using JsonDocument Doc = JsonDocument.Parse(Rel);
 			int Code = Doc.RootElement.GetProperty("retcode").GetInt32();
 			if (Code == 0) return true;
-			else
-			{
-				ErorrTip(-102); return false;
-			}
+			else return false;
 		}
 
 		// Http请求
-		private static async Task<string> HttpPost(string Url, string Json = null, string[] Head = null)
+		private static async Task<string> HttpPost(string Url, string Body = null, string[] Head = null)
 		{
-			try
-			{
-				using HttpClient Http = new();
-				HttpContent Cont = Json == null ? null : new StringContent(Json, Encoding.UTF8, "application/json");
-				if (Head != null)
-				{
-					for (int i = 0; i < Head.Length; i++)
-					{
-						Http.DefaultRequestHeaders.Add(Head[i++], Head[i]);
-					}
-				}
-				return await (await Http.PostAsync(Url, Cont)).Content.ReadAsStringAsync();
-			}
-			catch
-			{
-				ErorrTip(-1005); return null;
-			}
+			return await Get_Http(true, Url, Head, Body);
 		}
 		private static async Task<string> HttpGet(string Url, string[] Head = null)
 		{
+			return await Get_Http(false, Url, Head);
+		}
+		private static async Task<string> Get_Http(bool IsPost, string Url, string[] Head = null, string Body = null)
+		{
 			try
 			{
-				using HttpClient Http = new();
+				Http ??= new HttpClient()
+				{
+					Timeout = TimeSpan.FromSeconds(10)
+				};
+				HttpRequestMessage Request = new(IsPost ? HttpMethod.Post : HttpMethod.Get, Url);
+				if (IsPost && Body != null)
+				{
+					Request.Content = new StringContent(Body, Encoding.UTF8, "application/json");
+				}
 				if (Head != null)
 				{
-					for (int i = 0; i < Head.Length; i++)
+					for (int i = 0; i < Head.Length; i += 2)
 					{
-						Http.DefaultRequestHeaders.Add(Head[i++], Head[i]);
+						Request.Headers.Add(Head[i], Head[i + 1]);
 					}
 				}
-				return await (await Http.GetAsync(Url)).Content.ReadAsStringAsync();
+				using HttpResponseMessage Response = await Http.SendAsync(Request);
+				return await Response.Content.ReadAsStringAsync();
 			}
-			catch
+			catch (Exception e)
 			{
-				ErorrTip(-1005); return null;
+				ErorrTip(-1005, e.Message); return null;
 			}
 		}
 
@@ -933,36 +905,34 @@ namespace SR_DMG
 				{
 					return JsonSerializer.Deserialize<Token>(File.ReadAllText(SR_DMG.App_Path[3]));
 				}
-				else { ErorrTip(-101); return null; }
+				else { ErorrTip(-101, "请先扫码登录 ( Login )"); return null; }
 			}
 			catch
 			{
-				ErorrTip(-1001, $"：{SR_DMG.App_Path[3]}"); return null;
+				ErorrTip(-1001, SR_DMG.App_Path[3]); return null;
 			}
 		}
 
 		/// <remarks><list type="table">
 		/// <item><term>-101</term><description> 未登录</description></item>
-		/// <item><term>-102</term><description> 登录状态失效</description></item>
-		/// <item><term>-103</term><description> UID不存在</description></item>
+		/// <item><term>-102</term><description> UID不存在</description></item>
 		/// <item><term>-1001</term><description> 文件读取失败</description></item>
 		/// <item><term>-1002</term><description> 文件保存失败</description></item>
 		/// <item><term>-1003</term><description> 二维码超时失效</description></item>
 		/// <item><term>-1005</term><description> 网络错误</description></item>
 		/// </list></remarks>
-		public static void ErorrTip(int Code, string Msg = "", string Tietle = "错误提示")
+		public static void ErorrTip(int Code, string Msg, string Tietle = "错误提示")
 		{
 			MessageBox.Show(Code > -1 ? Msg : Code switch
 			{
 				-101 => "未登录",
-				-102 => "登录状态失效",
-				-103 => "UID不存在",
+				-102 => "UID不存在",
 				-1001 => "文件读取失败",
 				-1002 => "文件保存失败",
 				-1003 => "二维码超时失效",
 				-1005 => "网络错误",
-				_ => $"未知的错误"
-			} + $"{Msg}", Tietle, MessageBoxButtons.OK,
+				_ => $"未知错误"
+			} + $"：{Msg}", Tietle, MessageBoxButtons.OK,
 			Code >= 0 ? MessageBoxIcon.Information :
 			Code > -1000 ? MessageBoxIcon.Exclamation :
 			MessageBoxIcon.Error);
@@ -974,20 +944,20 @@ namespace SR_DMG
 			return new JsonSerializerOptions { WriteIndented = true, Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping };
 		}
 
-	}
+		public class Token
+		{
+			public string Nickname { set; get; }
+			public string Aid { set; get; }
+			public string Uid { set; get; }
+			public string Mid { set; get; }
+			public string Server { set; get; }
+			public string Game_Biz { set; get; }
+			public string Device_Fp { set; get; }
+			public string Cookie_Token { set; get; }
+			public string Stoken { set; get; }
+			public string Ltoken { set; get; }
+		}
 
-	public class Token
-	{
-		public string Nickname { set; get; }
-		public string Aid { set; get; }
-		public string Uid { set; get; }
-		public string Mid { set; get; }
-		public string Server { set; get; }
-		public string Game_Biz { set; get; }
-		public string Device_Fp { set; get; }
-		public string Cookie_Token { set; get; }
-		public string Stoken { set; get; }
-		public string Ltoken { set; get; }
 	}
 
 }
