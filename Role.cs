@@ -588,7 +588,7 @@ namespace SR_DMG
 			DMG[0][2] = (Character_Level * 10 + 200) / ((Character_Level * 10 + 200) +
 				(Enemy_Level * 10 + 200) * (1 - (DEF_Reduced + DEF_Ignores) * 0.01f));
 			DMG[0][3] = 1 - (RES_Boost - RES_PEN) * 0.01f;
-			DMG[0][4] = 1 + CRIT_Rate * 0.01f * CRIT_DMG * 0.01f;
+			DMG[0][4] = 1 + Math.Min(CRIT_Rate * 0.01f, 1) * CRIT_DMG * 0.01f;
 			DMG[0][5] = (1 - DMG_Reduction * 0.01f) * (1 + DMG_Taken * 0.01f) * (1 + DMG_Boost * 0.01f);
 			DMG[0][6] = Break_Factor[Math.Min(Math.Max(0, (int)Character_Level), 80)];
 			DMG[0][7] = (Toughness * 0.1f + 2) * 0.5f;

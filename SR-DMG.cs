@@ -5,7 +5,9 @@ using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Text.Json;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace SR_DMG
@@ -17,8 +19,18 @@ namespace SR_DMG
 		private Role Roled = new();
 		private float[] DMG = new float[6];
 		private readonly bool[] Flags = new bool[10];
-		public static readonly string[] App_Path = new string[5];
+		private readonly Dictionary<string, string> Cmd_Tip = [];
 		private readonly List<Role> Roles = [];
+		private static string App_Path;
+		public enum AppPath
+		{
+			None,
+			Config,
+			Save,
+			Token,
+			Data,
+			Readme
+		}
 
 		public SR_DMG()
 		{
@@ -35,20 +47,24 @@ namespace SR_DMG
 		private void DoInit()
 		{
 			Group = "";
-			App_Path[0] = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData) + "\\SR-DMG\\";
-			App_Path[1] = App_Path[0] + "App.config";
-			App_Path[2] = App_Path[0] + "SR-DMG.csv";
-			App_Path[3] = App_Path[0] + "Token.json";
-			App_Path[4] = App_Path[0] + "Data\\";
+			App_Path = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData) + "\\SR-DMG\\";
+			Cmd_Tip["保存路径"] = "path";
+			Cmd_Tip["登录米游社"] = "login";
+			Cmd_Tip["我的角色"] = "uid me";
+			Cmd_Tip["实时便筏"] = "note";
+			Cmd_Tip["每日签到"] = "sign";
+			Cmd_Tip["米游币任务"] = "coin";
+			Cmd_Tip["开发文档"] = "about";
 		}
 		// 程序加载及关闭
 		private void SR_DMG_Load(object sender, EventArgs e)
 		{
+			string FilePath = GetPath(AppPath.Config);
 			try
 			{
-				if (File.Exists(App_Path[1]))
+				if (File.Exists(FilePath))
 				{
-					string[] Arr = File.ReadAllLines(App_Path[1]);
+					string[] Arr = File.ReadAllLines(FilePath);
 					Group = Arr[39][(Arr[39].IndexOf('：') + 1)..];
 					if (Group != "")
 					{
@@ -78,7 +94,7 @@ namespace SR_DMG
 			}
 			catch
 			{
-				Mihomo.ErorrTip(-1001, App_Path[1]);
+				Mihomo.ErorrTip($"文件读取失败：{FilePath}", MessageBoxIcon.Error);
 			}
 			finally
 			{
@@ -93,16 +109,17 @@ namespace SR_DMG
 					MessageBoxButtons.OKCancel, MessageBoxIcon.Error) != DialogResult.OK)
 					e.Cancel = true;
 			}
-			string Dirctoy = Path.GetDirectoryName(App_Path[1]);
+			string FilePath = GetPath(AppPath.Config);
+			string Dirctoy = Path.GetDirectoryName(FilePath);
 			if (!Directory.Exists(Dirctoy))
 			{
 				Directory.CreateDirectory(Dirctoy);
 			}
 			try
 			{
-				using StreamWriter Wt = new(App_Path[1]);
 				int Start = 0;
 				int End = Role.Map_Mark.Count / 2;
+				using StreamWriter Wt = new(FilePath);
 				Wt.WriteLine("名称：" + Roled.Name);
 				foreach (KeyValuePair<string, bool> Map in Role.Map_Mark)
 				{
@@ -404,17 +421,6 @@ namespace SR_DMG
 							}
 							Save_Info = Flags[6] = true;
 							Cob_Insert(Cob_Transform, Str);
-							int Info = Cob_Transform.SelectedIndex;
-							foreach (Role role in Roles)
-							{
-								role.Transform.ForEach(value =>
-								{
-									if (value >= Info)
-									{
-										value++;
-									}
-								});
-							}
 							Flags[6] = false;
 						}
 						else
@@ -449,24 +455,7 @@ namespace SR_DMG
 					Transform("□" + Str, Roled, true);
 					Roled.Transform.Remove(Info);
 				}
-				for (int i = 0; i < Roles.Count; i++)
-				{
-					Roles[i].Transform.ForEach(value =>
-					{
-						if (value > Info)
-						{
-							value--;
-						}
-						else if (value == Info && Info < Cob_Transform.Items.Count)
-						{
-							Transform("□" + Cob_Transform.Items[Info].ToString(), Roles[i], false);
-							Cob_Simple.Items[i + 1] = Roles[i].ToSimple(i);
-						}
-					});
-					Roles[i].Transform.Remove(Info);
-				}
-				Cob_Transform.Items.RemoveAt(Info);
-				Cob_Transform.SelectedIndex = 0;
+				Cob_Delete(Cob_Transform, Info);
 				Flags[1] = Flags[6] = false;
 			}
 		}
@@ -574,17 +563,6 @@ namespace SR_DMG
 						{
 							Cob_Insert(Cob_Gain, "□ " + Arr[0] + ':' + Arr[1].Replace(" ", ""));
 						}
-						int Info = Cob_Gain.SelectedIndex;
-						foreach (Role role in Roles)
-						{
-							role.Gain.ForEach(value =>
-							{
-								if (value >= Info)
-								{
-									value++;
-								}
-							});
-						}
 						Flags[5] = false;
 						Save_Info = true;
 					}
@@ -615,24 +593,7 @@ namespace SR_DMG
 					Gain("□" + Str, Roled, true);
 					Roled.Gain.Remove(Info);
 				}
-				for (int i = 0; i < Roles.Count; i++)
-				{
-					Roles[i].Gain.ForEach(value =>
-					{
-						if (value > Info)
-						{
-							value--;
-						}
-						else if (value == Info && Info < Cob_Gain.Items.Count)
-						{
-							Gain("□" + Cob_Gain.Items[Info].ToString(), Roles[i], false);
-							Cob_Simple.Items[i + 1] = Roles[i].ToSimple(i);
-						}
-					});
-					Roles[i].Gain.Remove(Info);
-				}
-				Cob_Gain.Items.RemoveAt(Info);
-				Cob_Gain.SelectedIndex = 0;
+				Cob_Delete(Cob_Gain, Info);
 				Flags[1] = Flags[5] = false;
 			}
 		}
@@ -771,9 +732,10 @@ namespace SR_DMG
 				Cob_DMG_Equal_Clear();
 				Cob_Simple_Clear();
 				Lab_Tip.Text = "未选择组";
-				if (File.Exists(App_Path[2]))
+				string FilePath = GetPath(AppPath.Save);
+				if (File.Exists(FilePath))
 				{
-					string[] Arr = File.ReadAllLines(App_Path[2]);
+					string[] Arr = File.ReadAllLines(FilePath);
 					Arr = Array.FindAll(Arr, str => str.StartsWith('G'));
 					foreach (string str in Arr)
 					{
@@ -1156,12 +1118,17 @@ namespace SR_DMG
 				}
 				else
 				{
-					(int Index, string SeletText) = ListWindow("指令提示", "指令列表", ["Path", "Login", "Uid Me", "Note", "Sign", "Coin"]);
-					if (Index > -1) Command(SeletText);
+					List<string> CmdName = [];
+					foreach (KeyValuePair<string, string> Item in Cmd_Tip)
+					{
+						CmdName.Add(Item.Key);
+					}
+					(int Index, string SeletText) = ListWindow("指令提示", "指令列表", CmdName);
+					if (Index > -1) Command(Cmd_Tip[SeletText]);
 				}
 			}
 		}
-		private void Command(string str)
+		private async void Command(string Str)
 		{
 			if (Flags[9])
 			{
@@ -1170,31 +1137,33 @@ namespace SR_DMG
 			else
 			{
 				Flags[9] = true;
-				string[] Tar = str.Split(' ');
+				string[] Tar = Str.Split(' ');
+				Tip($"正在执行：{Str.ToUpper()}");
 				switch (Tar[0].ToLower())
 				{
-					case "path": Open(App_Path[0]); break;
-					case "login": Mihomo.Login(); break;
-					case "uid": LoadUID(Tar); break;
-					case "note": Note(); break;
-					case "sign": Sign(); break;
-					case "coin": Coin(); break;
-					default: Tip("无法识别：" + str); break;
+					case "path": OpenPath(); break;
+					case "login": await Mihomo.Login(); break;
+					case "uid": await LoadUID(Tar); break;
+					case "note": await Note(); break;
+					case "sign": await Sign(); break;
+					case "coin": await Coin(); break;
+					case "about": Readme(); break;
+					default: Tip("无法识别：" + Str); break;
 				}
 				Flags[9] = false;
 			}
 		}
 		// 获取角色信息
-		private async void LoadUID(string[] Tar)
+		private async Task LoadUID(string[] Tar)
 		{
 			if (Tar.Length > 1)
 			{
 				Avatars Avts;
 				if (Flags[2] == false) { Tip("未创建组"); return; }
-				string path = $"{App_Path[4]}{Tar[1]}.json";
+				string FilePath = $"{GetPath(AppPath.Data)}{Tar[1]}.json";
 				if (int.TryParse(Tar[1], out int Uid) && Uid >= 100000000)
 				{
-					if (!File.Exists(path) || Tar[0] == "UID")
+					if (!File.Exists(FilePath) || Tar[0] == "UID")
 					{
 						Tar[0] = "云端";
 						Avts = await Mihomo.Get_Roles(Uid);
@@ -1205,11 +1174,11 @@ namespace SR_DMG
 						try
 						{
 							Tar[0] = "本地";
-							Avts = JsonSerializer.Deserialize<Avatars>(File.ReadAllText(path));
+							Avts = JsonSerializer.Deserialize<Avatars>(File.ReadAllText(FilePath));
 						}
 						catch
 						{
-							Mihomo.ErorrTip(-1001, path); return;
+							Mihomo.ErorrTip($"文件读取失败：{FilePath}", MessageBoxIcon.Error); return;
 						}
 					}
 				}
@@ -1217,8 +1186,8 @@ namespace SR_DMG
 				{
 					Mihomo.Token Token = Mihomo.Get_Token();
 					if (Token == null) return;
-					path = $"{App_Path[4]}{Token.Uid}.json";
-					if (!File.Exists(path) || Tar[0] == "UID")
+					FilePath = $"{GetPath(AppPath.Data)}{Token.Uid}.json";
+					if (!File.Exists(FilePath) || Tar[0] == "UID")
 					{
 						Tar[0] = "云端";
 						string Rel = await Mihomo.Get_Roles(Token);
@@ -1230,11 +1199,11 @@ namespace SR_DMG
 						try
 						{
 							Tar[0] = "本地";
-							Avts = JsonSerializer.Deserialize<Avatars>(File.ReadAllText(path));
+							Avts = JsonSerializer.Deserialize<Avatars>(File.ReadAllText(FilePath));
 						}
 						catch
 						{
-							Mihomo.ErorrTip(-1002, path); return;
+							Mihomo.ErorrTip($"文件读取失败：{FilePath}", MessageBoxIcon.Error); return;
 						}
 					}
 				}
@@ -1270,40 +1239,58 @@ namespace SR_DMG
 			else Tip("缺少参数：UID");
 		}
 		// 实时便筏
-		private async void Note()
+		private async Task Note()
 		{
 			int[] Val = await Mihomo.Get_Note();
-			if (Val == null) { Tip("请求失败：登陆状态失效"); return; }
+			if (Val == null) { Tip("请求失败：实时便筏"); return; }
 			DateTime Now_Date = DateTime.Today;
 			DateTime Full_Time = DateTimeOffset.FromUnixTimeSeconds(Val[3]).LocalDateTime;
 			string Str = Now_Date.Day == Full_Time.Day ? "今天" : Now_Date.AddDays(1).Day == Full_Time.Day ? "明天" : "后天";
 			Str += $" {Full_Time:HH:mm}\n剩余：{(Val[2] / 3600).ToString().PadLeft(2, '0')} 时 {(Val[2] % 3600 / 60).ToString().PadLeft(2, '0')} 分";
-			Mihomo.ErorrTip(0, $"开拓力：{Val[0]} / {Val[1]}\n回满：{Str}", "实时便筏");
+			Mihomo.ErorrTip($"开拓力：{Val[0]} / {Val[1]}\n回满：{Str}", MessageBoxIcon.Information, "实时便筏");
 		}
 		// 每日签到
-		private async void Sign()
+		private async Task Sign()
 		{
 			string Str = await Mihomo.DoSign();
-			if (Str == null) { Tip("请求失败：登陆状态失效"); return; }
-			Mihomo.ErorrTip(0, Str, "每日签到");
+			if (Str == null) { Tip("请求失败：每日签到"); return; }
+			Mihomo.ErorrTip(Str, MessageBoxIcon.Information, "每日签到");
 		}
 		// 米游币任务
-		private async void Coin()
+		private async Task Coin()
 		{
 			string Rel = await Mihomo.DoCoin();
-			if (Rel == null) { Tip("请求失败：登陆状态失效"); return; }
-			Mihomo.ErorrTip(0, Rel, "米游币任务");
+			if (Rel == null) { Tip("请求失败：米游币任务"); return; }
+			Mihomo.ErorrTip(Rel, MessageBoxIcon.Information, "米游币任务");
+		}
+		// 开发文档
+		private static void Readme()
+		{
+			string FilePath = GetPath(AppPath.Readme);
+			try
+			{
+				Assembly Ase = Assembly.GetExecutingAssembly();
+				using Stream stream = Ase.GetManifestResourceStream("SR_DMG.README.md");
+				using FileStream Fs = File.Create(FilePath);
+				stream.CopyTo(Fs);
+				OpenPath(FilePath);
+			}
+			catch
+			{
+				Mihomo.ErorrTip($"文件保存失败：{FilePath}", MessageBoxIcon.Error);
+			}
 		}
 		// 打开文件
-		public static void Open(string path, bool flag = false)
+		public static void OpenPath(string FilePath = null, bool Flag = false)
 		{
-			if (flag || Directory.Exists(path))
+			FilePath ??= GetPath();
+			if (Flag || Directory.Exists(FilePath))
 			{
-				Process.Start("explorer", $"\"{path}\"");
+				Process.Start("explorer", $"\"{FilePath}\"");
 			}
 			else
 			{
-				Process.Start("explorer", $"/select,\"{path}\"");
+				Process.Start("explorer", $"/select,\"{FilePath}\"");
 			}
 		}
 		// 列表选择 窗口
@@ -1321,7 +1308,7 @@ namespace SR_DMG
 			};
 			ListView Lew = new()
 			{
-				Size = new Size(260, 260),
+				Size = new Size(260, 245),
 				Location = new Point(10, 10),
 				Font = new Font(this.Font.Name, 15),
 				BackColor = Form.BackColor,
@@ -1331,7 +1318,7 @@ namespace SR_DMG
 				MultiSelect = false,
 				GridLines = false
 			};
-			Lew.Columns.Add(ListName, 245, HorizontalAlignment.Center);
+			Lew.Columns.Add(ListName, 235, HorizontalAlignment.Center);
 			foreach (string str in ListText)
 			{
 				Lew.Items.Add(str);
@@ -1344,7 +1331,21 @@ namespace SR_DMG
 			};
 			Form.Controls.Add(Lew);
 			Form.ShowDialog();
+			Form.Dispose();
 			return (Index, SeletText);
+		}
+		public static string GetPath(AppPath FilePath = AppPath.None)
+		{
+			if (FilePath == AppPath.None) return App_Path;
+			else return App_Path + FilePath switch
+			{
+				AppPath.Config => "App.config",
+				AppPath.Save => "SR-DMG.csv",
+				AppPath.Token => "Token.json",
+				AppPath.Data => @"Data\",
+				AppPath.Readme => "Readme.md",
+				_ => string.Empty
+			};
 		}
 
 		// 载入数据
@@ -1361,7 +1362,9 @@ namespace SR_DMG
 				TextBox Tex = GetControl<TextBox>($"Tex_{Map.Value}");
 				if (Tex == null)
 				{
-					GetControl<ComboBox>($"Cob_{Map.Value}").SelectedIndex = (int)role.GetValue(Map.Key);
+					ComboBox Cob = GetControl<ComboBox>($"Cob_{Map.Value}");
+					int Index = (int)role.GetValue(Map.Key);
+					if (Index < Cob.Items.Count) Cob.SelectedIndex = Index;
 				}
 				else
 				{
@@ -1394,11 +1397,12 @@ namespace SR_DMG
 		// 读取数据文件
 		private void LoadDate()
 		{
-			if (File.Exists(App_Path[2]))
+			string FilePath = GetPath(AppPath.Save);
+			if (File.Exists(FilePath))
 			{
 				try
 				{
-					string[] Arr = File.ReadAllLines(App_Path[2]);
+					string[] Arr = File.ReadAllLines(FilePath);
 					int i = Array.IndexOf(Arr, Group) + 1;
 					if (i > 0)
 					{
@@ -1452,14 +1456,15 @@ namespace SR_DMG
 		private bool SaveDate()
 		{
 			if (!Save_Info) return false;
-			string Dirctoy = Path.GetDirectoryName(App_Path[2]);
+			string FilePath = GetPath(AppPath.Save);
+			string Dirctoy = Path.GetDirectoryName(FilePath);
 			if (!Directory.Exists(Dirctoy))
 			{
 				Directory.CreateDirectory(Dirctoy);
 			}
 			try
 			{
-				string[] Arr = File.Exists(App_Path[2]) ? File.ReadAllLines(App_Path[2]) : [];
+				string[] Arr = File.Exists(FilePath) ? File.ReadAllLines(FilePath) : [];
 				List<string> Info = [Group[(Group.IndexOf(' ') + 1)..] + '$'];
 				for (int i = 0; i < Arr.Length; i++)
 				{
@@ -1468,9 +1473,9 @@ namespace SR_DMG
 						Info.Add(Arr[i][(Arr[i].IndexOf(' ') + 1)..] + '$' + i);
 					}
 				}
-				if (Info.Count > 1) Info.Sort();
-				using StreamWriter Writ = new(App_Path[2], false);
 				Save_Info = false;
+				if (Info.Count > 1) Info.Sort();
+				using StreamWriter Writ = new(FilePath, false);
 				for (int i = 0; i < Info.Count; i++)
 				{
 					string[] Tp = Info[i].Split('$');
@@ -1538,8 +1543,9 @@ namespace SR_DMG
 		{
 			try
 			{
-				string[] Arr = File.ReadAllLines(App_Path[2]);
-				using (StreamWriter Writ = new(App_Path[2], false))
+				string FilePath = GetPath(AppPath.Save);
+				string[] Arr = File.ReadAllLines(FilePath);
+				using (StreamWriter Writ = new(FilePath, false))
 				{
 					int seq = 1;
 					int end = -1;
@@ -2075,12 +2081,12 @@ namespace SR_DMG
 			return Controls.Find(Str, true).OfType<T>().FirstOrDefault();
 		}
 		// 插入ComboBox
-		private static void Cob_Insert(ComboBox Cob, string Str)
+		private void Cob_Insert(ComboBox Cob, string Str)
 		{
 			int Info = -1;
 			for (int i = 1; i < Cob.Items.Count; i++)
 			{
-				if (string.Compare(Str, Cob.Items[i].ToString()) < 0)
+				if (string.Compare(Str[2..], Cob.Items[i].ToString()[2..]) < 0)
 				{
 					Cob.Items.Insert(i, Str);
 					Info = i;
@@ -2092,7 +2098,49 @@ namespace SR_DMG
 				Info = Cob.Items.Count;
 				Cob.Items.Add(Str);
 			}
+			bool SelType = Cob == Cob_Gain;
+			foreach (Role role in Roles)
+			{
+				List<int> Sel = SelType ? role.Gain : role.Transform;
+				for (int i = 0; i < Sel.Count; i++)
+				{
+					if (Sel[i] >= Info) Sel[i]++;
+				}
+			}
 			Cob.SelectedIndex = Info;
+		}
+		private void Cob_Delete(ComboBox Cob, int Index)
+		{
+			bool SelType = Cob == Cob_Gain;
+			for (int n = 0; n < Roles.Count; n++)
+			{
+				List<int> Sel = SelType ? Roles[n].Gain : Roles[n].Transform;
+				for (int i = 0; i < Sel.Count; i++)
+				{
+					if (Sel[i] > Index)
+					{
+						Sel[i]--;
+					}
+					else if (Sel[i] == Index)
+					{
+						Sel.RemoveAt(i--);
+						if (Index < Cob.Items.Count)
+						{
+							if (SelType)
+							{
+								Gain("□" + Cob_Gain.Items[Index].ToString(), Roles[n], false);
+							}
+							else
+							{
+								Transform("□" + Cob_Transform.Items[Index].ToString(), Roles[n], false);
+							}
+							Cob_Simple.Items[n + 1] = Roles[n].ToSimple(n);
+						}
+					}
+				}
+			}
+			Cob.Items.RemoveAt(Index);
+			Cob.SelectedIndex = 0;
 		}
 		// 字体文本修改
 		private static void SetTexFont(TextBox Tex, string Str)

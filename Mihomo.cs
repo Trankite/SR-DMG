@@ -10,7 +10,6 @@ using System.Text;
 using System.Text.Encodings.Web;
 using System.Text.Json;
 using System.Text.Json.Nodes;
-using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
@@ -36,35 +35,35 @@ namespace SR_DMG
 		const string MHM_URL = "https://api.mihomo.me/sr_info_parsed/";
 
 		// 获取所有的 Token
-		public static async void Login()
+		public static async Task Login()
 		{
 			try
 			{
 				Token Token = new();
 				(string device_id, string qr_url, string ticket) = await Get_QR_URL();
-				(Token.Aid, Token.Mid, Token.Stoken) = Check_Login(device_id, qr_url, ticket);
-				if (Token.Stoken == null) { ErorrTip(-1003, "请重新尝试扫码登录"); return; }
+				(Token.Aid, Token.Mid, Token.Stoken) = await Check_Login(device_id, qr_url, ticket);
+				if (Token.Stoken == null) { ErorrTip("二维码超时失效：请重新尝试扫码登录", MessageBoxIcon.Exclamation, "Token"); return; }
 				else
 				{
 					Token.Ltoken = await Get_LToken(Token);
 					Token.Cookie_Token = await Get_Cookie_Token(Token);
 					(Token.Nickname, Token.Uid, Token.Server, Token.Game_Biz) = await Get_Uid(Token);
 					Token.Device_Fp = await Get_Fp();
+					string FilePath = SR_DMG.GetPath(SR_DMG.AppPath.Token);
 					try
 					{
-						File.WriteAllText(SR_DMG.App_Path[3],
-							JsonSerializer.Serialize(Token, JsonSopt()));
-						ErorrTip(0, $"UID:{Token.Uid} {Token.Nickname}\n已保存 Token 信息", "Token");
+						File.WriteAllText(FilePath, JsonSerializer.Serialize(Token, JsonSopt()));
+						ErorrTip($"UID:{Token.Uid} {Token.Nickname}\n已保存 Token 信息", MessageBoxIcon.Information, "Token");
 					}
 					catch
 					{
-						ErorrTip(-1002, SR_DMG.App_Path[3], "Token");
+						ErorrTip($"文件保存失败：{FilePath}", MessageBoxIcon.Error, "Token");
 					}
 				}
 			}
 			catch
 			{
-				ErorrTip(-1005, "请求Token失败", "Token");
+				ErorrTip("意外错误：Token请求失败", MessageBoxIcon.Error, "Token");
 			}
 		}
 
@@ -133,7 +132,7 @@ namespace SR_DMG
 		}
 
 		// 检查二维码登录状态
-		private static (string aid, string mid, string stoken) Check_Login(string device_id, string qr_url, string ticket)
+		private static async Task<(string aid, string mid, string stoken)> Check_Login(string device_id, string qr_url, string ticket)
 		{
 			Form Form = new()
 			{
@@ -148,36 +147,36 @@ namespace SR_DMG
 				TopMost = true
 			};
 			string aid = null, mid = null, stoken = null;
-			Form.Shown += (sender, e) =>
+			Task Login = Task.Run(async () =>
 			{
-				Task.Run(() =>
+				while (true)
 				{
-					while (true)
+					await Task.Delay(3000);
+					if (!Form.Visible) return;
+					string Rel = HttpPost($"{PASS_URL}ma-cn-passport/app/queryQRLoginStatus",
+						JsonSerializer.Serialize(new { ticket }),
+						[
+							"x-rpc-app_id", APP_ID,
+							"x-rpc-device_id", device_id
+						]).Result;
+					if (Rel == null) break;
+					using JsonDocument Doc = JsonDocument.Parse(Rel);
+					JsonElement Data = Doc.RootElement.GetProperty("data");
+					if (Data.ValueKind == JsonValueKind.Null) break;
+					else if (Data.GetProperty("status").GetString() == "Confirmed")
 					{
-						Thread.Sleep(1000);
-						string Rel = HttpPost($"{PASS_URL}ma-cn-passport/app/queryQRLoginStatus",
-							JsonSerializer.Serialize(new { ticket }),
-							[
-								"x-rpc-device_id", device_id,
-							"x-rpc-app_id", APP_ID
-							]).Result;
-						if (Rel == null) break;
-						using JsonDocument Doc = JsonDocument.Parse(Rel);
-						JsonElement Data = Doc.RootElement.GetProperty("data");
-						if (Data.ValueKind == JsonValueKind.Null) break;
-						else if (Data.GetProperty("status").GetString() == "Confirmed")
-						{
-							JsonElement User_Info = Data.GetProperty("user_info");
-							aid = User_Info.GetProperty("aid").GetString();
-							mid = User_Info.GetProperty("mid").GetString();
-							stoken = Data.GetProperty("tokens").EnumerateArray().First().GetProperty("token").GetString();
-							break;
-						}
+						JsonElement User_Info = Data.GetProperty("user_info");
+						aid = User_Info.GetProperty("aid").GetString();
+						mid = User_Info.GetProperty("mid").GetString();
+						stoken = Data.GetProperty("tokens").EnumerateArray().First().GetProperty("token").GetString();
+						break;
 					}
-					Form.Close();
-				});
-			};
+				}
+				Form.Close();
+			});
 			Form.ShowDialog();
+			await Login;
+			Form.Dispose();
 			return (aid, mid, stoken);
 		}
 
@@ -395,7 +394,7 @@ namespace SR_DMG
 			Rel = JsonSerializer.Serialize(Avatars, JsonSopt());
 			if (Avatars.Avatar_List[0].Properts.Count > 0)
 			{
-				string Pat = $"{SR_DMG.App_Path[4]}";
+				string Pat = $"{SR_DMG.GetPath(SR_DMG.AppPath.Data)}";
 				Directory.CreateDirectory(Pat);
 				try
 				{
@@ -403,7 +402,7 @@ namespace SR_DMG
 				}
 				catch
 				{
-					ErorrTip(-1002, $"{Pat}{Token.Uid}"); return null;
+					ErorrTip($"文件保存失败：{Pat}{Token.Uid}", MessageBoxIcon.Error); return null;
 				}
 			}
 			return Rel;
@@ -425,7 +424,7 @@ namespace SR_DMG
 					Avatar_List = []
 				};
 			}
-			else { ErorrTip(-102, uid.ToString()); return null; }
+			else { ErorrTip($"UID不存在：{uid}", MessageBoxIcon.Exclamation); return null; }
 			foreach (JsonElement Cat in Doc.RootElement.GetProperty("characters").EnumerateArray())
 			{
 				Avatar Avt = new()
@@ -541,7 +540,7 @@ namespace SR_DMG
 							{
 								Avt.Properts.Add(new Propert
 								{
-									Name = "伤害提高",
+									Name = "增伤",
 									Value = $"{Adt.GetProperty("value").GetSingle() * 100:0.#}%"
 								});
 							}
@@ -578,14 +577,14 @@ namespace SR_DMG
 				});
 				Avts.Avatar_List.Add(Avt);
 			}
-			string path = $"{SR_DMG.App_Path[4]}{uid}.json";
+			string FilePath = $"{SR_DMG.GetPath(SR_DMG.AppPath.Data)}{uid}.json";
 			try
 			{
-				File.WriteAllText(path, JsonSerializer.Serialize(Avts, Mihomo.JsonSopt()));
+				File.WriteAllText(FilePath, JsonSerializer.Serialize(Avts, JsonSopt()));
 			}
 			catch
 			{
-				ErorrTip(-1002, path); return null;
+				ErorrTip($"文件保存失败：{FilePath}",MessageBoxIcon.Error); return null;
 			}
 			return Avts;
 		}
@@ -704,21 +703,21 @@ namespace SR_DMG
 				if (State[3] < 1 && !await DoShare(Token, News_List[0])) return null;
 				if (State[2] < 5)
 				{
-					foreach (string Item in News_List)
+					for (int i = 0; i < 5 - State[2]; i++)
 					{
-						if (!await DoUpvote(Token, Item, true)) return null;
+						await Task.Delay(500); if (!await DoUpvote(Token, News_List[i], true)) return null;
 					}
-					foreach (string Item in News_List)
+					for (int i = 0; i < 5 - State[2]; i++)
 					{
-						if (!await DoUpvote(Token, Item, false)) return null;
+						await Task.Delay(500); if (!await DoUpvote(Token, News_List[i], false)) return null;
 					}
 				}
 				News_List.RemoveRange(3, 2);
 				if (State[1] < 3)
 				{
-					foreach (string Item in News_List)
+					for (int i = 0; i < 3 - State[1]; i++)
 					{
-						if (!await Get_Page(Token, Item)) return null;
+						await Task.Delay(500); if (!await Get_Page(Token, News_List[i])) return null;
 					}
 				}
 			}
@@ -784,6 +783,7 @@ namespace SR_DMG
 			using JsonDocument Doc = JsonDocument.Parse(Rel);
 			int Code = Doc.RootElement.GetProperty("retcode").GetInt32();
 			if (Code == 0 || Code == 1008) return true;
+			else if (Code == 1034) { ErorrTip("账号风控：请前往米游社完成人机验证",MessageBoxIcon.Exclamation); return false; }
 			else return false;
 		}
 		// 最新帖子 列表
@@ -814,7 +814,7 @@ namespace SR_DMG
 			if (Rel == null) return false;
 			using JsonDocument Doc = JsonDocument.Parse(Rel);
 			int Code = Doc.RootElement.GetProperty("retcode").GetInt32();
-			if (Code == 0) return true;
+			if (Code == 0 || Code == -1) return true;
 			else return false;
 		}
 		// 点赞
@@ -838,7 +838,7 @@ namespace SR_DMG
 			if (Rel == null) return false;
 			using JsonDocument Doc = JsonDocument.Parse(Rel);
 			int Code = Doc.RootElement.GetProperty("retcode").GetInt32();
-			if (Code == 0) return true;
+			if (Code == 0 || Code == 1101) return true;
 			else return false;
 		}
 		// 浏览
@@ -855,7 +855,7 @@ namespace SR_DMG
 			if (Rel == null) return false;
 			using JsonDocument Doc = JsonDocument.Parse(Rel);
 			int Code = Doc.RootElement.GetProperty("retcode").GetInt32();
-			if (Code == 0) return true;
+			if (Code == 0 || Code == 1101) return true;
 			else return false;
 		}
 
@@ -893,49 +893,30 @@ namespace SR_DMG
 			}
 			catch (Exception e)
 			{
-				ErorrTip(-1005, e.Message); return null;
+				ErorrTip($"网络错误：{e.Message}", MessageBoxIcon.Error); return null;
 			}
 		}
 
 		public static Token Get_Token()
 		{
+			string FilePath = SR_DMG.GetPath(SR_DMG.AppPath.Token);
 			try
 			{
-				if (File.Exists(SR_DMG.App_Path[3]))
+				if (File.Exists(FilePath))
 				{
-					return JsonSerializer.Deserialize<Token>(File.ReadAllText(SR_DMG.App_Path[3]));
+					return JsonSerializer.Deserialize<Token>(File.ReadAllText(FilePath));
 				}
-				else { ErorrTip(-101, "请先扫码登录 ( Login )"); return null; }
+				else { ErorrTip("未登录：请先扫码登录 ( Login )", MessageBoxIcon.Exclamation); return null; }
 			}
 			catch
 			{
-				ErorrTip(-1001, SR_DMG.App_Path[3]); return null;
+				ErorrTip($"文件读取失败：{FilePath}", MessageBoxIcon.Error); return null;
 			}
 		}
 
-		/// <remarks><list type="table">
-		/// <item><term>-101</term><description> 未登录</description></item>
-		/// <item><term>-102</term><description> UID不存在</description></item>
-		/// <item><term>-1001</term><description> 文件读取失败</description></item>
-		/// <item><term>-1002</term><description> 文件保存失败</description></item>
-		/// <item><term>-1003</term><description> 二维码超时失效</description></item>
-		/// <item><term>-1005</term><description> 网络错误</description></item>
-		/// </list></remarks>
-		public static void ErorrTip(int Code, string Msg, string Tietle = "错误提示")
+		public static void ErorrTip(string Msg, MessageBoxIcon Ico = MessageBoxIcon.None, string Tietle = "错误提示")
 		{
-			MessageBox.Show(Code > -1 ? Msg : Code switch
-			{
-				-101 => "未登录",
-				-102 => "UID不存在",
-				-1001 => "文件读取失败",
-				-1002 => "文件保存失败",
-				-1003 => "二维码超时失效",
-				-1005 => "网络错误",
-				_ => $"未知错误"
-			} + $"：{Msg}", Tietle, MessageBoxButtons.OK,
-			Code >= 0 ? MessageBoxIcon.Information :
-			Code > -1000 ? MessageBoxIcon.Exclamation :
-			MessageBoxIcon.Error);
+			MessageBox.Show(Msg, Tietle, MessageBoxButtons.OK, Ico);
 		}
 
 		// 序列化
