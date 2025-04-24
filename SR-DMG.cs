@@ -47,7 +47,7 @@ namespace SR_DMG
 		private void DoInit()
 		{
 			Group = "";
-			App_Path = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData) + "\\SR-DMG\\";
+			App_Path = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "SR-DMG");
 			Cmd_Tip["保存路径"] = "path";
 			Cmd_Tip["登录米游社"] = "login";
 			Cmd_Tip["我的角色"] = "uid me";
@@ -94,7 +94,7 @@ namespace SR_DMG
 			}
 			catch
 			{
-				Mihomo.ErorrTip($"文件读取失败：{FilePath}", MessageBoxIcon.Error);
+				Mihomo.Message($"文件读取失败：{FilePath}", MessageBoxIcon.Error);
 			}
 			finally
 			{
@@ -103,28 +103,17 @@ namespace SR_DMG
 		}
 		private void SR_DMG_FormClosing(object sender, FormClosingEventArgs e)
 		{
-			if (SaveDate())
-			{
-				if (MessageBox.Show("数据文件未成功保存，是否仍要退出？", "文件被占用",
-					MessageBoxButtons.OKCancel, MessageBoxIcon.Error) != DialogResult.OK)
-					e.Cancel = true;
-			}
+			if (SaveDate()) e.Cancel = !Message("数据文件未成功保存，是否仍要退出？", "文件被占用");
 			string FilePath = GetPath(AppPath.Config);
 			string Dirctoy = Path.GetDirectoryName(FilePath);
-			if (!Directory.Exists(Dirctoy))
-			{
-				Directory.CreateDirectory(Dirctoy);
-			}
+			if (!Directory.Exists(Dirctoy)) Directory.CreateDirectory(Dirctoy);
 			try
 			{
-				int Start = 0;
-				int End = Role.Map_Mark.Count / 2;
 				using StreamWriter Wt = new(FilePath);
 				Wt.WriteLine("名称：" + Roled.Name);
-				foreach (KeyValuePair<string, bool> Map in Role.Map_Mark)
+				foreach (Role.Property Item in Role.Properties)
 				{
-					if (++Start > End) break;
-					Wt.WriteLine($"{Map.Key}：{Roled.GetValue(Map.Key)}");
+					Wt.WriteLine($"{Item.NickName}：{Roled.GetValue(Item.NickName)}");
 				}
 				Wt.WriteLine("增益：[" + string.Join("-", Roled.Gain) + ']');
 				Wt.WriteLine("转化：[" + string.Join("-", Roled.Transform) + ']');
@@ -134,20 +123,14 @@ namespace SR_DMG
 			}
 			catch
 			{
-				if (MessageBox.Show("配置文件未成功保存，是否仍要退出？", "文件被占用",
-					MessageBoxButtons.OKCancel, MessageBoxIcon.Error) != DialogResult.OK)
-					e.Cancel = true;
+				e.Cancel = !Message("配置文件未成功保存，是否仍要退出？", "文件被占用");
 			}
-
 		}
 		// 窗口透明
 		private void SR_DMG_MouseDown(object sender, MouseEventArgs e)
 		{
+			if (e.Button == MouseButtons.Right) Opacity = 0.1f;
 			Ceb_TopMost.Focus();
-			if (e.Button == MouseButtons.Right)
-			{
-				Opacity = 0.1f;
-			}
 		}
 		private void SR_DMG_MouseUp(object sender, MouseEventArgs e)
 		{
@@ -536,13 +519,11 @@ namespace SR_DMG
 		}
 		private void Tex_Gain_TextChanged(object sender, EventArgs e)
 		{
-			if (!Tex_Gain.Text.Contains(':'))
+			string Str = Tex_Gain.Text;
+			if (Str.EndsWith(':') && !Str.StartsWith('['))
 			{
-				if (Tex_Gain.Text != "")
-				{
-					Tex_Gain.Text = "[]:";
-					Tex_Gain.SelectionStart = 1;
-				}
+				Tex_Gain.Text = "[]:";
+				Tex_Gain.SelectionStart = 1;
 			}
 		}
 		private void Btn_Save_3_Click(object sender, EventArgs e)
@@ -607,11 +588,7 @@ namespace SR_DMG
 			if (Role.GetType(Arr[0])) Tar *= 100;
 			if (Str.StartsWith('□')) Tar *= -1;
 			role.SetValue(Arr[0], role.GetValue(Arr[0]) + Tar);
-			if (Info)
-			{
-				GetControl<TextBox>("Tex_" + Role.GetName(Arr[0])).Text =
-					role.GetValue(Arr[0]).ToString();
-			}
+			if (Info) GetControl<TextBox>("Tex_" + Role.GetName(Arr[0])).Text = role.GetValue(Arr[0]).ToString();
 		}
 
 		// 数据切换
@@ -620,10 +597,7 @@ namespace SR_DMG
 			if (Flags[1]) return;
 			if (Cob_Simple.SelectedIndex > 0)
 			{
-				if (Flags[2])
-				{
-					LoadRole(Roles[Cob_Simple.SelectedIndex - 1]);
-				}
+				if (Flags[2]) LoadRole(Roles[Cob_Simple.SelectedIndex - 1]);
 				else
 				{
 					Group = Cob_Simple.Text[2..];
@@ -652,10 +626,7 @@ namespace SR_DMG
 					Flags[2] = true;
 					Save_Info = true;
 				}
-				else
-				{
-					Tip("组名称不可为空");
-				}
+				else Tip("组名称不可为空");
 			}
 		}
 		private void Btn_Del_1_Click(object sender, EventArgs e)
@@ -671,14 +642,7 @@ namespace SR_DMG
 				}
 				Save_Info = true;
 			}
-			else
-			{
-				if (MessageBox.Show("是否删除组：" + Group, "删除确认",
-					MessageBoxButtons.OKCancel, MessageBoxIcon.Information) == DialogResult.OK)
-				{
-					DeleteDate();
-				}
-			}
+			else if (Message($"是否删除组：{Group}", "删除确认")) DeleteDate();
 		}
 		private void Cob_Simple_Clear()
 		{
@@ -708,8 +672,7 @@ namespace SR_DMG
 			{
 				if (SaveDate())
 				{
-					Tip("保存数据失败，暂时无法切换");
-					return;
+					Tip("保存数据失败，暂时无法切换"); return;
 				}
 				else Group_List();
 			}
@@ -829,10 +792,7 @@ namespace SR_DMG
 			{
 				Equal += (Equal == "" || Equal.EndsWith('：') ? "" : " + ") + Roled.DMG_Equal_3;
 			}
-			if (Equal == "" || Equal.EndsWith('：'))
-			{
-				Tip("参数不能都为空");
-			}
+			if (Equal == "" || Equal.EndsWith('：')) Tip("参数不能都为空");
 			else
 			{
 				Save_Info = true;
@@ -853,14 +813,7 @@ namespace SR_DMG
 		// 取消保存
 		private void Lab_Tip_MouseUp(object sender, MouseEventArgs e)
 		{
-			if (Save_Info && e.Button == MouseButtons.Right)
-			{
-				if (MessageBox.Show("是否取消此次保存计划？", "取消保存",
-					MessageBoxButtons.OKCancel, MessageBoxIcon.Information) == DialogResult.OK)
-				{
-					Save_Info = false;
-				}
-			}
+			if (e.Button == MouseButtons.Right) Save_Info = !Message("是否取消此次保存计划？", "取消保存");
 		}
 		// 参数相关文本框
 		private void Tex_DMG_Enter(object sender, EventArgs e)
@@ -868,20 +821,14 @@ namespace SR_DMG
 			if (Flags[7]) return;
 			TextBox Tex = sender as TextBox;
 			TGUpdate(Role.GetName(Tex.Name[4..]), Roled, false);
-			if (Tex.Text == "0")
-			{
-				Tex.Text = "";
-			}
+			if (Tex.Text == "0") Tex.Text = "";
 		}
 		private void Tex_DMG_Leave(object sender, EventArgs e)
 		{
 			if (Flags[7]) return;
 			TextBox Tex = sender as TextBox;
 			TGUpdate(Role.GetName(Tex.Name[4..]), Roled, true);
-			if (Tex.Text == "")
-			{
-				Tex.Text = "0";
-			}
+			if (Tex.Text == "") Tex.Text = "0";
 		}
 		private void TGUpdate(string tar, Role role, bool Info)
 		{
@@ -924,14 +871,8 @@ namespace SR_DMG
 					{
 						Str = "[" + Role.GetName(Str) + "]";
 					}
-					if (Info > Tar.Text.Length)
-					{
-						Tar.Text += Str;
-					}
-					else
-					{
-						Tar.Text = Tar.Text.Insert(Info, Str);
-					}
+					if (Info > Tar.Text.Length) Tar.Text += Str;
+					else Tar.Text = Tar.Text.Insert(Info, Str);
 				}
 				else
 				{
@@ -950,10 +891,7 @@ namespace SR_DMG
 				Flags[4] = false;
 				if (!Flags[8]) Ceb_Transform.Checked = Ceb_Gain.Checked = false;
 				Tar.SelectionStart = Info + Str.Length;
-				if (Tar == Tex_Transform)
-				{
-					Tex_Transform_TextChanged(null, null);
-				}
+				if (Tar == Tex_Transform) Tex_Transform_TextChanged(null, null);
 				Tar.Focus();
 			}
 			else
@@ -1038,23 +976,14 @@ namespace SR_DMG
 		private void Tex_Name_Enter(object sender, EventArgs e)
 		{
 			TextBox Tex = sender as TextBox;
-			if (Tex.Font.Style == FontStyle.Italic)
-			{
-				Tex.Text = "";
-			}
+			if (Tex.Font.Style == FontStyle.Italic) Tex.Text = "";
 			Tex.Font = new Font(Tex.Font, FontStyle.Regular);
 		}
 		private void Tex_Name_Leave(object sender, EventArgs e)
 		{
 			TextBox Tex = sender as TextBox;
-			if (Tex == Tex_Name_1)
-			{
-				Roled.Name = Tex.Text;
-			}
-			if (Tex.Text == "")
-			{
-				SetTexFont(Tex, null);
-			}
+			if (Tex == Tex_Name_1) Roled.Name = Tex.Text;
+			if (Tex.Text == "") SetTexFont(Tex, null);
 		}
 		// 启用伤害比对
 		private void Ceb_Note_CheckedChanged(object sender, EventArgs e)
@@ -1075,10 +1004,7 @@ namespace SR_DMG
 		}
 		private static void Improve(Label Lab, float Dmg1, float Dmg2)
 		{
-			if ((int)Dmg1 == (int)Dmg2)
-			{
-				Lab.Text = "";
-			}
+			if ((int)Dmg1 == (int)Dmg2) Lab.Text = "";
 			else
 			{
 				float Imp = (float)Math.Round((Dmg1 / Dmg2 - 1) * 100, 1);
@@ -1132,7 +1058,7 @@ namespace SR_DMG
 		{
 			if (Flags[9])
 			{
-				Tip("请等待指令执行完成！"); return;
+				Tip("请等待指令执行完成"); return;
 			}
 			else
 			{
@@ -1148,7 +1074,7 @@ namespace SR_DMG
 					case "sign": await Sign(); break;
 					case "coin": await Coin(); break;
 					case "about": Readme(); break;
-					default: Tip("无法识别：" + Str); break;
+					default: Tip($"无法识别：{Str.ToUpper()}"); break;
 				}
 				Flags[9] = false;
 			}
@@ -1160,9 +1086,9 @@ namespace SR_DMG
 			{
 				Avatars Avts;
 				if (Flags[2] == false) { Tip("未创建组"); return; }
-				string FilePath = $"{GetPath(AppPath.Data)}{Tar[1]}.json";
 				if (int.TryParse(Tar[1], out int Uid) && Uid >= 100000000)
 				{
+					string FilePath = Path.Combine(GetPath(AppPath.Data), $"{Tar[1]}.json");
 					if (!File.Exists(FilePath) || Tar[0] == "UID")
 					{
 						Tar[0] = "云端";
@@ -1178,7 +1104,7 @@ namespace SR_DMG
 						}
 						catch
 						{
-							Mihomo.ErorrTip($"文件读取失败：{FilePath}", MessageBoxIcon.Error); return;
+							Mihomo.Message($"文件读取失败：{FilePath}", MessageBoxIcon.Error); return;
 						}
 					}
 				}
@@ -1186,7 +1112,7 @@ namespace SR_DMG
 				{
 					Mihomo.Token Token = Mihomo.Get_Token();
 					if (Token == null) return;
-					FilePath = $"{GetPath(AppPath.Data)}{Token.Uid}.json";
+					string FilePath = Path.Combine(GetPath(AppPath.Data), $"{Token.Uid}.json");
 					if (!File.Exists(FilePath) || Tar[0] == "UID")
 					{
 						Tar[0] = "云端";
@@ -1203,7 +1129,7 @@ namespace SR_DMG
 						}
 						catch
 						{
-							Mihomo.ErorrTip($"文件读取失败：{FilePath}", MessageBoxIcon.Error); return;
+							Mihomo.Message($"文件读取失败：{FilePath}", MessageBoxIcon.Error); return;
 						}
 					}
 				}
@@ -1246,22 +1172,22 @@ namespace SR_DMG
 			DateTime Now_Date = DateTime.Today;
 			DateTime Full_Time = DateTimeOffset.FromUnixTimeSeconds(Val[3]).LocalDateTime;
 			string Str = Now_Date.Day == Full_Time.Day ? "今天" : Now_Date.AddDays(1).Day == Full_Time.Day ? "明天" : "后天";
-			Str += $" {Full_Time:HH:mm}\n剩余：{(Val[2] / 3600).ToString().PadLeft(2, '0')} 时 {(Val[2] % 3600 / 60).ToString().PadLeft(2, '0')} 分";
-			Mihomo.ErorrTip($"开拓力：{Val[0]} / {Val[1]}\n回满：{Str}", MessageBoxIcon.Information, "实时便筏");
+			Str += $" {Full_Time:HH:mm}\n需要：{(Val[2] / 3600).ToString().PadLeft(2, '0')} 时 {(Val[2] % 3600 / 60).ToString().PadLeft(2, '0')} 分";
+			Mihomo.Message($"开拓力：{Val[0]} / {Val[1]}\n回满：{Str}", MessageBoxIcon.Information, "实时便筏");
 		}
 		// 每日签到
 		private async Task Sign()
 		{
 			string Str = await Mihomo.DoSign();
 			if (Str == null) { Tip("请求失败：每日签到"); return; }
-			Mihomo.ErorrTip(Str, MessageBoxIcon.Information, "每日签到");
+			Mihomo.Message(Str, MessageBoxIcon.Information, "每日签到");
 		}
 		// 米游币任务
 		private async Task Coin()
 		{
 			string Rel = await Mihomo.DoCoin();
 			if (Rel == null) { Tip("请求失败：米游币任务"); return; }
-			Mihomo.ErorrTip(Rel, MessageBoxIcon.Information, "米游币任务");
+			Mihomo.Message(Rel, MessageBoxIcon.Information, "米游币任务");
 		}
 		// 开发文档
 		private static void Readme()
@@ -1269,15 +1195,18 @@ namespace SR_DMG
 			string FilePath = GetPath(AppPath.Readme);
 			try
 			{
-				Assembly Ase = Assembly.GetExecutingAssembly();
-				using Stream stream = Ase.GetManifestResourceStream("SR_DMG.README.md");
-				using FileStream Fs = File.Create(FilePath);
-				stream.CopyTo(Fs);
+				if (!File.Exists(FilePath))
+				{
+					Assembly Ase = Assembly.GetExecutingAssembly();
+					using Stream stream = Ase.GetManifestResourceStream("SR_DMG.README.md");
+					using FileStream Fs = File.Create(FilePath);
+					stream.CopyTo(Fs);
+				}
 				OpenPath(FilePath);
 			}
 			catch
 			{
-				Mihomo.ErorrTip($"文件保存失败：{FilePath}", MessageBoxIcon.Error);
+				Mihomo.Message($"文件保存失败：{FilePath}", MessageBoxIcon.Error);
 			}
 		}
 		// 打开文件
@@ -1337,15 +1266,20 @@ namespace SR_DMG
 		public static string GetPath(AppPath FilePath = AppPath.None)
 		{
 			if (FilePath == AppPath.None) return App_Path;
-			else return App_Path + FilePath switch
-			{
-				AppPath.Config => "App.config",
-				AppPath.Save => "SR-DMG.csv",
-				AppPath.Token => "Token.json",
-				AppPath.Data => @"Data\",
-				AppPath.Readme => "Readme.md",
-				_ => string.Empty
-			};
+			else return Path.Combine(App_Path,
+				FilePath switch
+				{
+					AppPath.Config => "App.config",
+					AppPath.Save => "SR-DMG.csv",
+					AppPath.Token => "Token.json",
+					AppPath.Data => "Data",
+					AppPath.Readme => "Readme.md",
+					_ => string.Empty
+				});
+		}
+		private static bool Message(string Msg, string Tietle)
+		{
+			return MessageBox.Show(Msg, Tietle, MessageBoxButtons.OKCancel, MessageBoxIcon.Exclamation) == DialogResult.OK;
 		}
 
 		// 载入数据
@@ -1354,21 +1288,18 @@ namespace SR_DMG
 			Flags[0] = Flags[5] = Flags[6] = true;
 			SetTexFont(Tex_Name_1, role.Name);
 			Roled.Name = role.Name;
-			int Start = 0;
-			int End = Role.Map_Name.Count / 2;
-			foreach (KeyValuePair<string, string> Map in Role.Map_Name)
+			foreach (Role.Property Item in Role.Properties)
 			{
-				if (++Start > End) break;
-				TextBox Tex = GetControl<TextBox>($"Tex_{Map.Value}");
+				TextBox Tex = GetControl<TextBox>($"Tex_{Item.PropertyName}");
 				if (Tex == null)
 				{
-					ComboBox Cob = GetControl<ComboBox>($"Cob_{Map.Value}");
-					int Index = (int)role.GetValue(Map.Key);
+					ComboBox Cob = GetControl<ComboBox>($"Cob_{Item.PropertyName}");
+					int Index = (int)role.GetValue(Item.NickName);
 					if (Index < Cob.Items.Count) Cob.SelectedIndex = Index;
 				}
 				else
 				{
-					Tex.Text = role.GetValue(Map.Key).ToString();
+					Tex.Text = role.GetValue(Item.NickName).ToString();
 				}
 			}
 			Roled.Gain = [.. role.Gain];
@@ -1458,10 +1389,7 @@ namespace SR_DMG
 			if (!Save_Info) return false;
 			string FilePath = GetPath(AppPath.Save);
 			string Dirctoy = Path.GetDirectoryName(FilePath);
-			if (!Directory.Exists(Dirctoy))
-			{
-				Directory.CreateDirectory(Dirctoy);
-			}
+			if (!Directory.Exists(Dirctoy)) Directory.CreateDirectory(Dirctoy);
 			try
 			{
 				string[] Arr = File.Exists(FilePath) ? File.ReadAllLines(FilePath) : [];

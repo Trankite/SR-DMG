@@ -39,46 +39,37 @@ namespace SR_DMG
 		{
 			try
 			{
-				Token Token = new();
-				(string device_id, string qr_url, string ticket) = await Get_QR_URL();
-				(Token.Aid, Token.Mid, Token.Stoken) = await Check_Login(device_id, qr_url, ticket);
-				if (Token.Stoken == null) { ErorrTip("二维码超时失效：请重新尝试扫码登录", MessageBoxIcon.Exclamation, "Token"); return; }
-				else
+				Token Token = Get_Token(false) ?? new();
+				(string Qr_Url, string Ticket) = await Get_QR_URL(Token);
+				await Check_Login(Token, Qr_Url, Ticket);
+				if (string.IsNullOrEmpty(Token.Stoken)) return;
+				await Get_LToken(Token);
+				await Get_Cookie_Token(Token);
+				await Get_Uid(Token);
+				await Get_Fp(Token);
+				if (Set_Token(Token))
 				{
-					Token.Ltoken = await Get_LToken(Token);
-					Token.Cookie_Token = await Get_Cookie_Token(Token);
-					(Token.Nickname, Token.Uid, Token.Server, Token.Game_Biz) = await Get_Uid(Token);
-					Token.Device_Fp = await Get_Fp();
-					string FilePath = SR_DMG.GetPath(SR_DMG.AppPath.Token);
-					try
-					{
-						File.WriteAllText(FilePath, JsonSerializer.Serialize(Token, JsonSopt()));
-						ErorrTip($"UID:{Token.Uid} {Token.Nickname}\n已保存 Token 信息", MessageBoxIcon.Information, "Token");
-					}
-					catch
-					{
-						ErorrTip($"文件保存失败：{FilePath}", MessageBoxIcon.Error, "Token");
-					}
+					Message($"UID:{Token.Uid} {Token.Nickname}\n已更新 Token 信息", MessageBoxIcon.Information, "Token");
 				}
 			}
 			catch
 			{
-				ErorrTip("意外错误：Token请求失败", MessageBoxIcon.Error, "Token");
+				Message("意外错误：Token请求失败", MessageBoxIcon.Error, "Token");
 			}
 		}
 
 		// 获取米游社的签名字符串
-		private static string Get_DS(bool Salt = false, string body = "", string query = "")
+		private static string Get_DS(bool Salt = false, string Body = "", string Query = "")
 		{
 			Random Rad = new();
 			string r = Rad.Next(100001, 200001).ToString();
 			string t = DateTimeOffset.UtcNow.ToUnixTimeSeconds().ToString();
 			string c = $"salt={(Salt ? SALT_K2 : SALT_LK2)}&t={t}&r={r}";
-			if (body.Length + query.Length > 0)
+			if (Body.Length + Query.Length > 0)
 			{
-				if (body.Length > 0) body = SortJson(body);
-				if (query.Length > 0) query = string.Join("&", query.Split('&').OrderBy(x => x));
-				c = $"salt={(Salt ? SALT_6X : SALT_4X)}&t={t}&r={r}&b={body}&q={query}";
+				if (Body.Length > 0) Body = SortJson(Body);
+				if (Query.Length > 0) Query = string.Join("&", Query.Split('&').OrderBy(x => x));
+				c = $"salt={(Salt ? SALT_6X : SALT_4X)}&t={t}&r={r}&b={Body}&q={Query}";
 			}
 			StringBuilder Str = new();
 			foreach (byte bt in MD5.HashData(Encoding.UTF8.GetBytes(c)))
@@ -115,24 +106,21 @@ namespace SR_DMG
 		}
 
 		// 获取二维码 URL
-		private static async Task<(string device_id, string qr_url, string ticket)> Get_QR_URL()
+		private static async Task<(string qr_url, string ticket)> Get_QR_URL(Token Token)
 		{
-			string device_id = Uuid_V4();
+			Token.Guid ??= Guid.NewGuid().ToString();
 			string Rel = await HttpPost($"{PASS_URL}ma-cn-passport/app/createQRLogin", Head:
-				[
-					"x-rpc-device_id", device_id,
-					"x-rpc-app_id", APP_ID
-				]);
-			if (Rel == null) return (null, null, null);
+				["x-rpc-device_id", Token.Guid, "x-rpc-app_id", APP_ID]);
+			if (Rel == null) return (null, null);
 			using JsonDocument Doc = JsonDocument.Parse(Rel);
 			JsonElement Data = Doc.RootElement.GetProperty("data");
 			string qr_url = Data.GetProperty("url").GetString();
 			string ticket = Data.GetProperty("ticket").GetString();
-			return (device_id, qr_url, ticket);
+			return (qr_url, ticket);
 		}
 
 		// 检查二维码登录状态
-		private static async Task<(string aid, string mid, string stoken)> Check_Login(string device_id, string qr_url, string ticket)
+		private static async Task Check_Login(Token Token, string qr_url, string ticket)
 		{
 			Form Form = new()
 			{
@@ -146,7 +134,6 @@ namespace SR_DMG
 				MaximizeBox = false,
 				TopMost = true
 			};
-			string aid = null, mid = null, stoken = null;
 			Task Login = Task.Run(async () =>
 			{
 				while (true)
@@ -155,33 +142,36 @@ namespace SR_DMG
 					if (!Form.Visible) return;
 					string Rel = HttpPost($"{PASS_URL}ma-cn-passport/app/queryQRLoginStatus",
 						JsonSerializer.Serialize(new { ticket }),
-						[
-							"x-rpc-app_id", APP_ID,
-							"x-rpc-device_id", device_id
-						]).Result;
+						["x-rpc-app_id", APP_ID, "x-rpc-device_id", Token.Guid]).Result;
 					if (Rel == null) break;
 					using JsonDocument Doc = JsonDocument.Parse(Rel);
 					JsonElement Data = Doc.RootElement.GetProperty("data");
-					if (Data.ValueKind == JsonValueKind.Null) break;
-					else if (Data.GetProperty("status").GetString() == "Confirmed")
+					if (Data.TryGetProperty("status", out JsonElement Status))
 					{
-						JsonElement User_Info = Data.GetProperty("user_info");
-						aid = User_Info.GetProperty("aid").GetString();
-						mid = User_Info.GetProperty("mid").GetString();
-						stoken = Data.GetProperty("tokens").EnumerateArray().First().GetProperty("token").GetString();
-						break;
+						if (Status.GetString() == "Confirmed")
+						{
+							JsonElement User_Info = Data.GetProperty("user_info");
+							Token.Aid = User_Info.GetProperty("aid").GetString();
+							Token.Mid = User_Info.GetProperty("mid").GetString();
+							Token.Stoken = Data.GetProperty("tokens").EnumerateArray().First().GetProperty("token").GetString();
+						}
+						else continue;
 					}
+					else
+					{
+						Message("二维码超时失效：请重新尝试扫码登录", MessageBoxIcon.Exclamation, "Token");
+					}
+					break;
 				}
 				Form.Close();
 			});
 			Form.ShowDialog();
 			await Login;
 			Form.Dispose();
-			return (aid, mid, stoken);
 		}
 
 		// 获取 Cookie Token
-		private static async Task<string> Get_Cookie_Token(Token Token)
+		private static async Task Get_Cookie_Token(Token Token)
 		{
 			string body = JsonSerializer.Serialize(new
 			{
@@ -194,30 +184,26 @@ namespace SR_DMG
 				dst_token_type = 4,
 			});
 			string Rel = await HttpPost($"{PASS_URL}ma-cn-session/app/exchange", body, ["x-rpc-app_id", APP_ID]);
-			if (Rel == null) return null;
+			if (Rel == null) return;
 			using JsonDocument Doc = JsonDocument.Parse(Rel);
-			int Code = Doc.RootElement.GetProperty("retcode").GetInt32();
-			if (Code == 0)
+			if (Retcode(Doc))
 			{
-				return Doc.RootElement.GetProperty("data").GetProperty("token").GetProperty("token").GetString();
+				Token.Cookie_Token = Doc.RootElement.GetProperty("data").GetProperty("token").GetProperty("token").GetString();
 			}
-			else return null;
 		}
 
 		// 获取 LToken
-		private static async Task<string> Get_LToken(Token Token)
+		private static async Task Get_LToken(Token Token)
 		{
 			string Rel = await HttpGet($"{PASS_URL}auth/api/getLTokenBySToken",
-				[
-					"Cookie", $"mid={Token.Mid};stoken={Token.Stoken};"
-				]);
-			if (Rel == null) return null;
+				["Cookie", $"mid={Token.Mid};stoken={Token.Stoken};"]);
+			if (Rel == null) return;
 			using JsonDocument Doc = JsonDocument.Parse(Rel);
-			return Doc.RootElement.GetProperty("data").GetProperty("ltoken").GetString();
+			Token.Ltoken = Doc.RootElement.GetProperty("data").GetProperty("ltoken").GetString();
 		}
 
 		// 获取 Uid
-		private static async Task<(string nickname, string uid, string server, string game_biz)> Get_Uid(Token Token)
+		private static async Task Get_Uid(Token Token)
 		{
 			string Rel = await HttpGet($"{AT_URL}getUserGameRolesByStoken",
 				[
@@ -226,24 +212,24 @@ namespace SR_DMG
 					"DS",Get_DS(true),
 					"Cookie", $"mid={Token.Mid};stoken={Token.Stoken};"
 				]);
-			if (Rel == null) return (null, null, null, null);
+			if (Rel == null) return;
 			using JsonDocument Doc = JsonDocument.Parse(Rel);
 			foreach (JsonElement List in Doc.RootElement.GetProperty("data").GetProperty("list").EnumerateArray())
 			{
 				string game_biz = List.GetProperty("game_biz").GetString();
 				if (game_biz.StartsWith("hkrpg"))
 				{
-					string nickname = List.GetProperty("nickname").GetString();
-					string uid = List.GetProperty("game_uid").GetString();
-					string server = List.GetProperty("region").GetString();
-					return (nickname, uid, server, game_biz);
+					Token.Game_Biz = game_biz;
+					Token.Nickname = List.GetProperty("nickname").GetString();
+					Token.Uid = List.GetProperty("game_uid").GetString();
+					Token.Server = List.GetProperty("region").GetString();
+					break;
 				}
 			}
-			return (null, null, null, null);
 		}
 
 		// 获取 Fp
-		public static async Task<string> Get_Fp()
+		public static async Task Get_Fp(Token Token)
 		{
 			string device = RadString(12);
 			string product = RadString(6);
@@ -313,33 +299,9 @@ namespace SR_DMG
 			string bbs_device_id = Guid.NewGuid().ToString();
 			string Rel = await HttpPost(FP_URL, JsonSerializer.Serialize(
 				new { device_id, seed_id, seed_time, platform, device_fp, app_name, ext_fields, bbs_device_id }));
-			if (Rel == null) return null;
+			if (Rel == null) return;
 			using JsonDocument Doc = JsonDocument.Parse(Rel);
-			return Doc.RootElement.GetProperty("data").GetProperty("device_fp").GetString();
-		}
-
-		// 获取 UUID V4
-		private static string Uuid_V4()
-		{
-			string UUID = "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx";
-			StringBuilder Str = new();
-			Random Rd = new();
-			foreach (var c in UUID)
-			{
-				if (c == 'x')
-				{
-					Str.Append(Rd.Next(0, 16).ToString("x"));
-				}
-				else if (c == 'y')
-				{
-					Str.Append(((Rd.Next(0, 16) & 0x03) | 0x08).ToString("x"));
-				}
-				else
-				{
-					Str.Append(c);
-				}
-			}
-			return Str.ToString();
+			Token.Device_Fp = Doc.RootElement.GetProperty("data").GetProperty("device_fp").GetString();
 		}
 
 		// 获取 标识符
@@ -359,13 +321,12 @@ namespace SR_DMG
 					"x-rpc-app_version", APP_VERSION,
 					"x-rpc-device_fp", Token.Device_Fp,
 					"x-rpc-client_type", "5",
-					"DS", Get_DS(query: query),
+					"DS", Get_DS(Query: query),
 					"Cookie", $"ltuid={Token.Aid};ltoken={Token.Ltoken};"
 				]);
 			if (Rel == null) return null;
 			using JsonDocument Doc = JsonDocument.Parse(Rel);
-			int code = Doc.RootElement.GetProperty("retcode").GetInt32();
-			if (code != 0) return null;
+			if (!Retcode(Doc)) return null;
 			Avatars Avatars = new() { Name = Token.Nickname, UID = Token.Uid, Avatar_List = [] };
 			foreach (JsonElement List in Doc.RootElement.GetProperty("data").GetProperty("avatar_list").EnumerateArray())
 			{
@@ -402,7 +363,7 @@ namespace SR_DMG
 				}
 				catch
 				{
-					ErorrTip($"文件保存失败：{Pat}{Token.Uid}", MessageBoxIcon.Error); return null;
+					Message($"文件保存失败：{Pat}{Token.Uid}", MessageBoxIcon.Error); return null;
 				}
 			}
 			return Rel;
@@ -424,7 +385,7 @@ namespace SR_DMG
 					Avatar_List = []
 				};
 			}
-			else { ErorrTip($"UID不存在：{uid}", MessageBoxIcon.Exclamation); return null; }
+			else { Message($"UID不存在：{uid}", MessageBoxIcon.Exclamation); return null; }
 			foreach (JsonElement Cat in Doc.RootElement.GetProperty("characters").EnumerateArray())
 			{
 				Avatar Avt = new()
@@ -584,7 +545,7 @@ namespace SR_DMG
 			}
 			catch
 			{
-				ErorrTip($"文件保存失败：{FilePath}",MessageBoxIcon.Error); return null;
+				Message($"文件保存失败：{FilePath}", MessageBoxIcon.Error); return null;
 			}
 			return Avts;
 		}
@@ -600,13 +561,12 @@ namespace SR_DMG
 					"x-rpc-app_version",APP_VERSION,
 					"x-rpc-device_fp",Token.Device_Fp,
 					"x-rpc-client_type","5",
-					"DS",Get_DS(query:query),
+					"DS",Get_DS(Query:query),
 					"Cookie", $"ltuid={Token.Aid};ltoken={Token.Ltoken};"
 				]);
 			if (Rel == null) return null;
 			using JsonDocument Doc = JsonDocument.Parse(Rel);
-			int Code = Doc.RootElement.GetProperty("retcode").GetInt32();
-			if (Code == 0)
+			if (Retcode(Doc))
 			{
 				JsonElement Data = Doc.RootElement.GetProperty("data");
 				int Stamina = Data.GetProperty("current_stamina").GetInt32();
@@ -634,13 +594,11 @@ namespace SR_DMG
 			string Rel = await HttpPost($"{SIGN_URL}sign", body, Cookie);
 			if (Rel == null) return null;
 			using JsonDocument Doc = JsonDocument.Parse(Rel);
-			int Code = Doc.RootElement.GetProperty("retcode").GetInt32();
-			if (Code == 0 || Code == -5003)
+			if (Retcode(Doc, [0, -5003]))
 			{
 				List<string> Sign_Home = await Get_Sign_Home();
 				(int Sign_Day, int Today) = await Get_Sign_Info(Token);
 				Rel = $"已签到 {Sign_Day} / {Today} 天";
-				if (Code == -5003) Rel += " ( 已领取 )";
 				if (Sign_Day > 0)
 				{
 					if (Sign_Day <= Sign_Home.Count) Rel += $"\n今日奖励：{Sign_Home[Sign_Day - 1]}";
@@ -657,8 +615,7 @@ namespace SR_DMG
 			string Rel = await HttpGet($"{SIGN_URL}home?lang=zh-cn&act_id={ACT_ID}");
 			if (Rel == null) return null;
 			using JsonDocument Doc = JsonDocument.Parse(Rel);
-			int Code = Doc.RootElement.GetProperty("retcode").GetInt32();
-			if (Code == 0)
+			if (Retcode(Doc))
 			{
 				foreach (JsonElement Item in Doc.RootElement.GetProperty("data").GetProperty("awards").EnumerateArray())
 				{
@@ -672,13 +629,10 @@ namespace SR_DMG
 		private static async Task<(int Sign_Day, int Today)> Get_Sign_Info(Token Token)
 		{
 			string Rel = await HttpGet($"{SIGN_URL}info?lang=zh-cn&act_id={ACT_ID}&region={Token.Server}&uid={Token.Uid}",
-				[
-					"Cookie", $"account_mid_v2={Token.Mid};cookie_token_v2={Token.Cookie_Token};"
-				]);
+				["Cookie", $"account_mid_v2={Token.Mid};cookie_token_v2={Token.Cookie_Token};"]);
 			if (Rel == null) return (-1, -1);
 			using JsonDocument Doc = JsonDocument.Parse(Rel);
-			int Code = Doc.RootElement.GetProperty("retcode").GetInt32();
-			if (Code == 0)
+			if (Retcode(Doc))
 			{
 				JsonElement Data = Doc.RootElement.GetProperty("data");
 				int Sign_Day = Data.GetProperty("total_sign_day").GetInt32();
@@ -695,38 +649,35 @@ namespace SR_DMG
 			if (Token == null) return null;
 			int[] State = await Get_State(Token);
 			if (State == null) return null;
-			if (State[0] < 1 && !await DoSignIn(Token)) return null;
+			if (State[0] < 1) await DoSignIn(Token);
 			if (State[3] < 1 || State[2] < 5 || State[1] < 3)
 			{
 				List<string> News_List = await Get_News_List();
 				if (News_List == null) return null;
-				if (State[3] < 1 && !await DoShare(Token, News_List[0])) return null;
-				if (State[2] < 5)
+				if (State[3] < 1)
 				{
-					for (int i = 0; i < 5 - State[2]; i++)
-					{
-						await Task.Delay(500); if (!await DoUpvote(Token, News_List[i], true)) return null;
-					}
-					for (int i = 0; i < 5 - State[2]; i++)
-					{
-						await Task.Delay(500); if (!await DoUpvote(Token, News_List[i], false)) return null;
-					}
+					if (!await DoShare(Token, News_List[0])) return null;
 				}
-				News_List.RemoveRange(3, 2);
 				if (State[1] < 3)
 				{
 					for (int i = 0; i < 3 - State[1]; i++)
 					{
-						await Task.Delay(500); if (!await Get_Page(Token, News_List[i])) return null;
+						if (!await Get_Page(Token, News_List[i])) return null;
+					}
+				}
+				if (State[2] < 5)
+				{
+					for (int n = 0; n < 2; n++)
+					{
+						for (int i = 0; i < 5 - State[2]; i++)
+						{
+							if (!await DoUpvote(Token, News_List[i], n == 0)) return null;
+						}
 					}
 				}
 			}
-			if (State[6] > 0)
-			{
-				await Task.Delay(500);
-				State = await Get_State(Token);
-				if (State == null) return null;
-			}
+			if (State[6] > 0) State = await Get_State(Token);
+			if (State == null) return null;
 			return $"米游币：{State[5]}"
 				+ $"\n今日奖励：{State[4]}"
 				+ $"\n任务进度：{(State[6] > 0 ? "未完成" : "已完成")}"
@@ -739,14 +690,11 @@ namespace SR_DMG
 		private static async Task<int[]> Get_State(Token Token)
 		{
 			string Rel = await HttpGet($"{BBS_URL}apihub/wapi/getUserMissionsState?point_sn=myb",
-				[
-					"Cookie", $"ltuid={Token.Aid};ltoken={Token.Ltoken};"
-				]);
+				["Cookie", $"ltuid={Token.Aid};ltoken={Token.Ltoken};"]);
 			if (Rel == null) return null;
 			int[] State = new int[7];
 			using JsonDocument Doc = JsonDocument.Parse(Rel);
-			int Code = Doc.RootElement.GetProperty("retcode").GetInt32();
-			if (Code == 0)
+			if (Retcode(Doc))
 			{
 				JsonElement Data = Doc.RootElement.GetProperty("data");
 				foreach (JsonElement Item in Data.GetProperty("states").EnumerateArray())
@@ -767,24 +715,18 @@ namespace SR_DMG
 		// 板块签到
 		private static async Task<bool> DoSignIn(Token Token)
 		{
-			string body = JsonSerializer.Serialize(new
-			{
-				gids = "6"
-			});
+			string body = JsonSerializer.Serialize(new { gids = "6" });
 			string Rel = await HttpPost($"{BBS_URL}apihub/app/api/signIn", body,
 				[
 					"Referer", REF_URL,
 					"x-rpc-app_version", APP_VERSION,
 					"x-rpc-client_type", "2",
-					"DS", Get_DS(true, body:body),
+					"DS", Get_DS(true, Body:body),
 					"Cookie", $"mid={Token.Mid};stoken={Token.Stoken};"
 				]);
 			if (Rel == null) return false;
 			using JsonDocument Doc = JsonDocument.Parse(Rel);
-			int Code = Doc.RootElement.GetProperty("retcode").GetInt32();
-			if (Code == 0 || Code == 1008) return true;
-			else if (Code == 1034) { ErorrTip("账号风控：请前往米游社完成人机验证",MessageBoxIcon.Exclamation); return false; }
-			else return false;
+			return Retcode(Doc, [0, 1008]);
 		}
 		// 最新帖子 列表
 		private static async Task<List<string>> Get_News_List()
@@ -813,9 +755,7 @@ namespace SR_DMG
 				]);
 			if (Rel == null) return false;
 			using JsonDocument Doc = JsonDocument.Parse(Rel);
-			int Code = Doc.RootElement.GetProperty("retcode").GetInt32();
-			if (Code == 0 || Code == -1) return true;
-			else return false;
+			return Retcode(Doc, [0, -1]);
 		}
 		// 点赞
 		private static async Task<bool> DoUpvote(Token Token, string Entity_id, bool Upvote_Type)
@@ -837,9 +777,7 @@ namespace SR_DMG
 				]);
 			if (Rel == null) return false;
 			using JsonDocument Doc = JsonDocument.Parse(Rel);
-			int Code = Doc.RootElement.GetProperty("retcode").GetInt32();
-			if (Code == 0 || Code == 1101) return true;
-			else return false;
+			return Retcode(Doc, [0, 1101]);
 		}
 		// 浏览
 		private static async Task<bool> Get_Page(Token Token, string Entity_id)
@@ -854,9 +792,7 @@ namespace SR_DMG
 				]);
 			if (Rel == null) return false;
 			using JsonDocument Doc = JsonDocument.Parse(Rel);
-			int Code = Doc.RootElement.GetProperty("retcode").GetInt32();
-			if (Code == 0 || Code == 1101) return true;
-			else return false;
+			return Retcode(Doc);
 		}
 
 		// Http请求
@@ -893,11 +829,29 @@ namespace SR_DMG
 			}
 			catch (Exception e)
 			{
-				ErorrTip($"网络错误：{e.Message}", MessageBoxIcon.Error); return null;
+				Message($"网络错误：{e.Message}", MessageBoxIcon.Error); return null;
 			}
 		}
 
-		public static Token Get_Token()
+		// API返回信息
+		private static bool Retcode(JsonDocument Doc, int[] IsOk = null)
+		{
+			int RetCode = Doc.RootElement.GetProperty("retcode").GetInt32();
+			if (IsOk?.Contains(RetCode) ?? RetCode == 0) return true;
+			else
+			{
+				string Mes = RetCode switch
+				{
+					10001 or -100 => "登录失效：请重新登录",
+					1034 => "账号风控：请前往米游社完成人机验证",
+					_ => Doc.RootElement.GetProperty("message").GetString()
+				};
+				Message($"错误代码：{RetCode}\n{Mes}", MessageBoxIcon.Information, "网页消息");
+				return false;
+			}
+		}
+
+		public static Token Get_Token(bool NotNull = true)
 		{
 			string FilePath = SR_DMG.GetPath(SR_DMG.AppPath.Token);
 			try
@@ -906,15 +860,27 @@ namespace SR_DMG
 				{
 					return JsonSerializer.Deserialize<Token>(File.ReadAllText(FilePath));
 				}
-				else { ErorrTip("未登录：请先扫码登录 ( Login )", MessageBoxIcon.Exclamation); return null; }
+				else { if (NotNull) Message("未登录：请先扫码登录 ( Login )", MessageBoxIcon.Exclamation); return null; }
 			}
 			catch
 			{
-				ErorrTip($"文件读取失败：{FilePath}", MessageBoxIcon.Error); return null;
+				if (NotNull) Message($"文件读取失败：{FilePath}", MessageBoxIcon.Error); return null;
+			}
+		}
+		public static bool Set_Token(Token Token)
+		{
+			string FilePath = SR_DMG.GetPath(SR_DMG.AppPath.Token);
+			try
+			{
+				File.WriteAllText(FilePath, JsonSerializer.Serialize(Token, JsonSopt())); return true;
+			}
+			catch
+			{
+				Message($"文件保存失败：{FilePath}", MessageBoxIcon.Error, "Token"); return false;
 			}
 		}
 
-		public static void ErorrTip(string Msg, MessageBoxIcon Ico = MessageBoxIcon.None, string Tietle = "错误提示")
+		public static void Message(string Msg, MessageBoxIcon Ico = MessageBoxIcon.None, string Tietle = "错误提示")
 		{
 			MessageBox.Show(Msg, Tietle, MessageBoxButtons.OK, Ico);
 		}
@@ -934,6 +900,7 @@ namespace SR_DMG
 			public string Server { set; get; }
 			public string Game_Biz { set; get; }
 			public string Device_Fp { set; get; }
+			public string Guid { set; get; }
 			public string Cookie_Token { set; get; }
 			public string Stoken { set; get; }
 			public string Ltoken { set; get; }

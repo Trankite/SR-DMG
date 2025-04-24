@@ -2199,6 +2199,7 @@
 			Controls.Add(Pan_SPD_Base);
 			Controls.Add(Pan_Heal_Rate);
 			Controls.Add(Pan_Effect);
+			DoubleBuffered = true;
 			Font = new System.Drawing.Font("微软雅黑", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, 134);
 			ForeColor = System.Drawing.SystemColors.WindowText;
 			FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
