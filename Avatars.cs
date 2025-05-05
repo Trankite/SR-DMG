@@ -18,12 +18,7 @@ namespace SR_DMG
 		public int Rank { set; get; }
 		public List<Propert> Properts { set; get; }
 		public Servant Servant { set; get; }
-		private static readonly string[] Prop_Name =
-		[
-			"生命值","攻击力","防御力","速度","暴击率","暴击伤害",
-			"治疗提高","基础生命","基础攻击","基础防御","基础速度",
-			"充能效率","效果命中","效果抵抗","增伤","击破特攻"
-		];
+		private static string[] Prop_Name;
 		public static List<Propert> Get_Propert(TPropert[] _Properts, string Ele)
 		{
 			string[] Value = new string[16];
@@ -84,6 +79,15 @@ namespace SR_DMG
 				"wind" => "风",
 				_ => "物理"
 			};
+		}
+		public static void Init()
+		{
+			Prop_Name =
+			[
+				"生命值", "攻击力", "防御力", "速度", "暴击率", "暴击伤害",
+				"治疗提高", "基础生命", "基础攻击", "基础防御", "基础速度",
+				"充能效率", "效果命中", "效果抵抗", "增伤", "击破特攻"
+			];
 		}
 	}
 

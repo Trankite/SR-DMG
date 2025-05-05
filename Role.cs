@@ -577,14 +577,14 @@ namespace SR_DMG
 				new Property("治疗提高", "Heal_Rate", 1),
 			];
 			Map_Property = new Dictionary<string, Property>(72);
-			foreach (PropertyInfo Item in typeof(Role).GetProperties())
-			{
-				Properties.Find(x => x.PropertyName == Item.Name).PropertyInfo = Item;
-			}
 			foreach (Property Item in Properties)
 			{
 				Map_Property[Item.NickName] = Item;
 				Map_Property[Item.PropertyName] = Item;
+			}
+			foreach (PropertyInfo Item in typeof(Role).GetProperties())
+			{
+				Map_Property[Item.Name].PropertyInfo = Item;
 			}
 		}
 		public static bool GetType(string str)

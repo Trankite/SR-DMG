@@ -19,7 +19,7 @@ namespace SR_DMG
 		private Role Roled = new();
 		private float[] DMG = new float[6];
 		private readonly bool[] Flags = new bool[10];
-		private readonly Dictionary<string, string> Cmd_Tip = [];
+		private static readonly Dictionary<string, string> Cmd_Tip = [];
 		private readonly List<Role> Roles = [];
 		private static string App_Path;
 		public enum AppPath
@@ -35,8 +35,10 @@ namespace SR_DMG
 		public SR_DMG()
 		{
 			DoInit();
-			InitializeComponent();
+			Group = "";
+			Avatar.Init();
 			Role.Start(this);
+			InitializeComponent();
 			Cob_Simple_Clear();
 			Cob_DMG_Equal_Clear();
 			Cob_Transform_Clear();
@@ -44,9 +46,8 @@ namespace SR_DMG
 		}
 
 		// 初始化
-		private void DoInit()
+		public static void DoInit()
 		{
-			Group = "";
 			App_Path = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "SR-DMG");
 			Cmd_Tip["保存路径"] = "path";
 			Cmd_Tip["登录米游社"] = "login";
@@ -94,7 +95,7 @@ namespace SR_DMG
 			}
 			catch
 			{
-				Mihomo.Message($"文件读取失败：{FilePath}", MessageBoxIcon.Error);
+				Program.TipForm($"文件读取失败\n{FilePath}");
 			}
 			finally
 			{
@@ -104,9 +105,7 @@ namespace SR_DMG
 		private void SR_DMG_FormClosing(object sender, FormClosingEventArgs e)
 		{
 			if (SaveDate()) e.Cancel = !Message("数据文件未成功保存，是否仍要退出？", "文件被占用");
-			string FilePath = GetPath(AppPath.Config);
-			string Dirctoy = Path.GetDirectoryName(FilePath);
-			if (!Directory.Exists(Dirctoy)) Directory.CreateDirectory(Dirctoy);
+			string FilePath = GetPath(AppPath.Config, IsCreate: true);
 			try
 			{
 				using StreamWriter Wt = new(FilePath);
@@ -696,14 +695,11 @@ namespace SR_DMG
 				Cob_Simple_Clear();
 				Lab_Tip.Text = "未选择组";
 				string FilePath = GetPath(AppPath.Save);
-				if (File.Exists(FilePath))
+				string[] Arr = File.ReadAllLines(FilePath);
+				Arr = Array.FindAll(Arr, str => str.StartsWith('G'));
+				foreach (string str in Arr)
 				{
-					string[] Arr = File.ReadAllLines(FilePath);
-					Arr = Array.FindAll(Arr, str => str.StartsWith('G'));
-					foreach (string str in Arr)
-					{
-						Cob_Simple.Items.Add("· " + str);
-					}
+					Cob_Simple.Items.Add("· " + str);
 				}
 				Flags[2] = false;
 			}
@@ -1088,11 +1084,11 @@ namespace SR_DMG
 				if (Flags[2] == false) { Tip("未创建组"); return; }
 				if (int.TryParse(Tar[1], out int Uid) && Uid >= 100000000)
 				{
-					string FilePath = Path.Combine(GetPath(AppPath.Data), $"{Tar[1]}.json");
+					string FilePath = GetPath(AppPath.Data, Tar[1]);
 					if (!File.Exists(FilePath) || Tar[0] == "UID")
 					{
 						Tar[0] = "云端";
-						Avts = await Mihomo.Get_Roles(Uid);
+						Avts = await Mihomo.Get_Roles(Tar[1]);
 						if (Avts == null) return;
 					}
 					else
@@ -1104,7 +1100,7 @@ namespace SR_DMG
 						}
 						catch
 						{
-							Mihomo.Message($"文件读取失败：{FilePath}", MessageBoxIcon.Error); return;
+							Program.TipForm($"文件读取失败\n{FilePath}"); return;
 						}
 					}
 				}
@@ -1112,7 +1108,7 @@ namespace SR_DMG
 				{
 					Mihomo.Token Token = Mihomo.Get_Token();
 					if (Token == null) return;
-					string FilePath = Path.Combine(GetPath(AppPath.Data), $"{Token.Uid}.json");
+					string FilePath = GetPath(AppPath.Data, Token.Uid);
 					if (!File.Exists(FilePath) || Tar[0] == "UID")
 					{
 						Tar[0] = "云端";
@@ -1129,7 +1125,7 @@ namespace SR_DMG
 						}
 						catch
 						{
-							Mihomo.Message($"文件读取失败：{FilePath}", MessageBoxIcon.Error); return;
+							Program.TipForm($"文件读取失败\n{FilePath}"); return;
 						}
 					}
 				}
@@ -1167,27 +1163,23 @@ namespace SR_DMG
 		// 实时便筏
 		private async Task Note()
 		{
-			int[] Val = await Mihomo.Get_Note();
-			if (Val == null) { Tip("请求失败：实时便筏"); return; }
-			DateTime Now_Date = DateTime.Today;
-			DateTime Full_Time = DateTimeOffset.FromUnixTimeSeconds(Val[3]).LocalDateTime;
-			string Str = Now_Date.Day == Full_Time.Day ? "今天" : Now_Date.AddDays(1).Day == Full_Time.Day ? "明天" : "后天";
-			Str += $" {Full_Time:HH:mm}\n需要：{(Val[2] / 3600).ToString().PadLeft(2, '0')} 时 {(Val[2] % 3600 / 60).ToString().PadLeft(2, '0')} 分";
-			Mihomo.Message($"开拓力：{Val[0]} / {Val[1]}\n回满：{Str}", MessageBoxIcon.Information, "实时便筏");
+			string Str = await Mihomo.Get_Note();
+			if (Str == null) { Tip("请求失败：实时便筏"); return; }
+			Program.TipForm(Str, "实时便筏");
 		}
 		// 每日签到
 		private async Task Sign()
 		{
 			string Str = await Mihomo.DoSign();
 			if (Str == null) { Tip("请求失败：每日签到"); return; }
-			Mihomo.Message(Str, MessageBoxIcon.Information, "每日签到");
+			Program.TipForm(Str, "每日签到");
 		}
 		// 米游币任务
 		private async Task Coin()
 		{
-			string Rel = await Mihomo.DoCoin();
-			if (Rel == null) { Tip("请求失败：米游币任务"); return; }
-			Mihomo.Message(Rel, MessageBoxIcon.Information, "米游币任务");
+			string Str = await Mihomo.DoCoin();
+			if (Str == null) { Tip("请求失败：米游币任务"); return; }
+			Program.TipForm(Str, "米游币任务");
 		}
 		// 开发文档
 		private static void Readme()
@@ -1206,7 +1198,7 @@ namespace SR_DMG
 			}
 			catch
 			{
-				Mihomo.Message($"文件保存失败：{FilePath}", MessageBoxIcon.Error);
+				Program.TipForm($"文件保存失败\n{FilePath}");
 			}
 		}
 		// 打开文件
@@ -1263,7 +1255,18 @@ namespace SR_DMG
 			Form.Dispose();
 			return (Index, SeletText);
 		}
-		public static string GetPath(AppPath FilePath = AppPath.None)
+		public static string GetPath(AppPath FileType = AppPath.None, string FileName = null, bool IsCreate = false)
+		{
+			if (IsCreate)
+			{
+				string FilePath = GetPath(FileType, FileName);
+				string DirPath = Path.GetDirectoryName(FilePath);
+				if (!Directory.Exists(DirPath)) Directory.CreateDirectory(DirPath);
+				return FilePath;
+			}
+			else return GetPath(FileType, FileName);
+		}
+		private static string GetPath(AppPath FilePath, string FileName)
 		{
 			if (FilePath == AppPath.None) return App_Path;
 			else return Path.Combine(App_Path,
@@ -1272,7 +1275,7 @@ namespace SR_DMG
 					AppPath.Config => "App.config",
 					AppPath.Save => "SR-DMG.csv",
 					AppPath.Token => "Token.json",
-					AppPath.Data => "Data",
+					AppPath.Data => Path.Combine("Data", $"{FileName}.json"),
 					AppPath.Readme => "Readme.md",
 					_ => string.Empty
 				});
@@ -1387,9 +1390,7 @@ namespace SR_DMG
 		private bool SaveDate()
 		{
 			if (!Save_Info) return false;
-			string FilePath = GetPath(AppPath.Save);
-			string Dirctoy = Path.GetDirectoryName(FilePath);
-			if (!Directory.Exists(Dirctoy)) Directory.CreateDirectory(Dirctoy);
+			string FilePath = GetPath(AppPath.Save, IsCreate: true);
 			try
 			{
 				string[] Arr = File.Exists(FilePath) ? File.ReadAllLines(FilePath) : [];
@@ -1403,7 +1404,7 @@ namespace SR_DMG
 				}
 				Save_Info = false;
 				if (Info.Count > 1) Info.Sort();
-				using StreamWriter Writ = new(FilePath, false);
+				using StreamWriter Writ = new(FilePath);
 				for (int i = 0; i < Info.Count; i++)
 				{
 					string[] Tp = Info[i].Split('$');

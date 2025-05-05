@@ -49,12 +49,12 @@ namespace SR_DMG
 				await Get_Fp(Token);
 				if (Set_Token(Token))
 				{
-					Message($"UID:{Token.Uid} {Token.Nickname}\n已更新 Token 信息", MessageBoxIcon.Information, "Token");
+					Program.TipForm($"{Token.Nickname}UID:{Token.Uid}\n已更新 Token 信息", "Token");
 				}
 			}
 			catch
 			{
-				Message("意外错误：Token请求失败", MessageBoxIcon.Error, "Token");
+				Program.TipForm("意外错误：Token请求失败", "Token");
 			}
 		}
 
@@ -159,7 +159,7 @@ namespace SR_DMG
 					}
 					else
 					{
-						Message("二维码超时失效：请重新尝试扫码登录", MessageBoxIcon.Exclamation, "Token");
+						Program.TipForm("二维码超时失效\n请重新尝试扫码登录", "Token");
 					}
 					break;
 				}
@@ -291,7 +291,7 @@ namespace SR_DMG
 			};
 			string device_id = RadString(16);
 			string seed_id = Guid.NewGuid().ToString();
-			string seed_time = $"{DateTimeOffset.UtcNow.ToUnixTimeMilliseconds()}";
+			string seed_time = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds().ToString();
 			string platform = "2";
 			string device_fp = RadString(13);
 			string app_name = "bbs_cn";
@@ -355,25 +355,24 @@ namespace SR_DMG
 			Rel = JsonSerializer.Serialize(Avatars, JsonSopt());
 			if (Avatars.Avatar_List[0].Properts.Count > 0)
 			{
-				string Pat = $"{SR_DMG.GetPath(SR_DMG.AppPath.Data)}";
-				Directory.CreateDirectory(Pat);
+				string FilePath = SR_DMG.GetPath(SR_DMG.AppPath.Data, Token.Uid, true);
 				try
 				{
-					File.WriteAllText($"{Pat}{Token.Uid}.json", Rel);
+					File.WriteAllText(FilePath, Rel);
 				}
 				catch
 				{
-					Message($"文件保存失败：{Pat}{Token.Uid}", MessageBoxIcon.Error); return null;
+					Program.TipForm($"文件保存失败\n{FilePath}"); return null;
 				}
 			}
 			return Rel;
 		}
 
 		// Mihomo API
-		public static async Task<Avatars> Get_Roles(int uid)
+		public static async Task<Avatars> Get_Roles(string UID)
 		{
 			Avatars Avts;
-			string Rel = await HttpGet($"{MHM_URL}{uid}?lang=cn");
+			string Rel = await HttpGet($"{MHM_URL}{UID}?lang=cn");
 			if (Rel == null) return null;
 			using JsonDocument Doc = JsonDocument.Parse(Rel);
 			if (Doc.RootElement.TryGetProperty("player", out JsonElement Player))
@@ -385,58 +384,38 @@ namespace SR_DMG
 					Avatar_List = []
 				};
 			}
-			else { Message($"UID不存在：{uid}", MessageBoxIcon.Exclamation); return null; }
-			foreach (JsonElement Cat in Doc.RootElement.GetProperty("characters").EnumerateArray())
+			else { Program.TipForm($"UID不存在\n{UID}"); return null; }
+			foreach (JsonElement Characters in Doc.RootElement.GetProperty("characters").EnumerateArray())
 			{
 				Avatar Avt = new()
 				{
-					Name = Cat.GetProperty("name").GetString(),
-					Level = Cat.GetProperty("level").GetInt32(),
-					Element = Cat.GetProperty("element").GetProperty("name").GetString(),
-					Rank = Cat.GetProperty("rank").GetInt32(),
+					Name = Characters.GetProperty("name").GetString(),
+					Level = Characters.GetProperty("level").GetInt32(),
+					Element = Characters.GetProperty("element").GetProperty("name").GetString(),
+					Rank = Characters.GetProperty("rank").GetInt32(),
 					Properts = [],
-					Servant = new Servant
-					{
-						Name = "",
-						Properts = []
-					}
+					Servant = new Servant { Name = "", Properts = [] }
 				};
 				float[] Vals = new float[6];
-				foreach (JsonElement Atr in Cat.GetProperty("attributes").EnumerateArray())
+				foreach (JsonElement Atr in Characters.GetProperty("attributes").EnumerateArray())
 				{
 					switch (Atr.GetProperty("name").GetString())
 					{
 						case "生命值":
 							Vals[0] = Atr.GetProperty("value").GetSingle();
-							Avt.Properts.Add(new Propert
-							{
-								Name = "基础生命",
-								Value = $"{(int)Vals[0]}"
-							});
+							Avt.Properts.Add(new Propert { Name = "基础生命", Value = $"{(int)Vals[0]}" });
 							break;
 						case "攻击力":
 							Vals[1] = Atr.GetProperty("value").GetSingle();
-							Avt.Properts.Add(new Propert
-							{
-								Name = "基础攻击",
-								Value = $"{(int)Vals[1]}"
-							});
+							Avt.Properts.Add(new Propert { Name = "基础攻击", Value = $"{(int)Vals[1]}" });
 							break;
 						case "防御力":
 							Vals[2] = Atr.GetProperty("value").GetSingle();
-							Avt.Properts.Add(new Propert
-							{
-								Name = "基础防御",
-								Value = $"{(int)Vals[2]}"
-							});
+							Avt.Properts.Add(new Propert { Name = "基础防御", Value = $"{(int)Vals[2]}" });
 							break;
 						case "速度":
 							Vals[3] = Atr.GetProperty("value").GetSingle();
-							Avt.Properts.Add(new Propert
-							{
-								Name = "基础速度",
-								Value = $"{(int)Vals[3]}"
-							});
+							Avt.Properts.Add(new Propert { Name = "基础速度", Value = $"{(int)Vals[3]}" });
 							break;
 						case "暴击率":
 							Vals[4] = Atr.GetProperty("value").GetSingle() * 100;
@@ -446,112 +425,68 @@ namespace SR_DMG
 							break;
 					}
 				}
-				foreach (JsonElement Adt in Cat.GetProperty("additions").EnumerateArray())
+				foreach (JsonElement Additons in Characters.GetProperty("additions").EnumerateArray())
 				{
-					switch (Adt.GetProperty("name").GetString())
+					switch (Additons.GetProperty("name").GetString())
 					{
 						case "生命值":
-							Vals[0] += Adt.GetProperty("value").GetSingle();
+							Vals[0] += Additons.GetProperty("value").GetSingle();
 							break;
 						case "攻击力":
-							Vals[1] += Adt.GetProperty("value").GetSingle();
+							Vals[1] += Additons.GetProperty("value").GetSingle();
 							break;
 						case "防御力":
-							Vals[2] += Adt.GetProperty("value").GetSingle();
+							Vals[2] += Additons.GetProperty("value").GetSingle();
 							break;
 						case "速度":
-							Vals[3] += Adt.GetProperty("value").GetSingle();
+							Vals[3] += Additons.GetProperty("value").GetSingle();
 							break;
 						case "暴击率":
-							Vals[4] += Adt.GetProperty("value").GetSingle() * 100;
+							Vals[4] += Additons.GetProperty("value").GetSingle() * 100;
 							break;
 						case "暴击伤害":
-							Vals[5] += Adt.GetProperty("value").GetSingle() * 100;
+							Vals[5] += Additons.GetProperty("value").GetSingle() * 100;
 							break;
 						case "能量恢复效率":
-							Avt.Properts.Add(new Propert
-							{
-								Name = "充能效率",
-								Value = $"{Adt.GetProperty("value").GetSingle() * 100 + 100:0.#}%"
-							});
+							Avt.Properts.Add(new Propert { Name = "充能效率", Value = $"{Additons.GetProperty("value").GetSingle() * 100 + 100:0.#}%" });
 							break;
 						case "效果命中":
-							Avt.Properts.Add(new Propert
-							{
-								Name = "效果命中",
-								Value = $"{Adt.GetProperty("value").GetSingle() * 100:0.#}%"
-							});
+							Avt.Properts.Add(new Propert { Name = "效果命中", Value = $"{Additons.GetProperty("value").GetSingle() * 100:0.#}%" });
 							break;
 						case "效果抵抗":
-							Avt.Properts.Add(new Propert
-							{
-								Name = "效果抵抗",
-								Value = $"{Adt.GetProperty("value").GetSingle() * 100:0.#}%"
-							});
+							Avt.Properts.Add(new Propert { Name = "效果抵抗", Value = $"{Additons.GetProperty("value").GetSingle() * 100:0.#}%" });
 							break;
 						case "击破特攻":
-							Avt.Properts.Add(new Propert
-							{
-								Name = "击破特攻",
-								Value = $"{Adt.GetProperty("value").GetSingle() * 100:0.#}%"
-							});
+							Avt.Properts.Add(new Propert { Name = "击破特攻", Value = $"{Additons.GetProperty("value").GetSingle() * 100:0.#}%" });
 							break;
 						default:
-							if (Adt.GetProperty("name").GetString().StartsWith(Avt.Element))
-							{
-								Avt.Properts.Add(new Propert
-								{
-									Name = "增伤",
-									Value = $"{Adt.GetProperty("value").GetSingle() * 100:0.#}%"
-								});
-							}
+							if (Additons.GetProperty("name").GetString().StartsWith(Avt.Element))
+								Avt.Properts.Add(new Propert { Name = "增伤", Value = $"{Additons.GetProperty("value").GetSingle() * 100:0.#}%" });
 							break;
 					}
 				}
-				Avt.Properts.Add(new Propert
-				{
-					Name = "生命值",
-					Value = $"{(int)Vals[0]}"
-				});
-				Avt.Properts.Add(new Propert
-				{
-					Name = "攻击力",
-					Value = $"{(int)Vals[1]}"
-				}); Avt.Properts.Add(new Propert
-				{
-					Name = "防御力",
-					Value = $"{(int)Vals[2]}"
-				}); Avt.Properts.Add(new Propert
-				{
-					Name = "速度",
-					Value = $"{(int)Vals[3]}"
-				});
-				Avt.Properts.Add(new Propert
-				{
-					Name = "暴击率",
-					Value = $"{Vals[4]:0.#}%"
-				});
-				Avt.Properts.Add(new Propert
-				{
-					Name = "暴击伤害",
-					Value = $"{Vals[5]:0.#}%"
-				});
+				Avt.Properts.Add(new Propert { Name = "生命值", Value = $"{(int)Vals[0]}" });
+				Avt.Properts.Add(new Propert { Name = "攻击力", Value = $"{(int)Vals[1]}" });
+				Avt.Properts.Add(new Propert { Name = "防御力", Value = $"{(int)Vals[2]}" });
+				Avt.Properts.Add(new Propert { Name = "速度", Value = $"{(int)Vals[3]}" });
+				Avt.Properts.Add(new Propert { Name = "暴击率", Value = $"{Vals[4]:0.#}%" });
+				Avt.Properts.Add(new Propert { Name = "暴击伤害", Value = $"{Vals[5]:0.#}%" });
 				Avts.Avatar_List.Add(Avt);
 			}
-			string FilePath = $"{SR_DMG.GetPath(SR_DMG.AppPath.Data)}{uid}.json";
+			string FilePath = SR_DMG.GetPath(SR_DMG.AppPath.Data, UID, true);
 			try
 			{
 				File.WriteAllText(FilePath, JsonSerializer.Serialize(Avts, JsonSopt()));
 			}
 			catch
 			{
-				Message($"文件保存失败：{FilePath}", MessageBoxIcon.Error); return null;
+				Program.TipForm($"文件保存失败\n{FilePath}"); return null;
 			}
 			return Avts;
 		}
 
 		// 实时便筏
-		public static async Task<int[]> Get_Note()
+		public static async Task<string> Get_Note()
 		{
 			Token Token = Get_Token();
 			if (Token == null) return null;
@@ -573,7 +508,11 @@ namespace SR_DMG
 				int Max_Stamina = Data.GetProperty("max_stamina").GetInt32();
 				int Recover_Time = Data.GetProperty("stamina_recover_time").GetInt32();
 				int Full_Ts = Data.GetProperty("stamina_full_ts").GetInt32();
-				return [Stamina, Max_Stamina, Recover_Time, Full_Ts];
+				DateTime Now_Date = DateTime.Today;
+				DateTime Full_Time = DateTimeOffset.FromUnixTimeSeconds(Full_Ts).LocalDateTime;
+				string Str = Now_Date.Day == Full_Time.Day ? "今天" : Now_Date.AddDays(1).Day == Full_Time.Day ? "明天" : "后天";
+				Str += $" {Full_Time:HH:mm} 回满\n{(Recover_Time / 3600).ToString().PadLeft(2, '0')} 时 {(Recover_Time % 3600 / 60).ToString().PadLeft(2, '0')} 分";
+				return $"开拓力：{Stamina} / {Max_Stamina}\n{Str}";
 			}
 			else return null;
 		}
@@ -599,10 +538,9 @@ namespace SR_DMG
 				List<string> Sign_Home = await Get_Sign_Home();
 				(int Sign_Day, int Today) = await Get_Sign_Info(Token);
 				Rel = $"已签到 {Sign_Day} / {Today} 天";
-				if (Sign_Day > 0)
+				if (Sign_Day > 0 && Sign_Day <= Sign_Home.Count)
 				{
-					if (Sign_Day <= Sign_Home.Count) Rel += $"\n今日奖励：{Sign_Home[Sign_Day - 1]}";
-					if (Sign_Day < Sign_Home.Count) Rel += $"\n明日奖励：{Sign_Home[Sign_Day]}";
+					Rel += $"\n{Sign_Home[Sign_Day - 1]}";
 				}
 				return Rel;
 			}
@@ -672,19 +610,21 @@ namespace SR_DMG
 						for (int i = 0; i < 5 - State[2]; i++)
 						{
 							if (!await DoUpvote(Token, News_List[i], n == 0)) return null;
+							if (i < 4 - State[2]) await Task.Delay(100);
 						}
 					}
 				}
+				else await Task.Delay(100);
 			}
 			if (State[6] > 0) State = await Get_State(Token);
 			if (State == null) return null;
 			return $"米游币：{State[5]}"
 				+ $"\n今日奖励：{State[4]}"
 				+ $"\n任务进度：{(State[6] > 0 ? "未完成" : "已完成")}"
-				+ $"\n· 打卡：{State[0]} / 1"
-				+ $"\n· 浏览：{State[1]} / 3"
-				+ $"\n· 点赞：{State[2]} / 5"
-				+ $"\n· 分享：{State[3]} / 1";
+				+ $"\n打卡：{State[0]} / 1"
+				+ $"\n浏览：{State[1]} / 3"
+				+ $"\n点赞：{State[2]} / 5"
+				+ $"\n分享：{State[3]} / 1";
 		}
 		// 任务进度
 		private static async Task<int[]> Get_State(Token Token)
@@ -829,7 +769,7 @@ namespace SR_DMG
 			}
 			catch (Exception e)
 			{
-				Message($"网络错误：{e.Message}", MessageBoxIcon.Error); return null;
+				Program.TipForm($"网络错误\n{e.Message}"); return null;
 			}
 		}
 
@@ -846,7 +786,7 @@ namespace SR_DMG
 					1034 => "账号风控：请前往米游社完成人机验证",
 					_ => Doc.RootElement.GetProperty("message").GetString()
 				};
-				Message($"错误代码：{RetCode}\n{Mes}", MessageBoxIcon.Information, "网页消息");
+				Program.TipForm($"错误代码：{RetCode}\n{Mes}", "网页消息");
 				return false;
 			}
 		}
@@ -860,29 +800,24 @@ namespace SR_DMG
 				{
 					return JsonSerializer.Deserialize<Token>(File.ReadAllText(FilePath));
 				}
-				else { if (NotNull) Message("未登录：请先扫码登录 ( Login )", MessageBoxIcon.Exclamation); return null; }
+				else { if (NotNull) Program.TipForm("未登录\n请先扫码登录 ( Login )"); return null; }
 			}
 			catch
 			{
-				if (NotNull) Message($"文件读取失败：{FilePath}", MessageBoxIcon.Error); return null;
+				if (NotNull) Program.TipForm($"文件读取失败\n{FilePath}"); return null;
 			}
 		}
 		public static bool Set_Token(Token Token)
 		{
-			string FilePath = SR_DMG.GetPath(SR_DMG.AppPath.Token);
+			string FilePath = SR_DMG.GetPath(SR_DMG.AppPath.Token, IsCreate: true);
 			try
 			{
 				File.WriteAllText(FilePath, JsonSerializer.Serialize(Token, JsonSopt())); return true;
 			}
 			catch
 			{
-				Message($"文件保存失败：{FilePath}", MessageBoxIcon.Error, "Token"); return false;
+				Program.TipForm($"文件保存失败\n{FilePath}", "Token"); return false;
 			}
-		}
-
-		public static void Message(string Msg, MessageBoxIcon Ico = MessageBoxIcon.None, string Tietle = "错误提示")
-		{
-			MessageBox.Show(Msg, Tietle, MessageBoxButtons.OK, Ico);
 		}
 
 		// 序列化
