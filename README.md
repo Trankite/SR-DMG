@@ -55,6 +55,19 @@
 
     about
 
+**启动参数**：部分指令可作为启动参数，仅展示指令结果
+
+*以下是一个 CMD 脚本的示例，将文本另存为 sign.bat 双击启动*
+
+*程序路径需替换为你的路径，参数以空格分隔*
+
+    @echo off
+    pause
+    echo 等待程序启动· · ·
+    set EXE_PATH="C:\Users\Trankite\SR-DMG.exe"
+    %EXE_PATH% note sign coin
+    exit
+
 ## 提示
 
 **基础数值**：右键 “攻击力 / 生命值 / 防御力 / 速度”
