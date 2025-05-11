@@ -42,7 +42,8 @@ namespace SR_DMG
 				Token Token = Get_Token(false) ?? new();
 				(string Qr_Url, string Ticket) = await Get_QR_URL(Token);
 				await Check_Login(Token, Qr_Url, Ticket);
-				if (string.IsNullOrEmpty(Token.Stoken)) return;
+				if (string.IsNullOrEmpty(Token.Stoken) ||
+					!Program.Message("是否更新Token数据？", "Token")) return;
 				await Get_LToken(Token);
 				await Get_Cookie_Token(Token);
 				await Get_Uid(Token);
@@ -125,6 +126,7 @@ namespace SR_DMG
 			Form Form = new()
 			{
 				Text = "扫码登录",
+				Icon = Program.Icon,
 				Size = new Size(300, 300),
 				FormBorderStyle = FormBorderStyle.FixedSingle,
 				StartPosition = FormStartPosition.CenterScreen,
@@ -355,7 +357,7 @@ namespace SR_DMG
 			Rel = JsonSerializer.Serialize(Avatars, JsonSopt());
 			if (Avatars.Avatar_List[0].Properts.Count > 0)
 			{
-				string FilePath = SR_DMG.GetPath(SR_DMG.AppPath.Data, Token.Uid, true);
+				string FilePath = Program.GetPath(Program.AppPath.Data, Token.Uid, true);
 				try
 				{
 					File.WriteAllText(FilePath, Rel);
@@ -473,7 +475,7 @@ namespace SR_DMG
 				Avt.Properts.Add(new Propert { Name = "暴击伤害", Value = $"{Vals[5]:0.#}%" });
 				Avts.Avatar_List.Add(Avt);
 			}
-			string FilePath = SR_DMG.GetPath(SR_DMG.AppPath.Data, UID, true);
+			string FilePath = Program.GetPath(Program.AppPath.Data, UID, true);
 			try
 			{
 				File.WriteAllText(FilePath, JsonSerializer.Serialize(Avts, JsonSopt()));
@@ -522,31 +524,29 @@ namespace SR_DMG
 		{
 			Token Token = Get_Token();
 			if (Token == null) return null;
-			string body = JsonSerializer.Serialize(new
+			(int Sign_Day, int Today, bool IsSign) = await Get_Sign_Info(Token);
+			if (!IsSign)
 			{
-				act_id = ACT_ID,
-				region = Token.Server,
-				uid = Token.Uid,
-				lang = "zh-cn"
-			});
-			string[] Cookie = ["Cookie", $"account_mid_v2={Token.Mid};cookie_token_v2={Token.Cookie_Token};"];
-			string Rel = await HttpPost($"{SIGN_URL}sign", body, Cookie);
-			if (Rel == null) return null;
-			using JsonDocument Doc = JsonDocument.Parse(Rel);
-			if (Retcode(Doc, [0, -5003]))
-			{
-				List<string> Sign_Home = await Get_Sign_Home();
-				(int Sign_Day, int Today) = await Get_Sign_Info(Token);
-				Rel = $"已签到 {Sign_Day} / {Today} 天";
-				if (Sign_Day > 0 && Sign_Day <= Sign_Home.Count)
+				string body = JsonSerializer.Serialize(new
 				{
-					Rel += $"\n{Sign_Home[Sign_Day - 1]}";
-				}
-				return Rel;
+					act_id = ACT_ID,
+					region = Token.Server,
+					uid = Token.Uid,
+					lang = "zh-cn"
+				});
+				string[] Cookie = ["Cookie", $"account_mid_v2={Token.Mid};cookie_token_v2={Token.Cookie_Token};"];
+				string Rel = await HttpPost($"{SIGN_URL}sign", body, Cookie);
+				if (Rel == null) return null;
+				using JsonDocument Doc = JsonDocument.Parse(Rel);
+				if (Retcode(Doc)) Sign_Day++;
 			}
-			else return null;
+			return $"已签到 {Sign_Day} / {Today} 天\n{Get_Sign_Home(await Get_Sign_Home(), Today)}";
 		}
-		// 签到奖励 列表
+		// 签到奖励
+		private static string Get_Sign_Home(List<string> SignHome, int Day)
+		{
+			return Day > 0 && Day < SignHome.Count + 1 ? SignHome[Day - 1] : "???";
+		}
 		private static async Task<List<string>> Get_Sign_Home()
 		{
 			List<string> Sign_Home = [];
@@ -557,27 +557,29 @@ namespace SR_DMG
 			{
 				foreach (JsonElement Item in Doc.RootElement.GetProperty("data").GetProperty("awards").EnumerateArray())
 				{
-					Sign_Home.Add($"{Item.GetProperty("name").GetString()} × {Item.GetProperty("cnt").GetInt32()}");
+					int Num = Item.GetProperty("cnt").GetInt32();
+					Sign_Home.Add($"{Item.GetProperty("name").GetString()}{(Num > 1 ? $" × {Num}" : string.Empty)}");
 				}
-				return Sign_Home;
+				return Sign_Home.Count > 0 ? Sign_Home : null;
 			}
 			else return null;
 		}
 		// 签到信息
-		private static async Task<(int Sign_Day, int Today)> Get_Sign_Info(Token Token)
+		private static async Task<(int Sign_Day, int Today, bool IsSign)> Get_Sign_Info(Token Token)
 		{
 			string Rel = await HttpGet($"{SIGN_URL}info?lang=zh-cn&act_id={ACT_ID}&region={Token.Server}&uid={Token.Uid}",
 				["Cookie", $"account_mid_v2={Token.Mid};cookie_token_v2={Token.Cookie_Token};"]);
-			if (Rel == null) return (-1, -1);
+			if (Rel == null) return (-1, -1, false);
 			using JsonDocument Doc = JsonDocument.Parse(Rel);
 			if (Retcode(Doc))
 			{
 				JsonElement Data = Doc.RootElement.GetProperty("data");
 				int Sign_Day = Data.GetProperty("total_sign_day").GetInt32();
 				int Today = DateTime.Parse(Data.GetProperty("today").GetString()).Day;
-				return (Sign_Day, Today);
+				bool IsSign = Data.GetProperty("is_sign").GetBoolean();
+				return (Sign_Day, Today, IsSign);
 			}
-			else return (-1, -1);
+			else return (-1, -1, false);
 		}
 
 		// 米游币任务
@@ -793,7 +795,7 @@ namespace SR_DMG
 
 		public static Token Get_Token(bool NotNull = true)
 		{
-			string FilePath = SR_DMG.GetPath(SR_DMG.AppPath.Token);
+			string FilePath = Program.GetPath(Program.AppPath.Token);
 			try
 			{
 				if (File.Exists(FilePath))
@@ -809,7 +811,7 @@ namespace SR_DMG
 		}
 		public static bool Set_Token(Token Token)
 		{
-			string FilePath = SR_DMG.GetPath(SR_DMG.AppPath.Token, IsCreate: true);
+			string FilePath = Program.GetPath(Program.AppPath.Token, IsCreate: true);
 			try
 			{
 				File.WriteAllText(FilePath, JsonSerializer.Serialize(Token, JsonSopt())); return true;

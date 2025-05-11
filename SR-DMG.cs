@@ -21,23 +21,10 @@ namespace SR_DMG
 		private readonly bool[] Flags = new bool[10];
 		private static readonly Dictionary<string, string> Cmd_Tip = [];
 		private readonly List<Role> Roles = [];
-		private static string App_Path;
-		public enum AppPath
-		{
-			None,
-			Config,
-			Save,
-			Token,
-			Data,
-			Readme
-		}
 
 		public SR_DMG()
 		{
 			DoInit();
-			Group = "";
-			Avatar.Init();
-			Role.Start(this);
 			InitializeComponent();
 			Cob_Simple_Clear();
 			Cob_DMG_Equal_Clear();
@@ -46,9 +33,9 @@ namespace SR_DMG
 		}
 
 		// 初始化
-		public static void DoInit()
+		public void DoInit()
 		{
-			App_Path = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "SR-DMG");
+			Group = "";
 			Cmd_Tip["保存路径"] = "path";
 			Cmd_Tip["登录米游社"] = "login";
 			Cmd_Tip["我的角色"] = "uid me";
@@ -56,11 +43,13 @@ namespace SR_DMG
 			Cmd_Tip["每日签到"] = "sign";
 			Cmd_Tip["米游币任务"] = "coin";
 			Cmd_Tip["开发文档"] = "about";
+			Role.Start(this);
+			Avatar.Init();
 		}
 		// 程序加载及关闭
 		private void SR_DMG_Load(object sender, EventArgs e)
 		{
-			string FilePath = GetPath(AppPath.Config);
+			string FilePath = Program.GetPath(Program.AppPath.Config);
 			try
 			{
 				if (File.Exists(FilePath))
@@ -104,8 +93,8 @@ namespace SR_DMG
 		}
 		private void SR_DMG_FormClosing(object sender, FormClosingEventArgs e)
 		{
-			if (SaveDate()) e.Cancel = !Message("数据文件未成功保存，是否仍要退出？", "文件被占用");
-			string FilePath = GetPath(AppPath.Config, IsCreate: true);
+			if (SaveDate()) e.Cancel = !Program.Message("数据文件未成功保存，是否仍要退出？", "文件被占用");
+			string FilePath = Program.GetPath(Program.AppPath.Config, IsCreate: true);
 			try
 			{
 				using StreamWriter Wt = new(FilePath);
@@ -118,11 +107,10 @@ namespace SR_DMG
 				Wt.WriteLine("转化：[" + string.Join("-", Roled.Transform) + ']');
 				Wt.WriteLine("当前组：" + Group);
 				Wt.Write("历史记录：" + Cob_Simple.SelectedIndex);
-				Mihomo.Http?.Dispose();
 			}
 			catch
 			{
-				e.Cancel = !Message("配置文件未成功保存，是否仍要退出？", "文件被占用");
+				e.Cancel = !Program.Message("配置文件未成功保存，是否仍要退出？", "文件被占用");
 			}
 		}
 		// 窗口透明
@@ -641,7 +629,7 @@ namespace SR_DMG
 				}
 				Save_Info = true;
 			}
-			else if (Message($"是否删除组：{Group}", "删除确认")) DeleteDate();
+			else if (Program.Message($"是否删除组：{Group}", "删除确认")) DeleteDate();
 		}
 		private void Cob_Simple_Clear()
 		{
@@ -694,7 +682,7 @@ namespace SR_DMG
 				Cob_DMG_Equal_Clear();
 				Cob_Simple_Clear();
 				Lab_Tip.Text = "未选择组";
-				string FilePath = GetPath(AppPath.Save);
+				string FilePath = Program.GetPath(Program.AppPath.Save);
 				string[] Arr = File.ReadAllLines(FilePath);
 				Arr = Array.FindAll(Arr, str => str.StartsWith('G'));
 				foreach (string str in Arr)
@@ -809,7 +797,7 @@ namespace SR_DMG
 		// 取消保存
 		private void Lab_Tip_MouseUp(object sender, MouseEventArgs e)
 		{
-			if (e.Button == MouseButtons.Right) Save_Info = !Message("是否取消此次保存计划？", "取消保存");
+			if (e.Button == MouseButtons.Right) Save_Info = !Program.Message("是否取消此次保存计划？", "取消保存");
 		}
 		// 参数相关文本框
 		private void Tex_DMG_Enter(object sender, EventArgs e)
@@ -1045,8 +1033,8 @@ namespace SR_DMG
 					{
 						CmdName.Add(Item.Key);
 					}
-					(int Index, string SeletText) = ListWindow("指令提示", "指令列表", CmdName);
-					if (Index > -1) Command(Cmd_Tip[SeletText]);
+					int Index = Program.ListForm("指令提示", "指令列表", CmdName);
+					if (Index > -1) Command(Cmd_Tip[CmdName[Index]]);
 				}
 			}
 		}
@@ -1084,7 +1072,7 @@ namespace SR_DMG
 				if (Flags[2] == false) { Tip("未创建组"); return; }
 				if (int.TryParse(Tar[1], out int Uid) && Uid >= 100000000)
 				{
-					string FilePath = GetPath(AppPath.Data, Tar[1]);
+					string FilePath = Program.GetPath(Program.AppPath.Data, Tar[1]);
 					if (!File.Exists(FilePath) || Tar[0] == "UID")
 					{
 						Tar[0] = "云端";
@@ -1108,7 +1096,7 @@ namespace SR_DMG
 				{
 					Mihomo.Token Token = Mihomo.Get_Token();
 					if (Token == null) return;
-					string FilePath = GetPath(AppPath.Data, Token.Uid);
+					string FilePath = Program.GetPath(Program.AppPath.Data, Token.Uid);
 					if (!File.Exists(FilePath) || Tar[0] == "UID")
 					{
 						Tar[0] = "云端";
@@ -1137,12 +1125,9 @@ namespace SR_DMG
 					if (Item.Servant.Name == "") continue;
 					ListText.Add(Item.Servant.Name);
 				}
-				(int Index, string SeletText) = ListWindow($"{Tar[0]}数据", "角色列表", ListText);
+				int Index = Program.ListForm($"{Tar[0]}数据", "角色列表", ListText);
 				if (Index < 0) return;
-				Role role = new()
-				{
-					Name = SeletText
-				};
+				Role role = new() { Name = ListText[Index] };
 				Avatar Avt = Avts.Avatar_List.Where(Avt => Avt.Name == role.Name || Avt.Servant.Name == role.Name).First();
 				if (Avt.Properts.Count > 0)
 				{
@@ -1184,7 +1169,7 @@ namespace SR_DMG
 		// 开发文档
 		private static void Readme()
 		{
-			string FilePath = GetPath(AppPath.Readme);
+			string FilePath = Program.GetPath(Program.AppPath.Readme);
 			try
 			{
 				if (!File.Exists(FilePath))
@@ -1204,7 +1189,7 @@ namespace SR_DMG
 		// 打开文件
 		public static void OpenPath(string FilePath = null, bool Flag = false)
 		{
-			FilePath ??= GetPath();
+			FilePath ??= Program.GetPath();
 			if (Flag || Directory.Exists(FilePath))
 			{
 				Process.Start("explorer", $"\"{FilePath}\"");
@@ -1213,76 +1198,6 @@ namespace SR_DMG
 			{
 				Process.Start("explorer", $"/select,\"{FilePath}\"");
 			}
-		}
-		// 列表选择 窗口
-		private (int Index, string SeletText) ListWindow(string Title, string ListName, List<string> ListText)
-		{
-			int Index = -1;
-			string SeletText = null;
-			Form Form = new()
-			{
-				Text = Title,
-				Size = new Size(300, 300),
-				FormBorderStyle = FormBorderStyle.FixedSingle,
-				StartPosition = FormStartPosition.CenterScreen,
-				MaximizeBox = false
-			};
-			ListView Lew = new()
-			{
-				Size = new Size(260, 245),
-				Location = new Point(10, 10),
-				Font = new Font(this.Font.Name, 15),
-				BackColor = Form.BackColor,
-				ForeColor = Form.ForeColor,
-				FullRowSelect = true,
-				View = View.Details,
-				MultiSelect = false,
-				GridLines = false
-			};
-			Lew.Columns.Add(ListName, 235, HorizontalAlignment.Center);
-			foreach (string str in ListText)
-			{
-				Lew.Items.Add(str);
-			}
-			Lew.SelectedIndexChanged += (sender, e) =>
-			{
-				Index = Lew.SelectedIndices[0];
-				SeletText = Lew.SelectedItems[0].Text;
-				Form.Close();
-			};
-			Form.Controls.Add(Lew);
-			Form.ShowDialog();
-			Form.Dispose();
-			return (Index, SeletText);
-		}
-		public static string GetPath(AppPath FileType = AppPath.None, string FileName = null, bool IsCreate = false)
-		{
-			if (IsCreate)
-			{
-				string FilePath = GetPath(FileType, FileName);
-				string DirPath = Path.GetDirectoryName(FilePath);
-				if (!Directory.Exists(DirPath)) Directory.CreateDirectory(DirPath);
-				return FilePath;
-			}
-			else return GetPath(FileType, FileName);
-		}
-		private static string GetPath(AppPath FilePath, string FileName)
-		{
-			if (FilePath == AppPath.None) return App_Path;
-			else return Path.Combine(App_Path,
-				FilePath switch
-				{
-					AppPath.Config => "App.config",
-					AppPath.Save => "SR-DMG.csv",
-					AppPath.Token => "Token.json",
-					AppPath.Data => Path.Combine("Data", $"{FileName}.json"),
-					AppPath.Readme => "Readme.md",
-					_ => string.Empty
-				});
-		}
-		private static bool Message(string Msg, string Tietle)
-		{
-			return MessageBox.Show(Msg, Tietle, MessageBoxButtons.OKCancel, MessageBoxIcon.Exclamation) == DialogResult.OK;
 		}
 
 		// 载入数据
@@ -1331,7 +1246,7 @@ namespace SR_DMG
 		// 读取数据文件
 		private void LoadDate()
 		{
-			string FilePath = GetPath(AppPath.Save);
+			string FilePath = Program.GetPath(Program.AppPath.Save);
 			if (File.Exists(FilePath))
 			{
 				try
@@ -1390,7 +1305,7 @@ namespace SR_DMG
 		private bool SaveDate()
 		{
 			if (!Save_Info) return false;
-			string FilePath = GetPath(AppPath.Save, IsCreate: true);
+			string FilePath = Program.GetPath(Program.AppPath.Save, IsCreate: true);
 			try
 			{
 				string[] Arr = File.Exists(FilePath) ? File.ReadAllLines(FilePath) : [];
@@ -1472,7 +1387,7 @@ namespace SR_DMG
 		{
 			try
 			{
-				string FilePath = GetPath(AppPath.Save);
+				string FilePath = Program.GetPath(Program.AppPath.Save);
 				string[] Arr = File.ReadAllLines(FilePath);
 				using (StreamWriter Writ = new(FilePath, false))
 				{
