@@ -16,11 +16,16 @@ namespace SR_DMG
 			Application.SetCompatibleTextRenderingDefault(false);
 			Application.SetColorMode(SystemColorMode.Dark);
 			Application.ThreadException += new ThreadExceptionEventHandler(Application_ThreadException);
-			if (args.Length == 0) Application.Run(new SR_DMG());
+			if (args.Length == 0)
+			{
+				MainForm = new SR_DMG();
+				Application.Run(MainForm);
+			}
 			else CommandPrompt(args);
 			Mihomo.Http?.Dispose();
 		}
 
+		public static SR_DMG MainForm;
 		public enum AppPath { None, Config, Save, Token, Data, Readme }
 		public static Icon Icon = Icon.ExtractAssociatedIcon(Application.ExecutablePath);
 		private static readonly string App_Path = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "SR-DMG");
@@ -37,21 +42,16 @@ namespace SR_DMG
 					_ => $"无效指令\n{args[i]}",
 				};
 			}
-			TipForm(string.Join("\n\n", args), Top: true);
+			TipForm(string.Join("\n\n", args));
 		}
 
-		public static void TipForm(string Tips, string Title = "SR-DMG", bool Top = false)
+		public static void TipForm(string Tips, string Title = "SR-DMG")
 		{
 			Form Form = new()
 			{
-				Icon = Icon,
 				Text = Title,
-				TopMost = Top,
 				AutoSize = true,
-				AutoSizeMode = AutoSizeMode.GrowAndShrink,
-				FormBorderStyle = FormBorderStyle.FixedSingle,
-				StartPosition = FormStartPosition.CenterScreen,
-				MaximizeBox = false
+				AutoSizeMode = AutoSizeMode.GrowAndShrink
 			};
 			Panel Pan = new()
 			{
@@ -73,7 +73,7 @@ namespace SR_DMG
 			};
 			Pan.Controls.Add(Lab);
 			Form.Controls.Add(Pan);
-			Form.ShowDialog();
+			TopForm(Form);
 			Form.Dispose();
 		}
 
@@ -82,16 +82,13 @@ namespace SR_DMG
 			int Index = -1;
 			Form Form = new()
 			{
-				Icon = Icon,
 				Text = Title,
-				Size = new Size(300, 300),
-				FormBorderStyle = FormBorderStyle.FixedSingle,
-				StartPosition = FormStartPosition.CenterScreen,
-				MaximizeBox = false
+				Size = new Size(285, 305),
+				Owner = MainForm
 			};
 			ListView ListView = new()
 			{
-				Size = new Size(260, 245),
+				Size = new Size(250, 250),
 				Location = new Point(10, 10),
 				Font = new Font(Form.Font.Name, 15),
 				BackColor = Form.BackColor,
@@ -101,18 +98,20 @@ namespace SR_DMG
 				MultiSelect = false,
 				GridLines = false
 			};
-			ListView.Columns.Add(ListName, 235);
+			ListView.Columns.Add(string.Empty, 0);
+			ListView.Columns.Add(ListName, 0, HorizontalAlignment.Center);
 			foreach (string str in ListText)
 			{
-				ListView.Items.Add(str);
+				ListView.Items.Add(new ListViewItem([string.Empty, str]));
 			}
+			ListView.AutoResizeColumn(1, ColumnHeaderAutoResizeStyle.HeaderSize);
 			ListView.SelectedIndexChanged += (sender, e) =>
 			{
 				Index = ListView.SelectedIndices[0];
 				Form.Close();
 			};
 			Form.Controls.Add(ListView);
-			Form.ShowDialog();
+			TopForm(Form);
 			Form.Dispose();
 			return Index;
 		}
@@ -147,6 +146,22 @@ namespace SR_DMG
 					AppPath.Readme => "Readme.md",
 					_ => string.Empty
 				});
+		}
+
+		public static void TopForm(Form Form)
+		{
+			Form.Icon = Icon;
+			Form.MaximizeBox = false;
+			Form.FormBorderStyle = FormBorderStyle.FixedSingle;
+			Form.StartPosition = FormStartPosition.CenterScreen;
+			bool Top = MainForm?.TopMost ?? false;
+			if (Top)
+			{
+				MainForm.TopMost = false;
+				Form.ShowDialog();
+				MainForm.TopMost = true;
+			}
+			else Form.ShowDialog();
 		}
 
 		private static void Application_ThreadException(object sender, ThreadExceptionEventArgs e)

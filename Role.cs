@@ -52,11 +52,10 @@ namespace SR_DMG
 			Transform = [.. Transform.Distinct()];
 			Gain = [.. Gain.Distinct()];
 		}
-		private static SR_DMG App;
 		private static float[] Break_Ratio;
 		private static float[] Break_Factor;
 		private static Dictionary<string, Property> Map_Property;
-		public static List<Property> Properties;
+		private static List<Property> Properties;
 
 		// 实例参数
 		public float[] Base = new float[36];
@@ -425,11 +424,12 @@ namespace SR_DMG
 		}
 
 		// 转化更新器
-		private void Set(string name, ref float date, float value)
+		private void Set(string name, ref float data, float value)
 		{
-			App.TranUpdate(name, this, false);
-			date = (float)Math.Round(value, Map_Property[name].Accuracy);
-			App.TranUpdate(name, this, true);
+			if (data == value) return;
+			Program.MainForm.TranUpdate(name, this, false);
+			data = (float)Math.Round(value, Map_Property[name].Accuracy);
+			Program.MainForm.TranUpdate(name, this, true);
 		}
 
 		// 增益
@@ -515,9 +515,8 @@ namespace SR_DMG
 		}
 
 		// 外部接口
-		public static void Start(SR_DMG App)
+		public static void Init()
 		{
-			Role.App = App;
 			Break_Ratio = [4, 4, 1, 1.2f, 1, 0, 4, 2, 2, 2, 2, 4, 3, 2];
 			Break_Factor = [
 				54.00f, 58.00f, 62.00f, 67.53f, 70.51f,
@@ -621,6 +620,10 @@ namespace SR_DMG
 				return Convert.ToSingle(Item.PropertyInfo.GetValue(this));
 			}
 			else return float.NaN;
+		}
+		public static List<Property> GetProperties()
+		{
+			return Properties;
 		}
 
 		public class Property

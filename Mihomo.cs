@@ -126,15 +126,12 @@ namespace SR_DMG
 			Form Form = new()
 			{
 				Text = "扫码登录",
-				Icon = Program.Icon,
 				Size = new Size(300, 300),
-				FormBorderStyle = FormBorderStyle.FixedSingle,
 				StartPosition = FormStartPosition.CenterScreen,
 				BackgroundImageLayout = ImageLayout.Center,
-				BackgroundImage = new Bitmap(new QRCode(new QRCodeGenerator().CreateQrCode(
-						qr_url, QRCodeGenerator.ECCLevel.Q)).GetGraphic(20), 200, 200),
-				MaximizeBox = false,
-				TopMost = true
+				BackgroundImage = new Bitmap(new QRCode(new QRCodeGenerator()
+				.CreateQrCode(qr_url, QRCodeGenerator.ECCLevel.Q))
+				.GetGraphic(20), 200, 200)
 			};
 			Task Login = Task.Run(async () =>
 			{
@@ -167,7 +164,7 @@ namespace SR_DMG
 				}
 				Form.Close();
 			});
-			Form.ShowDialog();
+			Program.TopForm(Form);
 			await Login;
 			Form.Dispose();
 		}

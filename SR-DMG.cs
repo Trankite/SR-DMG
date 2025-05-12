@@ -43,8 +43,8 @@ namespace SR_DMG
 			Cmd_Tip["每日签到"] = "sign";
 			Cmd_Tip["米游币任务"] = "coin";
 			Cmd_Tip["开发文档"] = "about";
-			Role.Start(this);
 			Avatar.Init();
+			Role.Init();
 		}
 		// 程序加载及关闭
 		private void SR_DMG_Load(object sender, EventArgs e)
@@ -99,7 +99,7 @@ namespace SR_DMG
 			{
 				using StreamWriter Wt = new(FilePath);
 				Wt.WriteLine("名称：" + Roled.Name);
-				foreach (Role.Property Item in Role.Properties)
+				foreach (Role.Property Item in Role.GetProperties())
 				{
 					Wt.WriteLine($"{Item.NickName}：{Roled.GetValue(Item.NickName)}");
 				}
@@ -433,23 +433,18 @@ namespace SR_DMG
 		{
 			string[] Arr = Str[(Str.IndexOf('：') + 1)..].Split(':', '<');
 			Arr[0] = Arr[0][(Arr[0].IndexOf('[') + 1)..].Trim(']');
+			if (Arr[1].Contains($"[{Arr[0]}]")) return;
 			float Max = Arr.Length > 2 ? Arr[2].Contains('%') ?
 				float.Parse(Arr[2][..Arr[2].IndexOf('%')]) * 0.01f
 				: float.Parse(Arr[2]) : float.MaxValue;
 			float Tar = (float)Compute(Arr[1], role).Val;
-			if (Tar > 0)
-			{
-				if (Tar > Max) Tar = Max;
-				if (Role.GetType(Arr[0])) Tar *= 100;
-				if (Str.StartsWith('□')) Tar *= -1;
-				Tar = (float)Math.Round(Tar, Role.GetType(Arr[0]) ? 1 : 0);
-				role.SetValue(Arr[0], role.GetValue(Arr[0]) + Tar);
-				if (Info)
-				{
-					GetControl<TextBox>("Tex_" + Role.GetName(Arr[0])).Text =
-						role.GetValue(Arr[0]).ToString();
-				}
-			}
+			if (Tar > 0) return;
+			if (Tar > Max) Tar = Max;
+			if (Role.GetType(Arr[0])) Tar *= 100;
+			if (Str.StartsWith('□')) Tar *= -1;
+			Tar = (float)Math.Round(Tar, Role.GetType(Arr[0]) ? 1 : 0);
+			role.SetValue(Arr[0], role.GetValue(Arr[0]) + Tar);
+			if (Info) GetControl<TextBox>("Tex_" + Role.GetName(Arr[0])).Text = role.GetValue(Arr[0]).ToString();
 		}
 		public void TranUpdate(string tar, Role role, bool Info)
 		{
@@ -1206,7 +1201,7 @@ namespace SR_DMG
 			Flags[0] = Flags[5] = Flags[6] = true;
 			SetTexFont(Tex_Name_1, role.Name);
 			Roled.Name = role.Name;
-			foreach (Role.Property Item in Role.Properties)
+			foreach (Role.Property Item in Role.GetProperties())
 			{
 				TextBox Tex = GetControl<TextBox>($"Tex_{Item.PropertyName}");
 				if (Tex == null)
