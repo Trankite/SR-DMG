@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Reflection;
 
 namespace SR_DMG
@@ -28,26 +29,17 @@ namespace SR_DMG
 		{
 			string[] Arr = str.Split(',');
 			Name = Arr[0][(Arr[0].IndexOf(' ') + 1)..];
-			int i = 0;
-			while (i < Base.Length)
+			foreach (string s in Arr[^1].Trim('[', ']').Split('-'))
 			{
-				Base[i++] = float.Parse(Arr[i]);
+				if (int.TryParse(s, out int n)) Transform.Add(n);
 			}
-			string[] Info = Arr[++i].Trim('[', ']').Split('-');
-			if (Info[0] != "")
+			foreach (string s in Arr[^2].Trim('[', ']').Split('-'))
 			{
-				for (int k = 0; k < Info.Length; k++)
-				{
-					Gain.Add(int.Parse(Info[k]));
-				}
+				if (int.TryParse(s, out int n)) Gain.Add(n);
 			}
-			Info = Arr[++i].Trim('[', ']').Split('-');
-			if (Info[0] != "")
+			for (int i = 0; i < Base.Length; i++)
 			{
-				for (int k = 0; k < Info.Length; k++)
-				{
-					Transform.Add(int.Parse(Info[k]));
-				}
+				if (i < Arr.Length - 1 && float.TryParse(Arr[i + 1], out float Val)) Base[i] = Val;
 			}
 			Transform = [.. Transform.Distinct()];
 			Gain = [.. Gain.Distinct()];
@@ -56,377 +48,291 @@ namespace SR_DMG
 		private static float[] Break_Factor;
 		private static Dictionary<string, Property> Map_Property;
 		private static List<Property> Properties;
+		private static string Tips;
 
 		// 实例参数
-		public float[] Base = new float[36];
+		public float[] Base = new float[38];
 
 		// 名称
-		public string Name = "";
+		public string Name = string.Empty;
 
 		// 攻击力
 		public float ATK
 		{
-			get { return Base[0]; }
-			set
-			{
-				Set("攻击力", ref Base[0], value);
-			}
+			get { return Get(nameof(ATK)); }
+			set { Set(nameof(ATK), value); }
 		}
 
 		// 生命值
 		public float HP
 		{
-			get { return Base[1]; }
-			set
-			{
-				Set("生命值", ref Base[1], value);
-			}
+			get { return Get(nameof(HP)); }
+			set { Set(nameof(HP), value); }
 		}
 
 		// 防御力
 		public float DEF
 		{
-			get { return Base[2]; }
-			set
-			{
-				Set("防御力", ref Base[2], value);
-			}
+			get { return Get(nameof(DEF)); }
+			set { Set(nameof(DEF), value); }
 		}
 
 		// 基础攻击
 		public float ATK_Base
 		{
-			get { return Base[3]; }
-			set
-			{
-				Set("基础攻击", ref Base[3], value);
-			}
+			get { return Get(nameof(ATK_Base)); }
+			set { Set(nameof(ATK_Base), value); }
 		}
 
 		// 基础生命
 		public float HP_Base
 		{
-			get { return Base[4]; }
-			set
-			{
-				Set("基础生命", ref Base[4], value);
-			}
+			get { return Get(nameof(HP_Base)); }
+			set { Set(nameof(HP_Base), value); }
 		}
 
 		// 基础防御 
 		public float DEF_Base
 		{
-			get { return Base[5]; }
-			set
-			{
-				Set("基础防御", ref Base[5], value);
-			}
+			get { return Get(nameof(DEF_Base)); }
+			set { Set(nameof(DEF_Base), value); }
+
 		}
 
 		// 攻击倍率
 		public float DMG_Equal_1
 		{
-			get { return Base[6]; }
-			set
-			{
-				Set("攻击倍率", ref Base[6], value);
-			}
+			get { return Get(nameof(DMG_Equal_1)); }
+			set { Set(nameof(DMG_Equal_1), value); }
 		}
 
 		// 特殊倍率
 		public float DMG_Equal_2
 		{
-			get { return Base[7]; }
-			set
-			{
-				Set("特殊倍率", ref Base[7], value);
-			}
+			get { return Get(nameof(DMG_Equal_2)); }
+			set { Set(nameof(DMG_Equal_2), value); }
 		}
 
 		// 固定数值
 		public float DMG_Equal_3
 		{
-			get { return Base[8]; }
-			set
-			{
-				Set("固定数值", ref Base[8], value);
-			}
+			get { return Get(nameof(DMG_Equal_3)); }
+			set { Set(nameof(DMG_Equal_3), value); }
 		}
 
 		// 独立乘区
 		public float DMG_Equal_4
 		{
-			get { return Base[9]; }
-			set
-			{
-				Set("独立乘区", ref Base[9], value);
-			}
+			get { return Get(nameof(DMG_Equal_4)); }
+			set { Set(nameof(DMG_Equal_4), value); }
 		}
 
 		// 倍率类型
 		public float DMG_Equal_Tpye
 		{
-			get { return Base[10]; }
-			set
-			{
-				Set("倍率类型", ref Base[10], value);
-			}
+			get { return Get(nameof(DMG_Equal_Tpye)); }
+			set { Set(nameof(DMG_Equal_Tpye), value); }
 		}
 
 		// 倍率标号
 		public float DMG_Equal_Info
 		{
-			get { return Base[11]; }
-			set
-			{
-				Set("倍率标号", ref Base[11], value);
-			}
+			get { return Get(nameof(DMG_Equal_Info)); }
+			set { Set(nameof(DMG_Equal_Info), value); }
 		}
 
 		// 暴击率
 		public float CRIT_Rate
 		{
-			get { return Base[12]; }
-			set
-			{
-				Set("暴击率", ref Base[12], value);
-			}
+			get { return Get(nameof(CRIT_Rate)); }
+			set { Set(nameof(CRIT_Rate), value); }
 		}
 
 		// 暴击伤害
 		public float CRIT_DMG
 		{
-			get { return Base[13]; }
-			set
-			{
-				Set("暴击伤害", ref Base[13], value);
-			}
+			get { return Get(nameof(CRIT_DMG)); }
+			set { Set(nameof(CRIT_DMG), value); }
 		}
 
 		// 角色等级
 		public float Character_Level
 		{
-			get { return Base[14]; }
-			set
-			{
-				Set("角色等级", ref Base[14], value);
-			}
+			get { return Get(nameof(Character_Level)); }
+			set { Set(nameof(Character_Level), value); }
 		}
 
 		// 怪物等级
 		public float Enemy_Level
 		{
-			get { return Base[15]; }
-			set
-			{
-				Set("怪物等级", ref Base[15], value);
-			}
+			get { return Get(nameof(Enemy_Level)); }
+			set { Set(nameof(Enemy_Level), value); }
 		}
 
 		// 减防
 		public float DEF_Reduced
 		{
-			get { return Base[16]; }
-			set
-			{
-				Set("减防", ref Base[16], value);
-			}
+			get { return Get(nameof(DEF_Reduced)); }
+			set { Set(nameof(DEF_Reduced), value); }
 		}
 
 		// 无视防御
 		public float DEF_Ignores
 		{
-			get { return Base[17]; }
-			set
-			{
-				Set("无视防御", ref Base[17], value);
-			}
+			get { return Get(nameof(DEF_Ignores)); }
+			set { Set(nameof(DEF_Ignores), value); }
 		}
 
 		// 抗性
 		public float RES_Boost
 		{
-			get { return Base[18]; }
-			set
-			{
-				Set("抗性", ref Base[18], value);
-			}
+			get { return Get(nameof(RES_Boost)); }
+			set { Set(nameof(RES_Boost), value); }
 		}
 
 		// 穿透
 		public float RES_PEN
 		{
-			get { return Base[19]; }
-			set
-			{
-				Set("穿透", ref Base[19], value);
-			}
+			get { return Get(nameof(RES_PEN)); }
+			set { Set(nameof(RES_PEN), value); }
 		}
 
 		// 增伤
 		public float DMG_Boost
 		{
-			get { return Base[20]; }
-			set
-			{
-				Set("增伤", ref Base[20], value);
-			}
+			get { return Get(nameof(DMG_Boost)); }
+			set { Set(nameof(DMG_Boost), value); }
 		}
 
 		// 易伤
 		public float DMG_Taken
 		{
-			get { return Base[21]; }
-			set
-			{
-				Set("易伤", ref Base[21], value);
-			}
+			get { return Get(nameof(DMG_Taken)); }
+			set { Set(nameof(DMG_Taken), value); }
 		}
 
 		// 免伤
 		public float DMG_Reduction
 		{
-			get { return Base[22]; }
-			set
-			{
-				Set("免伤", ref Base[22], value);
-			}
+			get { return Get(nameof(DMG_Reduction)); }
+			set { Set(nameof(DMG_Reduction), value); }
 		}
 
 		// 超击破
 		public float Break_Equal
 		{
-			get { return Base[23]; }
-			set
-			{
-				Set("超击破", ref Base[23], value);
-			}
+			get { return Get(nameof(Break_Equal)); }
+			set { Set(nameof(Break_Equal), value); }
 		}
 
 		// 击破特攻
 		public float Break_Effect
 		{
-			get { return Base[24]; }
-			set
-			{
-				Set("击破特攻", ref Base[24], value);
-			}
+			get { return Get(nameof(Break_Effect)); }
+			set { Set(nameof(Break_Effect), value); }
 		}
 
 		// 击破效率
 		public float Break_Efficiency
 		{
-			get { return Base[25]; }
-			set
-			{
-				Set("击破效率", ref Base[25], value);
-			}
+			get { return Get(nameof(Break_Efficiency)); }
+			set { Set(nameof(Break_Efficiency), value); }
 		}
 
 		// 击破增伤
 		public float Break_Boost
 		{
-			get { return Base[26]; }
-			set
-			{
-				Set("击破增伤", ref Base[26], value);
-			}
+			get { return Get(nameof(Break_Boost)); }
+			set { Set(nameof(Break_Boost), value); }
 		}
 
 		// 击破类型
 		public float Break_Type
 		{
-			get { return Base[27]; }
-			set
-			{
-				Set("击破类型", ref Base[27], value);
-			}
+			get { return Get(nameof(Break_Type)); }
+			set { Set(nameof(Break_Type), value); }
 		}
 
 		// 速度
 		public float SPD
 		{
-			get { return Base[28]; }
-			set
-			{
-				Set("速度", ref Base[28], value);
-			}
+			get { return Get(nameof(SPD)); }
+			set { Set(nameof(SPD), value); }
 		}
 
 		//基础速度
 		public float SPD_Base
 		{
-			get { return Base[29]; }
-			set
-			{
-				Set("基础速度", ref Base[29], value);
-			}
+			get { return Get(nameof(SPD_Base)); }
+			set { Set(nameof(SPD_Base), value); }
 		}
 
 		// 韧性
 		public float Toughness
 		{
-			get { return Base[30]; }
-			set
-			{
-				Set("韧性", ref Base[30], value);
-			}
+			get { return Get(nameof(Toughness)); }
+			set { Set(nameof(Toughness), value); }
 		}
 
 		// 削韧
 		public float Toughness_Reduction
 		{
-			get { return Base[31]; }
-			set
-			{
-				Set("削韧", ref Base[31], value);
-			}
+			get { return Get(nameof(Toughness_Reduction)); }
+			set { Set(nameof(Toughness_Reduction), value); }
 		}
 
 		// 效果命中
 		public float Effect_Hit_Rate
 		{
-			get { return Base[32]; }
-			set
-			{
-				Set("效果命中", ref Base[32], value);
-			}
+			get { return Get(nameof(Effect_Hit_Rate)); }
+			set { Set(nameof(Effect_Hit_Rate), value); }
 		}
 
 		// 效果抵抗
 		public float Effect_RES
 		{
-			get { return Base[33]; }
-			set
-			{
-				Set("效果抵抗", ref Base[33], value);
-			}
+			get { return Get(nameof(Effect_RES)); }
+			set { Set(nameof(Effect_RES), value); }
 		}
 
 		// 充能效率
 		public float Energy_Regeneration_Rate
 		{
-			get { return Base[34]; }
-			set
-			{
-				Set("充能效率", ref Base[34], value);
-			}
+			get { return Get(nameof(Energy_Regeneration_Rate)); }
+			set { Set(nameof(Energy_Regeneration_Rate), value); }
 		}
 
 		// 治疗提高
 		public float Heal_Rate
 		{
-			get { return Base[35]; }
-			set
-			{
-				Set("治疗提高", ref Base[35], value);
-			}
+			get { return Get(nameof(Heal_Rate)); }
+			set { Set(nameof(Heal_Rate), value); }
+		}
+
+		// 累计数值
+		public float Accumulate
+		{
+			get { return Get(nameof(Accumulate)); }
+			set { Set(nameof(Accumulate), value); }
+		}
+
+		// 效果层数
+		public float Effect_Layers
+		{
+			get { return Get(nameof(Effect_Layers)); }
+			set { Set(nameof(Effect_Layers), value); }
 		}
 
 		// 转化更新器
-		private void Set(string name, ref float data, float value)
+		private ref float Get(string name)
 		{
+			return ref Base[Map_Property[name].Index];
+		}
+		private void Set(string name, float value)
+		{
+			ref float data = ref Get(name);
 			if (data == value) return;
+			name = Map_Property[name].NickName;
 			Program.MainForm.TranUpdate(name, this, false);
 			data = (float)Math.Round(value, Map_Property[name].Accuracy);
 			Program.MainForm.TranUpdate(name, this, true);
@@ -574,17 +480,30 @@ namespace SR_DMG
 				new Property("效果抵抗", "Effect_RES", 1),
 				new Property("充能效率", "Energy_Regeneration_Rate", 1),
 				new Property("治疗提高", "Heal_Rate", 1),
+				new Property("累积数值", "Accumulate", 0),
+				new Property("效果层数", "Effect_Layers", 0)
 			];
+			for (int i = 0; i < Properties.Count; i++)
+			{
+				Properties[i].Index = i;
+			}
 			Map_Property = new Dictionary<string, Property>(72);
 			foreach (Property Item in Properties)
 			{
 				Map_Property[Item.NickName] = Item;
 				Map_Property[Item.PropertyName] = Item;
 			}
-			foreach (PropertyInfo Item in typeof(Role).GetProperties())
+			Type Type = typeof(Role);
+			foreach (PropertyInfo Prop in Type.GetProperties())
 			{
-				Map_Property[Item.Name].PropertyInfo = Item;
+				Property Property = Map_Property[Prop.Name];
+				ParameterExpression ObjParam = Expression.Parameter(Type);
+				ParameterExpression ValueParam = Expression.Parameter(typeof(float));
+				MemberExpression PropAccess = Expression.Property(Expression.Convert(ObjParam, Type), Prop);
+				Property.SetValue = Expression.Lambda<Action<Role, float>>(Expression.Assign(PropAccess, ValueParam), ObjParam, ValueParam).Compile();
+				Property.GetValue = Expression.Lambda<Func<Role, float>>(PropAccess, ObjParam).Compile();
 			}
+			Tips = string.Join(',', new[] { "SR-DMG" }.Concat(Properties.Select(s => s.NickName)).Concat(["增益", "转化"]));
 		}
 		public static bool GetType(string str)
 		{
@@ -609,7 +528,7 @@ namespace SR_DMG
 			if (name == null) return;
 			if (Map_Property.TryGetValue(name, out Property Item))
 			{
-				Item.PropertyInfo.SetValue(this, value);
+				Item.SetValue(this, value);
 			}
 		}
 		public float GetValue(string name)
@@ -617,20 +536,27 @@ namespace SR_DMG
 			if (name == null) return float.NaN;
 			if (Map_Property.TryGetValue(name, out Property Item))
 			{
-				return Convert.ToSingle(Item.PropertyInfo.GetValue(this));
+				return Convert.ToSingle(Item.GetValue(this));
 			}
 			else return float.NaN;
 		}
+		// 外部访问
 		public static List<Property> GetProperties()
 		{
 			return Properties;
 		}
+		public static string GetTips()
+		{
+			return Tips;
+		}
 
 		public class Property
 		{
+			public int Index;
 			public string NickName;
 			public string PropertyName;
-			public PropertyInfo PropertyInfo;
+			public Func<Role, float> GetValue;
+			public Action<Role, float> SetValue;
 			public int Accuracy;
 			public Property() { }
 			public Property(string name, string pname, int acc)

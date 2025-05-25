@@ -2,6 +2,10 @@
   "profiles": {
     "SR-DMG": {
       "commandName": "Project"
+    },
+    "参数启动": {
+      "commandName": "Project",
+      "commandLineArgs": "note sign coin"
     }
   }
 }

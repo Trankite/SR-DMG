@@ -172,6 +172,11 @@
 			Tex_Heal_Rate = new System.Windows.Forms.TextBox();
 			Lab_Heal_Rate = new System.Windows.Forms.Label();
 			Lab_MaxCRIT = new System.Windows.Forms.Label();
+			Pan_Layers = new System.Windows.Forms.Panel();
+			Tex_Effect_Layers = new System.Windows.Forms.TextBox();
+			Lab_Effect_Layers = new System.Windows.Forms.Label();
+			Tex_Accumulate = new System.Windows.Forms.TextBox();
+			Lab_Accumulate = new System.Windows.Forms.Label();
 			Pan_ATK_Base.SuspendLayout();
 			Pan_ATK.SuspendLayout();
 			Pan_HP_DEF.SuspendLayout();
@@ -182,6 +187,7 @@
 			Pan_SPD_Base.SuspendLayout();
 			Pan_Effect.SuspendLayout();
 			Pan_Heal_Rate.SuspendLayout();
+			Pan_Layers.SuspendLayout();
 			SuspendLayout();
 			// 
 			// Cob_Transform
@@ -2082,6 +2088,78 @@
 			Lab_MaxCRIT.Text = "期望极限：";
 			Lab_MaxCRIT.MouseUp += Lab_Area_MouseUp;
 			// 
+			// Pan_Layers
+			// 
+			Pan_Layers.Controls.Add(Tex_Effect_Layers);
+			Pan_Layers.Controls.Add(Lab_Effect_Layers);
+			Pan_Layers.Controls.Add(Tex_Accumulate);
+			Pan_Layers.Controls.Add(Lab_Accumulate);
+			Pan_Layers.Location = new System.Drawing.Point(225, 455);
+			Pan_Layers.Name = "Pan_Layers";
+			Pan_Layers.Size = new System.Drawing.Size(225, 65);
+			Pan_Layers.TabIndex = 0;
+			Pan_Layers.Visible = false;
+			// 
+			// Tex_Effect_Layers
+			// 
+			Tex_Effect_Layers.BorderStyle = System.Windows.Forms.BorderStyle.None;
+			Tex_Effect_Layers.ContextMenuStrip = MenuStrip;
+			Tex_Effect_Layers.Font = new System.Drawing.Font("微软雅黑", 13.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, 134);
+			Tex_Effect_Layers.ImeMode = System.Windows.Forms.ImeMode.Off;
+			Tex_Effect_Layers.Location = new System.Drawing.Point(114, 31);
+			Tex_Effect_Layers.MaxLength = 6;
+			Tex_Effect_Layers.Name = "Tex_Effect_Layers";
+			Tex_Effect_Layers.Size = new System.Drawing.Size(80, 25);
+			Tex_Effect_Layers.TabIndex = 0;
+			Tex_Effect_Layers.TabStop = false;
+			Tex_Effect_Layers.TextChanged += Tex_DMG_TextChanged;
+			Tex_Effect_Layers.Enter += Tex_DMG_Enter;
+			Tex_Effect_Layers.KeyPress += Tex_Legal_1_KeyPress;
+			Tex_Effect_Layers.Leave += Tex_DMG_Leave;
+			Tex_Effect_Layers.MouseUp += Tex_DMG_MouseUp;
+			// 
+			// Lab_Effect_Layers
+			// 
+			Lab_Effect_Layers.AutoSize = true;
+			Lab_Effect_Layers.Font = new System.Drawing.Font("微软雅黑", 13.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, 134);
+			Lab_Effect_Layers.Location = new System.Drawing.Point(1, 31);
+			Lab_Effect_Layers.Name = "Lab_Effect_Layers";
+			Lab_Effect_Layers.Size = new System.Drawing.Size(107, 25);
+			Lab_Effect_Layers.TabIndex = 0;
+			Lab_Effect_Layers.Text = "效果层数：";
+			Lab_Effect_Layers.MouseDown += Lab_Layers_MouseDown;
+			Lab_Effect_Layers.MouseUp += Tex_DMG_MouseUp;
+			// 
+			// Tex_Accumulate
+			// 
+			Tex_Accumulate.BorderStyle = System.Windows.Forms.BorderStyle.None;
+			Tex_Accumulate.ContextMenuStrip = MenuStrip;
+			Tex_Accumulate.Font = new System.Drawing.Font("微软雅黑", 13.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, 134);
+			Tex_Accumulate.ImeMode = System.Windows.Forms.ImeMode.Off;
+			Tex_Accumulate.Location = new System.Drawing.Point(114, 1);
+			Tex_Accumulate.MaxLength = 6;
+			Tex_Accumulate.Name = "Tex_Accumulate";
+			Tex_Accumulate.Size = new System.Drawing.Size(80, 25);
+			Tex_Accumulate.TabIndex = 0;
+			Tex_Accumulate.TabStop = false;
+			Tex_Accumulate.TextChanged += Tex_DMG_TextChanged;
+			Tex_Accumulate.Enter += Tex_DMG_Enter;
+			Tex_Accumulate.KeyPress += Tex_Legal_1_KeyPress;
+			Tex_Accumulate.Leave += Tex_DMG_Leave;
+			Tex_Accumulate.MouseUp += Tex_DMG_MouseUp;
+			// 
+			// Lab_Accumulate
+			// 
+			Lab_Accumulate.AutoSize = true;
+			Lab_Accumulate.Font = new System.Drawing.Font("微软雅黑", 13.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, 134);
+			Lab_Accumulate.Location = new System.Drawing.Point(1, 1);
+			Lab_Accumulate.Name = "Lab_Accumulate";
+			Lab_Accumulate.Size = new System.Drawing.Size(107, 25);
+			Lab_Accumulate.TabIndex = 0;
+			Lab_Accumulate.Text = "累积数值：";
+			Lab_Accumulate.MouseDown += Lab_Layers_MouseDown;
+			Lab_Accumulate.MouseUp += Tex_DMG_MouseUp;
+			// 
 			// SR_DMG
 			// 
 			AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
@@ -2199,6 +2277,7 @@
 			Controls.Add(Pan_SPD_Base);
 			Controls.Add(Pan_Heal_Rate);
 			Controls.Add(Pan_Effect);
+			Controls.Add(Pan_Layers);
 			DoubleBuffered = true;
 			Font = new System.Drawing.Font("微软雅黑", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, 134);
 			ForeColor = System.Drawing.SystemColors.WindowText;
@@ -2234,6 +2313,8 @@
 			Pan_Effect.PerformLayout();
 			Pan_Heal_Rate.ResumeLayout(false);
 			Pan_Heal_Rate.PerformLayout();
+			Pan_Layers.ResumeLayout(false);
+			Pan_Layers.PerformLayout();
 			ResumeLayout(false);
 			PerformLayout();
 		}
@@ -2381,6 +2462,11 @@
 		private System.Windows.Forms.TextBox Tex_Heal_Rate;
 		private System.Windows.Forms.Label Lab_Heal_Rate;
 		private System.Windows.Forms.Label Lab_MaxCRIT;
+		private System.Windows.Forms.Panel Pan_Layers;
+		private System.Windows.Forms.TextBox Tex_Effect_Layers;
+		private System.Windows.Forms.Label Lab_Effect_Layers;
+		private System.Windows.Forms.TextBox Tex_Accumulate;
+		private System.Windows.Forms.Label Lab_Accumulate;
 	}
 }
 

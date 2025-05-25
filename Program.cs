@@ -51,6 +51,7 @@ namespace SR_DMG
 			{
 				Text = Title,
 				AutoSize = true,
+				TopMost = MainForm == null,
 				AutoSizeMode = AutoSizeMode.GrowAndShrink
 			};
 			Panel Pan = new()
@@ -121,23 +122,10 @@ namespace SR_DMG
 			return MessageBox.Show(Msg, Tietle, MessageBoxButtons.OKCancel, MessageBoxIcon.Exclamation) == DialogResult.OK;
 		}
 
-		public static string GetPath(AppPath FileType = AppPath.None, string FileName = null, bool IsCreate = false)
+		public static string GetPath(AppPath FileType = AppPath.None, string FileName = null)
 		{
-			if (IsCreate)
-			{
-				string FilePath = GetPath(FileType, FileName);
-				string DirPath = Path.GetDirectoryName(FilePath);
-				if (!Directory.Exists(DirPath)) Directory.CreateDirectory(DirPath);
-				return FilePath;
-			}
-			else return GetPath(FileType, FileName);
-		}
-
-		private static string GetPath(AppPath FilePath, string FileName)
-		{
-			if (FilePath == AppPath.None) return App_Path;
-			else return Path.Combine(App_Path,
-				FilePath switch
+			string FilePath = Path.Combine(App_Path,
+				FileType switch
 				{
 					AppPath.Config => "App.config",
 					AppPath.Save => "SR-DMG.csv",
@@ -146,6 +134,9 @@ namespace SR_DMG
 					AppPath.Readme => "Readme.md",
 					_ => string.Empty
 				});
+			if (Path.GetExtension(FilePath) == string.Empty) Directory.CreateDirectory(FilePath);
+			else Directory.CreateDirectory(Path.GetDirectoryName(FilePath));
+			return FilePath;
 		}
 
 		public static void TopForm(Form Form)
@@ -154,14 +145,37 @@ namespace SR_DMG
 			Form.MaximizeBox = false;
 			Form.FormBorderStyle = FormBorderStyle.FixedSingle;
 			Form.StartPosition = FormStartPosition.CenterScreen;
-			bool Top = MainForm?.TopMost ?? false;
-			if (Top)
+			if (MainForm?.TopMost ?? false)
 			{
 				MainForm.TopMost = false;
 				Form.ShowDialog();
 				MainForm.TopMost = true;
 			}
 			else Form.ShowDialog();
+		}
+
+		public static string[] FileRead(string FilePath)
+		{
+			try
+			{
+				return File.ReadAllLines(FilePath);
+			}
+			catch
+			{
+				TipForm($"文件读取失败\n{FilePath}"); return null;
+			}
+		}
+
+		public static bool FileWrite(string FilePath, string[] Arr)
+		{
+			try
+			{
+				File.WriteAllLines(FilePath, Arr); return true;
+			}
+			catch
+			{
+				TipForm($"文件保存失败\n{FilePath}"); return false;
+			}
 		}
 
 		private static void Application_ThreadException(object sender, ThreadExceptionEventArgs e)

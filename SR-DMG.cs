@@ -35,7 +35,7 @@ namespace SR_DMG
 		// 初始化
 		public void DoInit()
 		{
-			Group = "";
+			Group = string.Empty;
 			Cmd_Tip["保存路径"] = "path";
 			Cmd_Tip["登录米游社"] = "login";
 			Cmd_Tip["我的角色"] = "uid me";
@@ -50,51 +50,40 @@ namespace SR_DMG
 		private void SR_DMG_Load(object sender, EventArgs e)
 		{
 			string FilePath = Program.GetPath(Program.AppPath.Config);
-			try
+			if (File.Exists(FilePath))
 			{
-				if (File.Exists(FilePath))
+				string[] Arr = Program.FileRead(FilePath);
+				if (Arr != null && Arr.Length > 40)
 				{
-					string[] Arr = File.ReadAllLines(FilePath);
-					Group = Arr[39][(Arr[39].IndexOf('：') + 1)..];
-					if (Group != "")
+					Group = Arr[^2][(Arr[^2].IndexOf('：') + 1)..];
+					if (Group != string.Empty)
 					{
 						Flags[2] = true;
-						LoadDate();
+						LoadData();
 					}
-					else
-					{
-						Group_List();
-					}
-					int i = int.Parse(Arr[40][(Arr[40].IndexOf('：') + 1)..]);
+					else Group_List();
+					int i = int.Parse(Arr[^1][(Arr[^1].IndexOf('：') + 1)..]);
 					if (Flags[2] && i > 0 && i < Cob_Simple.Items.Count)
 					{
 						Cob_Simple.SelectedIndex = i;
 					}
 					else
 					{
-						string Tar = "";
 						for (i = 0; i < 39; i++)
 						{
-							Tar += Arr[i][(Arr[i].IndexOf('：') + 1)..] + ',';
+							Arr[i] = Arr[i][(Arr[i].IndexOf('：') + 1)..];
 						}
-						Roled = new Role(Tar);
+						Roled = new Role(string.Join(',', Arr));
 					}
 				}
-				else Group_List();
 			}
-			catch
-			{
-				Program.TipForm($"文件读取失败\n{FilePath}");
-			}
-			finally
-			{
-				LoadRole(Roled);
-			}
+			else Group_List();
+			LoadRole(Roled);
 		}
 		private void SR_DMG_FormClosing(object sender, FormClosingEventArgs e)
 		{
-			if (SaveDate()) e.Cancel = !Program.Message("数据文件未成功保存，是否仍要退出？", "文件被占用");
-			string FilePath = Program.GetPath(Program.AppPath.Config, IsCreate: true);
+			if (SaveData()) e.Cancel = !Program.Message("数据文件未成功保存，是否仍要退出？", "文件被占用");
+			string FilePath = Program.GetPath(Program.AppPath.Config);
 			try
 			{
 				using StreamWriter Wt = new(FilePath);
@@ -150,87 +139,6 @@ namespace SR_DMG
 				DMG_Compute();
 			}
 		}
-		// 总值与基础值切换
-		private void Lab_ATK_MouseDown(object sender, MouseEventArgs e)
-		{
-			if (e.Button == MouseButtons.Right)
-			{
-				Pan_ATK.Hide();
-				Pan_ATK_Base.Show();
-			}
-		}
-		private void Lab_ATK_Base_MouseDown(object sender, MouseEventArgs e)
-		{
-			if (e.Button == MouseButtons.Right)
-			{
-				Pan_ATK_Base.Hide();
-				Pan_ATK.Show();
-			}
-		}
-		private void Lab_HP_DEF_MouseDown(object sender, MouseEventArgs e)
-		{
-			if (e.Button == MouseButtons.Right)
-			{
-				Pan_HP_DEF.Hide();
-				Pan_HP_DEF_Base.Show();
-			}
-		}
-		private void Lab_HP_DEF_Base_MouseDown(object sender, MouseEventArgs e)
-		{
-			if (e.Button == MouseButtons.Right)
-			{
-				Pan_HP_DEF_Base.Hide();
-				Pan_HP_DEF.Show();
-			}
-		}
-		private void Lab_Effect_MouseDown(object sender, MouseEventArgs e)
-		{
-			if (e.Button == MouseButtons.Right)
-			{
-				Pan_Effect.Hide();
-				Pan_Heal_Rate.Show();
-			}
-		}
-		private void Lab_Heal_Rate_MouseDown(object sender, MouseEventArgs e)
-		{
-			if (e.Button == MouseButtons.Right)
-			{
-				Pan_Heal_Rate.Hide();
-				Pan_Effect.Show();
-			}
-		}
-		private void Lab_DMG_Equal_2_MouseDown(object sender, MouseEventArgs e)
-		{
-			if (e.Button == MouseButtons.Right)
-			{
-				Pan_DMG_Equal_2.Hide();
-				Pan_DMG_Equal_3.Show();
-			}
-		}
-		private void Lab_DMG_Equal_3_MouseDown(object sender, MouseEventArgs e)
-		{
-			if (e.Button == MouseButtons.Right)
-			{
-				Pan_DMG_Equal_3.Hide();
-				Pan_DMG_Equal_2.Show();
-			}
-		}
-		private void Lab_SPD_MouseDown(object sender, MouseEventArgs e)
-		{
-			if (e.Button == MouseButtons.Right)
-			{
-				Pan_SPD.Hide();
-				Pan_SPD_Base.Show();
-			}
-		}
-		private void Lab_SPD_Base_MouseDown(object sender, MouseEventArgs e)
-		{
-			if (e.Button == MouseButtons.Right)
-			{
-				Pan_SPD_Base.Hide();
-				Pan_SPD.Show();
-			}
-		}
 
 		// 伤害计算参数
 		private void Tex_DMG_TextChanged(object sender, EventArgs e)
@@ -263,7 +171,7 @@ namespace SR_DMG
 			Lab_Break_2.Text = "击 破 ：" + Rel[1][4].ToString("F0");
 			Lab_Break_3.Text = "裂伤纠缠禁锢灼烧冻结触电风化".Substring((int)Roled.Break_Type * 2, 2).Insert(1, " ") + " ：" +
 				(Roled.Break_Type == 2 ? Rel[1][5].ToString("0.#") + " %" : Rel[1][5].ToString("F0"));
-			Lab_DMG_Equal_Info.Text = Rel[0][1] > 0 ? "+" + Rel[0][1] : "";
+			Lab_DMG_Equal_Info.Text = Rel[0][1] > 0 ? "+" + Rel[0][1] : string.Empty;
 			Lab_Area_1.Text = "攻击区：" + Rel[0][0].ToString("F0");
 			Lab_Area_2.Text = "总倍率：" + (Roled.ATK > 0 ? Rel[0][0] / Roled.ATK * 100 : 0).ToString("0.#") + " %";
 			Lab_Area_3.Text = "防御区：" + (Rel[0][2] * 100).ToString("0.#") + " %";
@@ -340,19 +248,19 @@ namespace SR_DMG
 					Tex_Transform.Text = Arr[0] + ':' + Equ + '<' + Arr[2];
 				}
 				else Tex_Transform.Text = Arr[0] + ':' + Equ;
-				Lab_Transform_Info.Text = Val == 0 ? "" : (Role.GetType(Arr[0].Trim('[', ']')) ?
+				Lab_Transform_Info.Text = Val == 0 ? string.Empty : (Role.GetType(Arr[0].Trim('[', ']')) ?
 					(Val * 100).ToString("0.#") + "%" : Val.ToString("F0"));
 				Tex_Transform.SelectionStart = Arr[0].Length + Loc + 1;
 				Tex_Transform.Refresh();
 			}
 			else
 			{
-				if (Tex_Transform.Text != "")
+				if (Tex_Transform.Text != string.Empty)
 				{
 					Tex_Transform.Text = "[]:";
 					Tex_Transform.SelectionStart = 1;
 				}
-				Lab_Transform_Info.Text = "";
+				Lab_Transform_Info.Text = string.Empty;
 			}
 			Flags[4] = false;
 		}
@@ -381,7 +289,7 @@ namespace SR_DMG
 							{
 								if (float.TryParse(Arr[2].TrimEnd('%'), out _))
 								{
-									Str += "<" + Arr[2].Replace(" ", "");
+									Str += "<" + Arr[2].Replace(" ", string.Empty);
 								}
 								else
 								{
@@ -520,11 +428,11 @@ namespace SR_DMG
 						Flags[5] = true;
 						if (Tex_Name_3.Font.Style == FontStyle.Regular)
 						{
-							Cob_Insert(Cob_Gain, "□ " + Tex_Name_3.Text + '：' + Arr[0] + ':' + Arr[1].Replace(" ", ""));
+							Cob_Insert(Cob_Gain, "□ " + Tex_Name_3.Text + '：' + Arr[0] + ':' + Arr[1].Replace(" ", string.Empty));
 						}
 						else
 						{
-							Cob_Insert(Cob_Gain, "□ " + Arr[0] + ':' + Arr[1].Replace(" ", ""));
+							Cob_Insert(Cob_Gain, "□ " + Arr[0] + ':' + Arr[1].Replace(" ", string.Empty));
 						}
 						Flags[5] = false;
 						Save_Info = true;
@@ -584,7 +492,7 @@ namespace SR_DMG
 				{
 					Group = Cob_Simple.Text[2..];
 					Flags[2] = true;
-					LoadDate();
+					LoadData();
 					Cob_Simple.DroppedDown = true;
 				}
 			}
@@ -603,7 +511,7 @@ namespace SR_DMG
 				{
 					Group = "G-0 " + Tex_Name_1.Text;
 					Cob_Simple_Clear();
-					Lab_Tip.Text = "";
+					Lab_Tip.Text = string.Empty;
 					Roles.Clear();
 					Flags[2] = true;
 					Save_Info = true;
@@ -624,13 +532,13 @@ namespace SR_DMG
 				}
 				Save_Info = true;
 			}
-			else if (Program.Message($"是否删除组：{Group}", "删除确认")) DeleteDate();
+			else if (Program.Message($"是否删除组：{Group}", "删除确认")) DeleteData();
 		}
 		private void Cob_Simple_Clear()
 		{
 			Cob_Simple.Items.Clear();
 			Cob_Simple.Items.Add("载入已保存的数据 （ 当前组：" +
-				(Group == "" ? "G-None" : Group) + " ）");
+				(Group == string.Empty ? "G-None" : Group) + " ）");
 			Cob_Simple.SelectedIndex = 0;
 		}
 		private void Cob_Simple_Update()
@@ -650,9 +558,9 @@ namespace SR_DMG
 		// 组切换
 		private void Btn_Group_Click(object sender, EventArgs e)
 		{
-			if (Flags[2] || Group == "")
+			if (Flags[2] || Group == string.Empty)
 			{
-				if (SaveDate())
+				if (SaveData())
 				{
 					Tip("保存数据失败，暂时无法切换"); return;
 				}
@@ -661,35 +569,29 @@ namespace SR_DMG
 			else
 			{
 				Flags[2] = true;
-				LoadDate();
+				LoadData();
 			}
 			Cob_Simple.DroppedDown = true;
 		}
 		private void Group_List()
 		{
-			try
+			Roles.Clear();
+			Roled.Gain.Clear();
+			Roled.Transform.Clear();
+			Cob_Gain_Clear();
+			Cob_Transform_Clear();
+			Cob_DMG_Equal_Clear();
+			Cob_Simple_Clear();
+			Lab_Tip.Text = "未选择组";
+			string FilePath = Program.GetPath(Program.AppPath.Save);
+			string[] Arr = Program.FileRead(FilePath);
+			if (Arr == null) return;
+			Arr = Array.FindAll(Arr, str => str.StartsWith('G'));
+			foreach (string str in Arr)
 			{
-				Roles.Clear();
-				Roled.Gain.Clear();
-				Roled.Transform.Clear();
-				Cob_Gain_Clear();
-				Cob_Transform_Clear();
-				Cob_DMG_Equal_Clear();
-				Cob_Simple_Clear();
-				Lab_Tip.Text = "未选择组";
-				string FilePath = Program.GetPath(Program.AppPath.Save);
-				string[] Arr = File.ReadAllLines(FilePath);
-				Arr = Array.FindAll(Arr, str => str.StartsWith('G'));
-				foreach (string str in Arr)
-				{
-					Cob_Simple.Items.Add("· " + str);
-				}
-				Flags[2] = false;
+				Cob_Simple.Items.Add("· " + str);
 			}
-			catch
-			{
-				Tip("读取组列表失败");
-			}
+			Flags[2] = false;
 		}
 
 		// 倍率切换
@@ -754,7 +656,7 @@ namespace SR_DMG
 		private void Btn_Save_2_Click(object sender, EventArgs e)
 		{
 			Flags[3] = true;
-			string Equal = "";
+			string Equal = string.Empty;
 			if (Tex_Name_2.Font.Style == FontStyle.Regular)
 			{
 				Equal = Tex_Name_2.Text + '：';
@@ -765,13 +667,13 @@ namespace SR_DMG
 			}
 			if (Roled.DMG_Equal_2 != 0 && Cob_DMG_Equal_Tpye.SelectedIndex > 0)
 			{
-				Equal += (Equal == "" || Equal.EndsWith('：') ? "" : " + ") + Roled.DMG_Equal_2 + "% [" + Cob_DMG_Equal_Tpye.Text + "]";
+				Equal += (Equal == string.Empty || Equal.EndsWith('：') ? string.Empty : " + ") + Roled.DMG_Equal_2 + "% [" + Cob_DMG_Equal_Tpye.Text + "]";
 			}
 			if (Roled.DMG_Equal_3 != 0)
 			{
-				Equal += (Equal == "" || Equal.EndsWith('：') ? "" : " + ") + Roled.DMG_Equal_3;
+				Equal += (Equal == string.Empty || Equal.EndsWith('：') ? string.Empty : " + ") + Roled.DMG_Equal_3;
 			}
-			if (Equal == "" || Equal.EndsWith('：')) Tip("参数不能都为空");
+			if (Equal == string.Empty || Equal.EndsWith('：')) Tip("参数不能都为空");
 			else
 			{
 				Save_Info = true;
@@ -800,14 +702,14 @@ namespace SR_DMG
 			if (Flags[7]) return;
 			TextBox Tex = sender as TextBox;
 			TGUpdate(Role.GetName(Tex.Name[4..]), Roled, false);
-			if (Tex.Text == "0") Tex.Text = "";
+			if (Tex.Text == "0") Tex.Text = string.Empty;
 		}
 		private void Tex_DMG_Leave(object sender, EventArgs e)
 		{
 			if (Flags[7]) return;
 			TextBox Tex = sender as TextBox;
 			TGUpdate(Role.GetName(Tex.Name[4..]), Roled, true);
-			if (Tex.Text == "") Tex.Text = "0";
+			if (Tex.Text == string.Empty) Tex.Text = "0";
 		}
 		private void TGUpdate(string tar, Role role, bool Info)
 		{
@@ -934,7 +836,7 @@ namespace SR_DMG
 			{
 				int Info = Tex_Calculator.SelectionStart;
 				string Str = (sender as Label).Text;
-				Str = ToFloat(Str) + (Str.EndsWith('%') ? "%" : "");
+				Str = ToFloat(Str) + (Str.EndsWith('%') ? "%" : string.Empty);
 				Flags[4] = true;
 				if (Info > Tex_Calculator.Text.Length)
 				{
@@ -955,14 +857,14 @@ namespace SR_DMG
 		private void Tex_Name_Enter(object sender, EventArgs e)
 		{
 			TextBox Tex = sender as TextBox;
-			if (Tex.Font.Style == FontStyle.Italic) Tex.Text = "";
+			if (Tex.Font.Style == FontStyle.Italic) Tex.Text = string.Empty;
 			Tex.Font = new Font(Tex.Font, FontStyle.Regular);
 		}
 		private void Tex_Name_Leave(object sender, EventArgs e)
 		{
 			TextBox Tex = sender as TextBox;
 			if (Tex == Tex_Name_1) Roled.Name = Tex.Text;
-			if (Tex.Text == "") SetTexFont(Tex, null);
+			if (Tex.Text == string.Empty) SetTexFont(Tex, null);
 		}
 		// 启用伤害比对
 		private void Ceb_Note_CheckedChanged(object sender, EventArgs e)
@@ -973,17 +875,17 @@ namespace SR_DMG
 			}
 			else
 			{
-				Lab_Vary_1.Text = "";
-				Lab_Vary_2.Text = "";
-				Lab_Vary_3.Text = "";
-				Lab_Vary_4.Text = "";
-				Lab_Vary_5.Text = "";
-				Lab_Vary_6.Text = "";
+				Lab_Vary_1.Text = string.Empty;
+				Lab_Vary_2.Text = string.Empty;
+				Lab_Vary_3.Text = string.Empty;
+				Lab_Vary_4.Text = string.Empty;
+				Lab_Vary_5.Text = string.Empty;
+				Lab_Vary_6.Text = string.Empty;
 			}
 		}
 		private static void Improve(Label Lab, float Dmg1, float Dmg2)
 		{
-			if ((int)Dmg1 == (int)Dmg2) Lab.Text = "";
+			if ((int)Dmg1 == (int)Dmg2) Lab.Text = string.Empty;
 			else
 			{
 				float Imp = (float)Math.Round((Dmg1 / Dmg2 - 1) * 100, 1);
@@ -1052,6 +954,7 @@ namespace SR_DMG
 					case "note": await Note(); break;
 					case "sign": await Sign(); break;
 					case "coin": await Coin(); break;
+					case "updata": Updata(); break;
 					case "about": Readme(); break;
 					default: Tip($"无法识别：{Str.ToUpper()}"); break;
 				}
@@ -1076,9 +979,9 @@ namespace SR_DMG
 					}
 					else
 					{
+						Tar[0] = "本地";
 						try
 						{
-							Tar[0] = "本地";
 							Avts = JsonSerializer.Deserialize<Avatars>(File.ReadAllText(FilePath));
 						}
 						catch
@@ -1095,15 +998,14 @@ namespace SR_DMG
 					if (!File.Exists(FilePath) || Tar[0] == "UID")
 					{
 						Tar[0] = "云端";
-						string Rel = await Mihomo.Get_Roles(Token);
-						if (Rel == null) return;
-						Avts = JsonSerializer.Deserialize<Avatars>(Rel);
+						Avts = await Mihomo.Get_Roles(Token);
+						if (Avts == null) return;
 					}
 					else
 					{
+						Tar[0] = "本地";
 						try
 						{
-							Tar[0] = "本地";
 							Avts = JsonSerializer.Deserialize<Avatars>(File.ReadAllText(FilePath));
 						}
 						catch
@@ -1117,7 +1019,7 @@ namespace SR_DMG
 				foreach (Avatar Item in Avts.Avatar_List)
 				{
 					ListText.Add(Item.Name);
-					if (Item.Servant.Name == "") continue;
+					if (Item.Servant.Name == string.Empty) continue;
 					ListText.Add(Item.Servant.Name);
 				}
 				int Index = Program.ListForm($"{Tar[0]}数据", "角色列表", ListText);
@@ -1239,71 +1141,62 @@ namespace SR_DMG
 			}
 		}
 		// 读取数据文件
-		private void LoadDate()
+		private void LoadData()
 		{
 			string FilePath = Program.GetPath(Program.AppPath.Save);
-			if (File.Exists(FilePath))
+			string[] Arr = Program.FileRead(FilePath);
+			if (Arr == null) return;
+			int Index = Array.IndexOf(Arr, Group) + 1;
+			if (Index > 0)
 			{
-				try
+				Lab_Tip.Text = string.Empty;
+				Cob_Simple_Clear();
+				if (Index < Arr.Length)
 				{
-					string[] Arr = File.ReadAllLines(FilePath);
-					int i = Array.IndexOf(Arr, Group) + 1;
-					if (i > 0)
+					int n = 0;
+					do
 					{
-						Lab_Tip.Text = "";
-						Cob_Simple_Clear();
-						if (i < Arr.Length)
+						if (Arr[Index] == string.Empty) continue;
+						switch (Arr[Index][0])
 						{
-							int n = 0;
-							do
-							{
-								if (Arr[i] == "") continue;
-								switch (Arr[i][0])
+							case 'G':
+								return;
+							case 'D':
+								Role role = new(Arr[Index]);
+								Cob_Simple.Items.Add(role.ToSimple(n++));
+								Roles.Add(role);
+								break;
+							case '&':
+								Cob_DMG_Equal_Info.Items.Add(Arr[Index][2..]);
+								break;
+							case '#':
+								if (Arr[Index].IndexOf(':') < Arr[Index].LastIndexOf('['))
 								{
-									case 'G':
-										return;
-									case 'D':
-										Role role = new(Arr[i]);
-										Cob_Simple.Items.Add(role.ToSimple(n++));
-										Roles.Add(role);
-										break;
-									case '&':
-										Cob_DMG_Equal_Info.Items.Add(Arr[i][2..]);
-										break;
-									case '#':
-										if (Arr[i].IndexOf(':') < Arr[i].LastIndexOf('['))
-										{
-											Cob_Transform.Items.Add("□" + Arr[i][1..]);
-										}
-										else
-										{
-											Cob_Gain.Items.Add("□" + Arr[i][1..]);
-										}
-										break;
+									Cob_Transform.Items.Add("□" + Arr[Index][1..]);
 								}
-							} while (++i < Arr.Length);
+								else
+								{
+									Cob_Gain.Items.Add("□" + Arr[Index][1..]);
+								}
+								break;
 						}
-					}
-					else
-					{
-						Group = "";
-						Group_List();
-					}
+					} while (++Index < Arr.Length);
 				}
-				catch
-				{
-					Tip("读取数据失败");
-				}
+			}
+			else
+			{
+				Group = string.Empty;
+				Group_List();
 			}
 		}
 		// 保存数据文件
-		private bool SaveDate()
+		private bool SaveData()
 		{
 			if (!Save_Info) return false;
-			string FilePath = Program.GetPath(Program.AppPath.Save, IsCreate: true);
+			string FilePath = Program.GetPath(Program.AppPath.Save);
 			try
 			{
-				string[] Arr = File.Exists(FilePath) ? File.ReadAllLines(FilePath) : [];
+				string[] Arr = Program.FileRead(FilePath) ?? [];
 				List<string> Info = [Group[(Group.IndexOf(' ') + 1)..] + '$'];
 				for (int i = 0; i < Arr.Length; i++)
 				{
@@ -1315,6 +1208,7 @@ namespace SR_DMG
 				Save_Info = false;
 				if (Info.Count > 1) Info.Sort();
 				using StreamWriter Writ = new(FilePath);
+				Writ.WriteLine(Role.GetTips());
 				for (int i = 0; i < Info.Count; i++)
 				{
 					string[] Tp = Info[i].Split('$');
@@ -1323,7 +1217,7 @@ namespace SR_DMG
 					{
 						while (++k < Arr.Length)
 						{
-							if (Arr[k] == "") continue;
+							if (Arr[k] == string.Empty) continue;
 							if (Arr[k].StartsWith('G')) break;
 							else Writ.WriteLine(Arr[k]);
 						}
@@ -1373,46 +1267,76 @@ namespace SR_DMG
 				}
 				else
 				{
-					Lab_Tip.Text = "";
+					Lab_Tip.Text = string.Empty;
 				}
 			}
 		}
 		// 删除整个数据组
-		private void DeleteDate()
+		private void DeleteData()
 		{
-			try
+			string FilePath = Program.GetPath(Program.AppPath.Save);
+			string[] Arr = Program.FileRead(FilePath);
+			if (Arr == null) return;
+			using (StreamWriter Writ = new(FilePath, false))
 			{
-				string FilePath = Program.GetPath(Program.AppPath.Save);
-				string[] Arr = File.ReadAllLines(FilePath);
-				using (StreamWriter Writ = new(FilePath, false))
+				int seq = 1;
+				int end = -1;
+				Save_Info = false;
+				int tar = Array.IndexOf(Arr, Group);
+				for (int i = 0; i < Arr.Length; i++)
 				{
-					int seq = 1;
-					int end = -1;
-					Save_Info = false;
-					int tar = Array.IndexOf(Arr, Group);
-					for (int i = 0; i < Arr.Length; i++)
+					if (Arr[i].StartsWith('G'))
 					{
-						if (Arr[i].StartsWith('G'))
+						if (i != tar)
 						{
-							if (i != tar)
-							{
-								Writ.WriteLine($"G-{seq++} " + Arr[i][(Arr[i].IndexOf(' ') + 1)..]);
-							}
-							else end = seq;
+							Writ.WriteLine($"G-{seq++} " + Arr[i][(Arr[i].IndexOf(' ') + 1)..]);
 						}
-						else if (seq != end && (i < Arr.Length - 1 || Arr[i] != ""))
-						{
-							Writ.WriteLine(Arr[i]);
-						}
+						else end = seq;
+					}
+					else if (seq != end && (i < Arr.Length - 1 || Arr[i] != string.Empty))
+					{
+						Writ.WriteLine(Arr[i]);
 					}
 				}
-				Group = "";
-				Group_List();
 			}
-			catch
+			Group = string.Empty;
+			Group_List();
+		}
+		// 旧版本数据更新
+		private void Updata()
+		{
+			string Tips = Role.GetTips();
+			string FilePath = Program.GetPath(Program.AppPath.Save);
+			string[] Arr = Program.FileRead(FilePath);
+			if (Arr == null) return;
+			if (!Arr[0].StartsWith("SR-DMG"))
 			{
-				Tip("文件被占用，未能删除 " + Group);
+				Tip("未更新：缺少标题"); return;
 			}
+			else if (Arr[0].Equals(Tips))
+			{
+				Tip("无需更新数据"); return;
+			}
+			string[] Tar = Tips.Split(",");
+			string[] Bas = Arr[0].Split(',');
+			int[] Dex = new int[Bas.Length];
+			for (int i = 0; i < Bas.Length; i++)
+			{
+				Dex[i] = Array.IndexOf(Tar, Bas[i]);
+			}
+			for (int i = 0; i < Arr.Length; i++)
+			{
+				if (!Arr[i].StartsWith('D')) continue;
+				string[] Tep = new string[Tar.Length];
+				Bas = Arr[i].Split(",");
+				for (int n = 0; n < Dex.Length; n++)
+				{
+					Tep[Dex[n]] = Bas[n];
+				}
+				Arr[i] = string.Join(',', Tep.Select(s => s ?? "0"));
+			}
+			Arr[0] = Tips;
+			if (Program.FileWrite(FilePath, Arr)) Tip("数据已更新");
 		}
 
 		// 表达式计算
@@ -1426,7 +1350,7 @@ namespace SR_DMG
 			}
 			if (string.IsNullOrWhiteSpace(Str))
 			{
-				Tex_Calculator.Text = "";
+				Tex_Calculator.Text = string.Empty;
 			}
 			else
 			{
@@ -1434,7 +1358,7 @@ namespace SR_DMG
 				var (Equ, Val, Loc) = Compute(Str, Roled, Tex_Calculator.SelectionStart);
 				if (string.IsNullOrWhiteSpace(Equ))
 				{
-					Tex_Calculator.Text = "";
+					Tex_Calculator.Text = string.Empty;
 				}
 				else
 				{
@@ -1449,7 +1373,7 @@ namespace SR_DMG
 			if (e.Button == MouseButtons.Right)
 			{
 				TextBox Tex = sender as TextBox;
-				Tex.Text = "";
+				Tex.Text = string.Empty;
 				Tex.Focus();
 			}
 		}
@@ -1458,8 +1382,8 @@ namespace SR_DMG
 			int Ord = 0;
 			int _Loc = 0;
 			double Rel = 0;
-			string Equ = "";
-			string Pend = "";
+			string Equ = string.Empty;
+			string Pend = string.Empty;
 			char[] Sym = new char[3];
 			bool[] Info = new bool[5];
 			double[] Cou = new double[3];
@@ -1485,7 +1409,7 @@ namespace SR_DMG
 							}
 							else
 							{
-								if (Pend == "")
+								if (Pend == string.Empty)
 								{
 									Pend = "0.";
 									if (i <= Loc) _Loc++;
@@ -1532,7 +1456,7 @@ namespace SR_DMG
 								Info[2] = false;
 							}
 							Equ += '(' + Cop.Equ + ')';
-							if (Info[3] || Pend == "") Rel = float.NaN;
+							if (Info[3] || Pend == string.Empty) Rel = float.NaN;
 							Info[0] = Info[3] = true;
 							if (i < Loc)
 							{
@@ -1605,8 +1529,8 @@ namespace SR_DMG
 										Equ += Cou[Ord];
 										if (i == Loc && Pend.Contains('.'))
 										{
-											Pend = (Pend.TrimEnd('0').EndsWith('.') ? "." : "") +
-												"".PadRight(Pend.Length - Pend.TrimEnd('0').Length, '0');
+											Pend = (Pend.TrimEnd('0').EndsWith('.') ? "." : string.Empty) +
+												string.Empty.PadRight(Pend.Length - Pend.TrimEnd('0').Length, '0');
 											Equ += Pend;
 											_Loc += Pend.Length;
 										}
@@ -1681,7 +1605,7 @@ namespace SR_DMG
 									Ord = (Ord + 1) % 3;
 								}
 								Array.Clear(Info, 0, Info.Length);
-								Pend = "";
+								Pend = string.Empty;
 							}
 							else if (i == Loc)
 							{
@@ -1704,7 +1628,7 @@ namespace SR_DMG
 					}
 				}
 			}
-			bool Pam = Pend != "";
+			bool Pam = Pend != string.Empty;
 			if (Pam && Info[0])
 			{
 				if (!Info[3])
@@ -1720,8 +1644,8 @@ namespace SR_DMG
 						Equ += Cou[Ord];
 						if (Loc + _Loc == Equ.Length && Pend.Contains('.'))
 						{
-							Pend = (Pend.TrimEnd('0').EndsWith('.') ? "." : "") +
-								"".PadRight(Pend.Length - Pend.TrimEnd('0').Length, '0');
+							Pend = (Pend.TrimEnd('0').EndsWith('.') ? "." : string.Empty) +
+								string.Empty.PadRight(Pend.Length - Pend.TrimEnd('0').Length, '0');
 							Equ += Pend;
 							_Loc += Pend.Length;
 						}
@@ -1858,7 +1782,7 @@ namespace SR_DMG
 					}
 				}
 			}
-			return [str + "".PadLeft(info, ')'), info.ToString()];
+			return [str + string.Empty.PadLeft(info, ')'), info.ToString()];
 		}
 		private static int Mark(string Str, int Loc)
 		{
@@ -1888,7 +1812,7 @@ namespace SR_DMG
 			}
 			else
 			{
-				string Info = "";
+				string Info = string.Empty;
 				foreach (char c in str)
 				{
 					if (Char.IsNumber(c))
@@ -2055,6 +1979,98 @@ namespace SR_DMG
 		private void Timer_Tick(object sender, EventArgs e)
 		{
 			Lab_Hint.Hide();
+		}
+		// 总值与基础值切换
+		private void Lab_ATK_MouseDown(object sender, MouseEventArgs e)
+		{
+			if (e.Button == MouseButtons.Right)
+			{
+				Pan_ATK.Hide();
+				Pan_ATK_Base.Show();
+			}
+		}
+		private void Lab_ATK_Base_MouseDown(object sender, MouseEventArgs e)
+		{
+			if (e.Button == MouseButtons.Right)
+			{
+				Pan_ATK_Base.Hide();
+				Pan_ATK.Show();
+			}
+		}
+		private void Lab_HP_DEF_MouseDown(object sender, MouseEventArgs e)
+		{
+			if (e.Button == MouseButtons.Right)
+			{
+				Pan_HP_DEF.Hide();
+				Pan_HP_DEF_Base.Show();
+			}
+		}
+		private void Lab_HP_DEF_Base_MouseDown(object sender, MouseEventArgs e)
+		{
+			if (e.Button == MouseButtons.Right)
+			{
+				Pan_HP_DEF_Base.Hide();
+				Pan_HP_DEF.Show();
+			}
+		}
+		private void Lab_Effect_MouseDown(object sender, MouseEventArgs e)
+		{
+			if (e.Button == MouseButtons.Right)
+			{
+				Pan_Effect.Hide();
+				Pan_Layers.Hide();
+				Pan_Heal_Rate.Show();
+			}
+		}
+		private void Lab_Heal_Rate_MouseDown(object sender, MouseEventArgs e)
+		{
+			if (e.Button == MouseButtons.Right)
+			{
+				Pan_Heal_Rate.Hide();
+				Pan_Effect.Hide();
+				Pan_Layers.Show();
+			}
+		}
+		private void Lab_Layers_MouseDown(object sender, MouseEventArgs e)
+		{
+			if (e.Button == MouseButtons.Right)
+			{
+				Pan_Layers.Hide();
+				Pan_Heal_Rate.Hide();
+				Pan_Effect.Show();
+			}
+		}
+		private void Lab_DMG_Equal_2_MouseDown(object sender, MouseEventArgs e)
+		{
+			if (e.Button == MouseButtons.Right)
+			{
+				Pan_DMG_Equal_2.Hide();
+				Pan_DMG_Equal_3.Show();
+			}
+		}
+		private void Lab_DMG_Equal_3_MouseDown(object sender, MouseEventArgs e)
+		{
+			if (e.Button == MouseButtons.Right)
+			{
+				Pan_DMG_Equal_3.Hide();
+				Pan_DMG_Equal_2.Show();
+			}
+		}
+		private void Lab_SPD_MouseDown(object sender, MouseEventArgs e)
+		{
+			if (e.Button == MouseButtons.Right)
+			{
+				Pan_SPD.Hide();
+				Pan_SPD_Base.Show();
+			}
+		}
+		private void Lab_SPD_Base_MouseDown(object sender, MouseEventArgs e)
+		{
+			if (e.Button == MouseButtons.Right)
+			{
+				Pan_SPD_Base.Hide();
+				Pan_SPD.Show();
+			}
 		}
 		// 限制字符输入
 		private void Tex_Name_KeyPress(object sender, KeyPressEventArgs e)
