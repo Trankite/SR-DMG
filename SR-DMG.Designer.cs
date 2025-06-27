@@ -171,7 +171,7 @@
 			Pan_Heal_Rate = new System.Windows.Forms.Panel();
 			Tex_Heal_Rate = new System.Windows.Forms.TextBox();
 			Lab_Heal_Rate = new System.Windows.Forms.Label();
-			Lab_MaxCRIT = new System.Windows.Forms.Label();
+			Lab_Max_CRIT = new System.Windows.Forms.Label();
 			Pan_Layers = new System.Windows.Forms.Panel();
 			Tex_Effect_Layers = new System.Windows.Forms.TextBox();
 			Lab_Effect_Layers = new System.Windows.Forms.Label();
@@ -2077,16 +2077,16 @@
 			Lab_Heal_Rate.MouseDown += Lab_Heal_Rate_MouseDown;
 			Lab_Heal_Rate.MouseUp += Tex_DMG_MouseUp;
 			// 
-			// Lab_MaxCRIT
+			// Lab_Max_CRIT
 			// 
-			Lab_MaxCRIT.AutoSize = true;
-			Lab_MaxCRIT.Font = new System.Drawing.Font("微软雅黑", 13.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, 134);
-			Lab_MaxCRIT.Location = new System.Drawing.Point(208, 258);
-			Lab_MaxCRIT.Name = "Lab_MaxCRIT";
-			Lab_MaxCRIT.Size = new System.Drawing.Size(107, 25);
-			Lab_MaxCRIT.TabIndex = 0;
-			Lab_MaxCRIT.Text = "期望极限：";
-			Lab_MaxCRIT.MouseUp += Lab_Area_MouseUp;
+			Lab_Max_CRIT.AutoSize = true;
+			Lab_Max_CRIT.Font = new System.Drawing.Font("微软雅黑", 13.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, 134);
+			Lab_Max_CRIT.Location = new System.Drawing.Point(224, 258);
+			Lab_Max_CRIT.Name = "Lab_Max_CRIT";
+			Lab_Max_CRIT.Size = new System.Drawing.Size(107, 25);
+			Lab_Max_CRIT.TabIndex = 0;
+			Lab_Max_CRIT.Text = "极限期望：";
+			Lab_Max_CRIT.MouseUp += Lab_Area_MouseUp;
 			// 
 			// Pan_Layers
 			// 
@@ -2162,11 +2162,12 @@
 			// 
 			// SR_DMG
 			// 
+			AllowDrop = true;
 			AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
 			BackColor = System.Drawing.SystemColors.Window;
 			ClientSize = new System.Drawing.Size(944, 561);
 			Controls.Add(Lab_Hint);
-			Controls.Add(Lab_MaxCRIT);
+			Controls.Add(Lab_Max_CRIT);
 			Controls.Add(Pan_SPD);
 			Controls.Add(Lab_Transform_Info);
 			Controls.Add(Lab_Tip);
@@ -2291,6 +2292,8 @@
 			Activated += SR_DMG_Activated;
 			FormClosing += SR_DMG_FormClosing;
 			Load += SR_DMG_Load;
+			DragDrop += SR_DMG_DragDrop;
+			DragEnter += SR_DMG_DragEnter;
 			MouseDown += SR_DMG_MouseDown;
 			MouseUp += SR_DMG_MouseUp;
 			Pan_ATK_Base.ResumeLayout(false);
@@ -2461,7 +2464,7 @@
 		private System.Windows.Forms.Panel Pan_Heal_Rate;
 		private System.Windows.Forms.TextBox Tex_Heal_Rate;
 		private System.Windows.Forms.Label Lab_Heal_Rate;
-		private System.Windows.Forms.Label Lab_MaxCRIT;
+		private System.Windows.Forms.Label Lab_Max_CRIT;
 		private System.Windows.Forms.Panel Pan_Layers;
 		private System.Windows.Forms.TextBox Tex_Effect_Layers;
 		private System.Windows.Forms.Label Lab_Effect_Layers;

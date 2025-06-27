@@ -18,6 +18,7 @@ namespace SR_DMG
 		private string Group;
 		private Role Roled = new();
 		private float[] DMG = new float[6];
+		private static string[] BreakRecord;
 		private readonly bool[] Flags = new bool[10];
 		private static readonly Dictionary<string, string> Cmd_Tip = [];
 		private readonly List<Role> Roles = [];
@@ -36,6 +37,7 @@ namespace SR_DMG
 		public void DoInit()
 		{
 			Group = string.Empty;
+			BreakRecord = ["裂伤", "纠缠", "禁锢", "灼烧", "冻结", "触电", "风化"];
 			Cmd_Tip["保存路径"] = "path";
 			Cmd_Tip["登录米游社"] = "login";
 			Cmd_Tip["我的角色"] = "uid me";
@@ -164,34 +166,30 @@ namespace SR_DMG
 		{
 			if (Flags[0]) return;
 			float[][] Rel = Roled.DMG();
-			Lab_DMG_1.Text = "不暴击：" + Rel[1][0].ToString("F0");
-			Lab_DMG_2.Text = "暴 击 ：" + Rel[1][1].ToString("F0");
-			Lab_DMG_3.Text = "期望值：" + Rel[1][2].ToString("F0");
-			Lab_Break_1.Text = "超击破：" + Rel[1][3].ToString("F0");
-			Lab_Break_2.Text = "击 破 ：" + Rel[1][4].ToString("F0");
-			Lab_Break_3.Text = "裂伤纠缠禁锢灼烧冻结触电风化".Substring((int)Roled.Break_Type * 2, 2).Insert(1, " ") + " ：" +
-				(Roled.Break_Type == 2 ? Rel[1][5].ToString("0.#") + " %" : Rel[1][5].ToString("F0"));
-			Lab_DMG_Equal_Info.Text = Rel[0][1] > 0 ? "+" + Rel[0][1] : string.Empty;
-			Lab_Area_1.Text = "攻击区：" + Rel[0][0].ToString("F0");
-			Lab_Area_2.Text = "总倍率：" + (Roled.ATK > 0 ? Rel[0][0] / Roled.ATK * 100 : 0).ToString("0.#") + " %";
-			Lab_Area_3.Text = "防御区：" + (Rel[0][2] * 100).ToString("0.#") + " %";
-			Lab_Area_4.Text = "抗性区：" + (Rel[0][3] * 100).ToString("0.#") + " %";
-			Lab_Area_5.Text = "暴击区：" + (Rel[0][4] * 100).ToString("0.#") + " %";
-			Lab_Area_6.Text = "伤害区：" + (Rel[0][5] * 100).ToString("0.#") + " %";
-			Lab_Area_7.Text = "击破区：" + Rel[0][6].ToString("F0");
-			Lab_Area_8.Text = "韧性区：" + (Rel[0][7] * 100).ToString("0.#") + " %";
-			float Crit = 2 * Roled.CRIT_Rate + Roled.CRIT_DMG;
-			Crit = Crit > 400 ? Crit - 100 : 100 + Crit * Crit / 800;
-			Lab_MaxCRIT.Text = $"期望极限：{Crit:0.#} %";
-			if (Ceb_Note.Checked)
-			{
-				Improve(Lab_Vary_1, Rel[1][0], DMG[0]);
-				Improve(Lab_Vary_2, Rel[1][1], DMG[1]);
-				Improve(Lab_Vary_3, Rel[1][2], DMG[2]);
-				Improve(Lab_Vary_4, Rel[1][3], DMG[3]);
-				Improve(Lab_Vary_5, Rel[1][4], DMG[4]);
-				Improve(Lab_Vary_6, Rel[1][5], DMG[5]);
-			}
+			Lab_DMG_1.Text = $"不暴击：{Rel[1][0]:F0}";
+			Lab_DMG_2.Text = $"暴 击 ：{Rel[1][1]:F0}";
+			Lab_DMG_3.Text = $"期望值：{Rel[1][2]:F0}";
+			Lab_Break_1.Text = $"超击破：{Rel[1][3]:F0}";
+			Lab_Break_2.Text = $"击 破 ：{Rel[1][4]:F0}";
+			Lab_Break_3.Text = $"{BreakRecord[(int)Roled.Break_Type].Insert(1, " ")} ：{(Roled.Break_Type == 2 ? $"{Rel[1][5]:0.#} %" : $"{Rel[1][5]:F0}")}";
+			Lab_DMG_Equal_Info.Text = Rel[0][1] > 0 ? $"+{Rel[0][1]}" : string.Empty;
+			Lab_Area_1.Text = $"攻击区：{Rel[0][0]:F0}";
+			Lab_Area_2.Text = $"总倍率：{Rel[0][0] / (Roled.DMG_Equal_Tpye switch { 1 => Roled.HP, 2 => Roled.DEF, _ => Roled.ATK }) * 100:0.#} %";
+			Lab_Area_3.Text = $"防御区：{Rel[0][2] * 100:0.#} %";
+			Lab_Area_4.Text = $"抗性区：{Rel[0][3] * 100:0.#} %";
+			Lab_Area_5.Text = $"暴击区：{Rel[0][4] * 100:0.#} %";
+			Lab_Area_6.Text = $"伤害区：{Rel[0][5] * 100:0.#} %";
+			Lab_Area_7.Text = $"击破区：{Rel[0][6]:F0}";
+			Lab_Area_8.Text = $"韧性区：{Rel[0][7] * 100:0.#} %";
+			float Crit = Roled.CRIT_Rate * 2 + Roled.CRIT_DMG;
+			Lab_Max_CRIT.Text = $"极限期望：{(Crit > 400 ? Crit - 100 : 100 + Crit * Crit / 800):0.#} %";
+			if (!Ceb_Note.Checked) return;
+			Improve(Lab_Vary_1, Rel[1][0], DMG[0]);
+			Improve(Lab_Vary_2, Rel[1][1], DMG[1]);
+			Improve(Lab_Vary_3, Rel[1][2], DMG[2]);
+			Improve(Lab_Vary_4, Rel[1][3], DMG[3]);
+			Improve(Lab_Vary_5, Rel[1][4], DMG[4]);
+			Improve(Lab_Vary_6, Rel[1][5], DMG[5]);
 		}
 
 		// 转化表达式
@@ -267,59 +265,34 @@ namespace SR_DMG
 		private void Btn_Save_4_Click(object sender, EventArgs e)
 		{
 			string[] Arr = Tex_Transform.Text.Split(':', '<');
-			if (Arr.Length > 1)
+			if (Arr.Length <= 1) { Tip("表达式不完整"); return; }
+			else if (Role.GetName(Arr[0].Trim('[', ']', ' ')) == null) { Tip("目标项错误：" + Arr[0]); return; }
+			else if (Lab_Transform_Info.Text == "NaN") { Tip("表达式错误：" + Arr[1]); return; }
+			else if (Arr[1].IndexOf('[') <= -1) { Tip("不包含引用数据：" + Arr[1]); return; }
+			string Str = "□ ";
+			Arr[1] = Compute(Arr[1], Roled).Equ.TrimEnd('+', '-', '*', '/');
+			if (Tex_Name_4.Font.Style == FontStyle.Regular)
 			{
-				if (Role.GetName(Arr[0].Trim('[', ']', ' ')) != null)
-				{
-					if (Lab_Transform_Info.Text != "NaN")
-					{
-						if (Arr[1].IndexOf('[') > -1)
-						{
-							string Str = "□ ";
-							Arr[1] = Compute(Arr[1], Roled).Equ.TrimEnd('+', '-', '*', '/');
-							if (Tex_Name_4.Font.Style == FontStyle.Regular)
-							{
-								Str += Tex_Name_4.Text + '：' + Arr[0] + ':' + Arr[1];
-							}
-							else
-							{
-								Str += Arr[0] + ':' + Arr[1];
-							}
-							if (Arr.Length > 2)
-							{
-								if (float.TryParse(Arr[2].TrimEnd('%'), out _))
-								{
-									Str += "<" + Arr[2].Replace(" ", string.Empty);
-								}
-								else
-								{
-									Tip("表达式错误：<" + Arr[2]);
-									return;
-								}
-							}
-							Save_Info = Flags[6] = true;
-							Cob_Insert(Cob_Transform, Str);
-							Flags[6] = false;
-						}
-						else
-						{
-							Tip("不包含引用数据：" + Arr[1]);
-						}
-					}
-					else
-					{
-						Tip("表达式错误：" + Arr[1]);
-					}
-				}
-				else
-				{
-					Tip("目标项错误：" + Arr[0]);
-				}
+				Str += Tex_Name_4.Text + '：' + Arr[0] + ':' + Arr[1];
 			}
 			else
 			{
-				Tip("表达式不完整");
+				Str += Arr[0] + ':' + Arr[1];
 			}
+			if (Arr.Length > 2)
+			{
+				if (float.TryParse(Arr[2].TrimEnd('%'), out _))
+				{
+					Str += "<" + Arr[2].Replace(" ", string.Empty);
+				}
+				else
+				{
+					Tip("表达式错误：<" + Arr[2]); return;
+				}
+			}
+			Save_Info = Flags[6] = true;
+			Cob_Insert(Cob_Transform, Str);
+			Flags[6] = false;
 		}
 		private void Btn_Del_4_Click(object sender, EventArgs e)
 		{
@@ -1167,17 +1140,8 @@ namespace SR_DMG
 								Roles.Add(role);
 								break;
 							case '&':
-								Cob_DMG_Equal_Info.Items.Add(Arr[Index][2..]);
-								break;
 							case '#':
-								if (Arr[Index].IndexOf(':') < Arr[Index].LastIndexOf('['))
-								{
-									Cob_Transform.Items.Add("□" + Arr[Index][1..]);
-								}
-								else
-								{
-									Cob_Gain.Items.Add("□" + Arr[Index][1..]);
-								}
+								AddGainOrTran(Arr[Index], false);
 								break;
 						}
 					} while (++Index < Arr.Length);
@@ -1188,6 +1152,32 @@ namespace SR_DMG
 				Group = string.Empty;
 				Group_List();
 			}
+		}
+		// 区分增益与转化
+		private bool AddGainOrTran(string str, bool insert)
+		{
+			if (str.StartsWith('&'))
+			{
+				str = str[2..];
+				if (insert) Cob_Insert(Cob_DMG_Equal_Info, str, false);
+				else Cob_DMG_Equal_Info.Items.Add(str);
+			}
+			else if (str.StartsWith('#'))
+			{
+				str = '□' + str[1..];
+				if (str.IndexOf(':') < str.LastIndexOf('['))
+				{
+					if (insert) Cob_Insert(Cob_Transform, str, false);
+					else Cob_Transform.Items.Add(str);
+				}
+				else
+				{
+					if (insert) Cob_Insert(Cob_Gain, str, false);
+					else Cob_Gain.Items.Add(str);
+				}
+			}
+			else return false;
+			return true;
 		}
 		// 保存数据文件
 		private bool SaveData()
@@ -1327,8 +1317,9 @@ namespace SR_DMG
 			for (int i = 0; i < Arr.Length; i++)
 			{
 				if (!Arr[i].StartsWith('D')) continue;
-				string[] Tep = new string[Tar.Length];
 				Bas = Arr[i].Split(",");
+				if (Bas.Length > Dex.Length) continue;
+				string[] Tep = new string[Tar.Length];
 				for (int n = 0; n < Dex.Length; n++)
 				{
 					Tep[Dex[n]] = Bas[n];
@@ -1844,7 +1835,7 @@ namespace SR_DMG
 			return Controls.Find(Str, true).OfType<T>().FirstOrDefault();
 		}
 		// 插入ComboBox
-		private void Cob_Insert(ComboBox Cob, string Str)
+		private void Cob_Insert(ComboBox Cob, string Str, bool Selected = true)
 		{
 			int Info = -1;
 			for (int i = 1; i < Cob.Items.Count; i++)
@@ -1870,7 +1861,7 @@ namespace SR_DMG
 					if (Sel[i] >= Info) Sel[i]++;
 				}
 			}
-			Cob.SelectedIndex = Info;
+			if (Selected) Cob.SelectedIndex = Info;
 		}
 		private void Cob_Delete(ComboBox Cob, int Index)
 		{
@@ -2126,6 +2117,30 @@ namespace SR_DMG
 				case '《':
 					e.KeyChar = '<';
 					break;
+			}
+		}
+		// 拖放数据
+		private void SR_DMG_DragEnter(object sender, DragEventArgs e)
+		{
+			if (e.Data.GetDataPresent(DataFormats.Text)) e.Effect = DragDropEffects.Copy;
+			else e.Effect = DragDropEffects.None;
+		}
+		private void SR_DMG_DragDrop(object sender, DragEventArgs e)
+		{
+			string[] data = e.Data.GetData(DataFormats.Text).ToString().Split([Environment.NewLine], StringSplitOptions.RemoveEmptyEntries);
+			if (data[0].StartsWith('D'))
+			{
+				LoadRole(new Role(data[0]) { Gain = [], Transform = [] });
+				Tip("已载入数据");
+			}
+			else
+			{
+				int n = 0;
+				foreach (string str in data)
+				{
+					if (AddGainOrTran(str, true)) n++;
+				}
+				Tip($"已导入{n}项数据");
 			}
 		}
 

@@ -27,7 +27,7 @@ namespace SR_DMG
 		}
 		public Role(string str)
 		{
-			string[] Arr = str.Split(',');
+			string[] Arr = str.TrimEnd(',').Split(',');
 			Name = Arr[0][(Arr[0].IndexOf(' ') + 1)..];
 			foreach (string s in Arr[^1].Trim('[', ']').Split('-'))
 			{
@@ -44,8 +44,7 @@ namespace SR_DMG
 			Transform = [.. Transform.Distinct()];
 			Gain = [.. Gain.Distinct()];
 		}
-		private static float[] Break_Ratio;
-		private static float[] Break_Factor;
+		private static float[][] BreakRecord;
 		private static Dictionary<string, Property> Map_Property;
 		private static List<Property> Properties;
 		private static string Tips;
@@ -394,28 +393,20 @@ namespace SR_DMG
 			float[][] DMG = [new float[8], new float[6]];
 			DMG[0][1] = DMG_Equal_Tpye switch { 1 => HP, 2 => DEF, _ => 0 } * DMG_Equal_2 * 0.01f;
 			DMG[0][0] = ATK * DMG_Equal_1 * 0.01f + DMG[0][1];
-			DMG[0][2] = (Character_Level * 10 + 200) / ((Character_Level * 10 + 200) +
-				(Enemy_Level * 10 + 200) * Math.Max(1 - (DEF_Reduced + DEF_Ignores) * 0.01f, 0));
+			DMG[0][2] = (Character_Level * 10 + 200) / ((Character_Level * 10 + 200) + (Enemy_Level * 10 + 200) * Math.Max(1 - (DEF_Reduced + DEF_Ignores) * 0.01f, 0));
 			DMG[0][3] = 1 - (RES_Boost - RES_PEN) * 0.01f;
 			DMG[0][4] = 1 + Math.Min(CRIT_Rate * 0.01f, 1) * CRIT_DMG * 0.01f;
 			DMG[0][5] = (1 - DMG_Reduction * 0.01f) * (1 + DMG_Taken * 0.01f) * (1 + DMG_Boost * 0.01f);
-			DMG[0][6] = Character_Level > 0 && Character_Level <= 80 ? Break_Factor[(int)Character_Level - 1] : 0;
+			DMG[0][6] = Character_Level > 0 && Character_Level <= 80 ? BreakRecord[1][(int)Character_Level - 1] : 0;
 			DMG[0][7] = (Toughness * 0.1f + 2) * 0.5f;
 			DMG[1][0] = DMG[0][0] * DMG[0][2] * DMG[0][3] * DMG[0][5] * (1 + DMG_Equal_4 * 0.01f);
 			DMG[1][1] = (1 + CRIT_DMG * 0.01f) * DMG[1][0];
 			DMG[1][2] = DMG[0][4] * DMG[1][0];
 			DMG[1][3] = DMG[0][2] * DMG[0][3] * DMG[0][6] * 0.1f * (1 - DMG_Reduction * 0.01f) * (1 + DMG_Taken * 0.01f) * (1 + Break_Effect * 0.01f);
-			if (Break_Type == 2)
-			{
-				DMG[1][5] = 30 * (1 + Break_Effect * 0.01f);
-			}
-			else
-			{
-				DMG[1][5] = Break_Ratio[((int)Break_Type + 1) * 2 - 1] * DMG[1][3];
-				if (Break_Type <= 1) DMG[1][5] *= DMG[0][7];
-			}
+			DMG[1][5] = Break_Type == 2 ? 30 * (1 + Break_Effect * 0.01f) : BreakRecord[0][((int)Break_Type + 1) * 2 - 1] * DMG[1][3];
+			if (Break_Type <= 1) DMG[1][5] *= DMG[0][7];
 			DMG[1][3] *= (1 + Break_Boost * 0.01f);
-			DMG[1][4] = Break_Ratio[((int)Break_Type + 1) * 2 - 2] * DMG[0][7] * DMG[1][3];
+			DMG[1][4] = BreakRecord[0][((int)Break_Type + 1) * 2 - 2] * DMG[0][7] * DMG[1][3];
 			DMG[1][3] *= Break_Equal * 0.01f * Toughness_Reduction * (1 + Break_Efficiency * 0.01f);
 			return DMG;
 		}
@@ -423,25 +414,7 @@ namespace SR_DMG
 		// 外部接口
 		public static void Init()
 		{
-			Break_Ratio = [4, 4, 1, 1.2f, 1, 0, 4, 2, 2, 2, 2, 4, 3, 2];
-			Break_Factor = [
-				54.00f, 58.00f, 62.00f, 67.53f, 70.51f,
-				73.52f, 76.57f, 79.64f, 82.74f, 85.87f,
-				91.49f, 97.07f, 102.59f, 108.06f, 113.47f,
-				118.84f, 124.15f, 129.41f, 134.62f, 139.77f,
-				149.33f, 158.80f, 168.18f, 177.46f, 186.65f,
-				195.75f, 204.75f, 213.66f, 222.48f, 231.20f,
-				246.43f, 261.18f, 275.47f, 289.32f, 302.73f,
-				315.71f, 328.29f, 340.47f, 352.26f, 363.67f,
-				408.12f, 451.79f, 494.68f, 536.82f, 578.22f,
-				618.92f, 658.91f, 698.23f, 736.89f, 774.90f,
-				871.06f, 964.87f, 1056.42f, 1145.79f, 1233.06f,
-				1318.30f, 1401.58f, 1482.96f, 1562.52f, 1640.31f,
-				1752.32f, 1861.90f, 1969.12f, 2074.07f, 2176.80f,
-				2277.39f, 2375.91f, 2472.42f, 2566.97f, 2659.64f,
-				2780.30f, 2898.60f, 3014.60f, 3128.37f, 3239.98f,
-				3349.47f, 3456.92f, 3562.38f, 3665.91f, 3767.55f
-			];
+			BreakRecord = [[4, 4, 1, 1.2f, 1, 0, 4, 2, 2, 2, 2, 4, 3, 2], [54, 58, 62, 68, 71, 74, 77, 80, 83, 86, 91, 97, 103, 108, 113, 119, 124, 129, 135, 140, 149, 159, 168, 177, 187, 196, 205, 214, 222, 231, 246, 261, 275, 289, 303, 316, 328, 340, 352, 364, 408, 452, 495, 537, 578, 619, 659, 698, 737, 775, 871, 965, 1056, 1146, 1233, 1318, 1402, 1483, 1563, 1640, 1752, 1862, 1969, 2074, 2177, 2277, 2376, 2472, 2567, 2660, 2780, 2899, 3015, 3128, 3240, 3349, 3457, 3562, 3666, 3768]];
 			Properties =
 			[
 				new Property("攻击力", "ATK", 0),
