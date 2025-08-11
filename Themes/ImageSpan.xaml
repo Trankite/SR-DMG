@@ -1,0 +1,31 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="clr-namespace:SR_DMG.Source.UI">
+    <Style TargetType="{x:Type local:ImageSpan}">
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type local:ImageSpan}">
+                    <Border CornerRadius="5">
+                        <StackPanel Orientation="Vertical" HorizontalAlignment="Center" Width="100">
+                            <Image
+                                Source="{TemplateBinding Icon}"
+                                Width="100" Height="100"
+                            />
+                            <ItemsControl ItemsSource="{TemplateBinding Images}" Margin="0,1,0,0">
+                                <ItemsControl.ItemsPanel>
+                                    <ItemsPanelTemplate>
+                                        <UniformGrid Columns="0" Rows="1" Height="20"/>
+                                    </ItemsPanelTemplate>
+                                </ItemsControl.ItemsPanel>
+                            </ItemsControl>
+                            <TextBox
+                                Text="{TemplateBinding Text}"
+                                Margin="0,1,0,1" Width="80"
+                                />
+                        </StackPanel>
+                    </Border>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+</ResourceDictionary>
