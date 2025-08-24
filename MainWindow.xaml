@@ -1,52 +1,94 @@
 ﻿<Window
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:local="clr-namespace:SR_DMG"
-    xmlns:UI="clr-namespace:SR_DMG.Source.UI" x:Class="SR_DMG.MainWindow"
-    xmlns:Icon="/Resources/UI/Icon"
-    Title="Star Rail Damage Calculator" Height="615" Width="960"
-    WindowStartupLocation="CenterScreen"
-    ResizeMode="CanMinimize">
-    <Grid>
-        <StackPanel Orientation="Vertical">
-            <StackPanel Orientation="Horizontal" Margin="25,10,0,0">
-                <UI:ImageSpan Text="未选择" Icon="/Resources/UI/Icon/Item-None.png">
-                    <UI:ImageSpan.Images>
-                        <Image Source="{DynamicResource Icon_Role-Type-0}"/>
-                        <Image Source="{DynamicResource Icon_Element-0}"/>
-                    </UI:ImageSpan.Images>
-                </UI:ImageSpan>
-            </StackPanel>
-            <StackPanel Orientation="Horizontal" Margin="5,10,0,0">
-                <StackPanel Orientation="Vertical">
-                    <UI:LabelTextBox Label="攻击力" Text="0" Image="{StaticResource Icon_ATK}"/>
-                    <UI:LabelTextBox Label="生命值" Text="0" Image="{StaticResource Icon_HP}"/>
-                    <UI:LabelTextBox Label="防御力" Text="0" Image="{StaticResource Icon_DEF}"/>
-                    <UI:LabelTextBox Label="速度" Text="0" Image="{StaticResource Icon_SPD}"/>
-                    <UI:LabelTextBox Label="暴击率" Text="0" Unit="%" Margin="0,10,0,0" Image="{StaticResource Icon_CRIT-Rate}"/>
-                    <UI:LabelTextBox Label="暴击伤害" Text="0" Unit="%" Image="{StaticResource Icon_CRIT-DMG}"/>
-                    <UI:LabelTextBox Label="伤害提高" Text="0" Unit="%" Image="{DynamicResource Icon_DMG-Boost-0}"/>
-                    <UI:LabelTextBox Label="无视防御" Text="0" Unit="%" Image="{StaticResource Icon_DEF}"/>
-                    <UI:LabelTextBox Label="抗性穿透" Text="0" Unit="%" Image="{DynamicResource Icon_RES-0}"/>
-                    <UI:LabelTextBox Label="效果命中" Text="0" Unit="%" Margin="0,10,0,0" Image="{StaticResource Icon_Effect-Rate}"/>
-                    <UI:LabelTextBox Label="治疗提高" Text="0" Unit="%" Image="{StaticResource Icon_Heal-Rate}"/>
-                    <UI:LabelTextBox Label="特殊数值" Text="0" Image="{StaticResource Icon_Energy-Toplimit}"/>
+    xmlns:local="clr-namespace:SR_DMG" x:Class="SR_DMG.MainWindow"
+    xmlns:UI="clr-namespace:SR_DMG.Source.UI.Model" WindowStartupLocation="CenterScreen"
+    Title="Star Rail Damage Calculator" Height="680" Width="1020" ResizeMode="CanMinimize">
+    <Window.Background>
+        <ImageBrush ImageSource="{DynamicResource Icon_Backgroup}"/>
+    </Window.Background>
+    <Grid Margin="10">
+        <Grid.Background>
+            <ImageBrush ImageSource="{DynamicResource Icon_Backgrole}" Stretch="Uniform"/>
+        </Grid.Background>
+        <StackPanel Orientation="Vertical" HorizontalAlignment="Left">
+            <Border CornerRadius="15" Background="{DynamicResource BackBrush_Minor}" HorizontalAlignment="Left">
+                <StackPanel Orientation="Horizontal" Margin="10" Height="150">
+                    <UI:ImageSpan x:Name="Span_Role" Text="角色" Icon="{StaticResource Icon_Not_Role}"/>
+                    <UI:GainView x:Name="Role_Skills" Margin="10,0,0,0"/>
                 </StackPanel>
-                <StackPanel Orientation="Vertical" Margin="10,0,0,0">
-                    <UI:LabelTextBox Label="基础攻击" Text="0" Image="{StaticResource Icon_ATK}"/>
-                    <UI:LabelTextBox Label="基础生命" Text="0" Image="{StaticResource Icon_HP}"/>
-                    <UI:LabelTextBox Label="基础防御" Text="0" Image="{StaticResource Icon_DEF}"/>
-                    <UI:LabelTextBox Label="基础速度" Text="0" Image="{StaticResource Icon_SPD}"/>
-                    <UI:LabelTextBox Label="超击破" Text="0" Unit="%" Margin="0,10,0,0" Image="{StaticResource Icon_Break-Effect}"/>
-                    <UI:LabelTextBox Label="击破特攻" Text="0" Unit="%" Image="{StaticResource Icon_Break-Effect}"/>
-                    <UI:LabelTextBox Label="击破增伤" Text="0" Unit="%" Image="{DynamicResource Icon_DMG-Boost-0}"/>
-                    <UI:LabelTextBox Label="击破效率" Text="0" Unit="%" Image="{StaticResource Icon_Break-Effect}"/>
-                    <UI:LabelTextBox Label="削韧值" Text="0" Image="{StaticResource Icon_Energy-Toplimit}"/>
-                    <UI:LabelTextBox Label="效果抵抗" Text="0" Unit="%" Margin="0,10,0,0" Image="{StaticResource Icon_Effect-RES}"/>
-                    <UI:LabelTextBox Label="充能效率" Text="0" Unit="%" Image="{StaticResource Icon_Energy-Rate}"/>
-                    <UI:LabelTextBox Label="能量上限" Text="0" Image="{StaticResource Icon_Energy-Toplimit}"/>
+            </Border>
+            <Grid Margin="0,10,0,0">
+                <StackPanel Orientation="Vertical" HorizontalAlignment="Left">
+                    <UI:LabelTextBox Title="攻击力" Text="0" Image="{StaticResource Icon_ATK}"/>
+                    <UI:LabelTextBox Title="生命值" Text="0" Image="{StaticResource Icon_HP}"/>
+                    <UI:LabelTextBox Title="防御力" Text="0" Image="{StaticResource Icon_DEF}"/>
+                    <UI:LabelTextBox Title="速度" Text="0" Image="{StaticResource Icon_SPD}" Margin="0,0,0,10"/>
+                    <UI:LabelTextBox Title="暴击率" Text="0" Unit="%" Image="{StaticResource Icon_CRIT_Rate}"/>
+                    <UI:LabelTextBox Title="暴击伤害" Text="0" Unit="%" Image="{StaticResource Icon_CRIT_DMG}"/>
+                    <UI:LabelTextBox Title="伤害提高" Text="0" Unit="%" Image="{DynamicResource Icon_DMG_Boost}"/>
+                    <UI:LabelTextBox Title="无视防御" Text="0" Unit="%" Image="{StaticResource Icon_DEF}"/>
+                    <UI:LabelTextBox Title="抗性穿透" Text="0" Unit="%" Image="{DynamicResource Icon_RES}" Margin="0,0,0,10"/>
+                    <UI:LabelTextBox Title="效果命中" Text="0" Unit="%" Image="{StaticResource Icon_Effect_Rate}"/>
+                    <UI:LabelTextBox Title="治疗提高" Text="0" Unit="%" Image="{StaticResource Icon_Heal_Rate}"/>
+                    <UI:LabelTextBox Title="特殊数值" Text="0" Image="{StaticResource Icon_Energy_Toplimit}"/>
                 </StackPanel>
-            </StackPanel>
+                <StackPanel Orientation="Vertical" HorizontalAlignment="Right">
+                    <UI:LabelTextBox Title="基础攻击" Text="0" Image="{StaticResource Icon_ATK}"/>
+                    <UI:LabelTextBox Title="基础生命" Text="0" Image="{StaticResource Icon_HP}"/>
+                    <UI:LabelTextBox Title="基础防御" Text="0" Image="{StaticResource Icon_DEF}"/>
+                    <UI:LabelTextBox Title="基础速度" Text="0" Image="{StaticResource Icon_SPD}" Margin="0,0,0,10"/>
+                    <UI:LabelTextBox Title="超击破" Text="0" Unit="%" Image="{StaticResource Icon_Break_Effect}"/>
+                    <UI:LabelTextBox Title="击破特攻" Text="0" Unit="%" Image="{StaticResource Icon_Break_Effect}"/>
+                    <UI:LabelTextBox Title="击破增伤" Text="0" Unit="%" Image="{DynamicResource Icon_DMG_Boost}"/>
+                    <UI:LabelTextBox Title="击破效率" Text="0" Unit="%" Image="{StaticResource Icon_Break_Effect}"/>
+                    <UI:LabelTextBox Title="削韧值" Text="0" Image="{StaticResource Icon_Energy_Toplimit}" Margin="0,0,0,10"/>
+                    <UI:LabelTextBox Title="效果抵抗" Text="0" Unit="%" Image="{StaticResource Icon_Effect_RES}"/>
+                    <UI:LabelTextBox Title="充能效率" Text="0" Unit="%" Image="{StaticResource Icon_Energy_Rate}"/>
+                    <UI:LabelTextBox Title="能量上限" Text="0" Image="{StaticResource Icon_Energy_Toplimit}"/>
+                </StackPanel>
+            </Grid>
+        </StackPanel>
+        <StackPanel Orientation="Vertical" HorizontalAlignment="Right">
+            <Border CornerRadius="15" Background="{DynamicResource BackBrush_Minor}" HorizontalAlignment="Right">
+                <StackPanel Orientation="Horizontal" Margin="10">
+                    <UI:ImageSpan x:Name="Span_Relic" Text="遗器" Icon="{StaticResource Icon_Not_Role}"/>
+                    <UI:GainView x:Name="Role_Gain" Margin="5,0,5,0"/>
+                    <Border CornerRadius="10" Background="{DynamicResource BackBrush}">
+                        <UniformGrid Columns="1" Rows="0" Margin="10">
+                            <UI:ComplexTicker Text="初始值"/>
+                            <UI:ComplexTicker Text="比较伤害"/>
+                            <UI:ComplexTicker Text="页面置顶"/>
+                            <UI:ComplexTicker Text="?????"/>
+                            <UI:ComplexTicker Text="?????"/>
+                            <UI:ComplexTicker Text="?????"/>
+                        </UniformGrid>
+                    </Border>
+                </StackPanel>
+            </Border>
+            <UI:DamageView HorizontalAlignment="Center" Margin="10"/>
+            <Border CornerRadius="15" Background="{DynamicResource BackBrush_Minor}">
+                <StackPanel Orientation="Horizontal" Margin="10">
+                    <UI:ImageSpan x:Name="Span_Enemy" Text="敌人" Icon="{StaticResource Icon_Not_Enemy}"/>
+                    <StackPanel Orientation="Vertical">
+                        <StackPanel Orientation="Horizontal">
+                            <StackPanel Orientation="Vertical" Margin="10,0,10,0">
+                                <UI:LabelTextBox Title="角色等级" Text="0" Unit="级" Image="{StaticResource Icon_HP}"/>
+                                <UI:LabelTextBox Title="抗性" Text="0" Unit="%" Image="{StaticResource Icon_RES}"/>
+                                <UI:LabelTextBox Title="易伤" Text="0" Unit="%" Image="{StaticResource Icon_DMG_Boost}"/>
+                            </StackPanel>
+                            <StackPanel Orientation="Vertical">
+                                <UI:LabelTextBox Title="怪物等级" Text="0" Unit="级" Image="{StaticResource Icon_HP}"/>
+                                <UI:LabelTextBox Title="免伤" Text="0" Unit="%" Image="{StaticResource Icon_DEF}"/>
+                                <UI:LabelTextBox Title="韧性值" Text="0" Image="{StaticResource Icon_Energy_Toplimit}"/>
+                            </StackPanel>
+                        </StackPanel>
+                        <Border CornerRadius="15" Background="{DynamicResource BackBrush}" Margin="5,5,0,0">
+                            <UI:ComplexSlider Title="数量" Value="1" Maximum="100" Margin="3"/>
+                        </Border>
+                    </StackPanel>
+                </StackPanel>
+            </Border>
         </StackPanel>
     </Grid>
 </Window>

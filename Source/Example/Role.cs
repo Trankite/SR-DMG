@@ -1,11 +1,12 @@
-﻿namespace SR_DMG.Source.Example
+﻿using SR_DMG.Source.Employ;
+
+namespace SR_DMG.Source.Example
 {
     /// <summary>
     /// 角色
     /// </summary>
-    internal class Role
+    public class Role : Thinkan.ISkill
     {
-        public int Id { get; set; }
         public string Name { get; set; } = string.Empty;
         public string Type { get; set; } = string.Empty;
         public string Element { get; set; } = string.Empty;

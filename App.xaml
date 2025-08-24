@@ -2,15 +2,22 @@
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:system="clr-namespace:System;assembly=netstandard"
-    xmlns:local="clr-namespace:SR_DMG"
-    StartupUri="MainWindow.xaml">
+    xmlns:local="clr-namespace:SR_DMG" StartupUri="MainWindow.xaml">
     <Application.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="/Themes/DefaultStyle.xaml"/>
-                <ResourceDictionary Source="/Themes/LabelTextBox.xaml"/>
-                <ResourceDictionary Source="/Themes/IconImages.xaml"/>
-                <ResourceDictionary Source="/Themes/ImageSpan.xaml"/>
+                <ResourceDictionary Source="/Themes/Style/IconImages.xaml"/>
+                <ResourceDictionary Source="/Themes/Style/DefaultStyle.xaml"/>
+                <ResourceDictionary Source="/Themes/Style/Converter.xaml"/>
+                <ResourceDictionary Source="/Themes/View/HorizontalItem.xaml"/>
+                <ResourceDictionary Source="/Themes/View/ComplexTicker.xaml"/>
+                <ResourceDictionary Source="/Themes/View/ComplexSlider.xaml"/>
+                <ResourceDictionary Source="/Themes/View/LabelTextBox.xaml"/>
+                <ResourceDictionary Source="/Themes/View/ImageSpan.xaml"/>
+                <ResourceDictionary Source="/Themes/View/GainItem.xaml"/>
+                <ResourceDictionary Source="/Themes/View/GainView.xaml"/>
+                <ResourceDictionary Source="/Themes/View/DamageView.xaml"/>
+                <ResourceDictionary Source="/Themes/View/DamageItem.xaml"/>
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </Application.Resources>
