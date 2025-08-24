@@ -1,0 +1,23 @@
+﻿<ResourceDictionary 
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:system="clr-namespace:System;assembly=netstandard" xmlns:x1="clr-namespace:System;assembly=mscorlib">
+    <FontWeight x:Key="FontWeigh">Bold</FontWeight>
+    <system:Double x:Key="Opacity">0.95</system:Double>
+    <system:Double x:Key="FontSize">15</system:Double>
+    <SolidColorBrush x:Key="BackBrush" Color="#333333"/>
+    <SolidColorBrush x:Key="BackBrush_Minor" Color="#555555"/>
+    <SolidColorBrush x:Key="ForeBrush" Color="#FFFFFF"/>
+    <Style TargetType="Border">
+        <Setter Property="Opacity" Value="{DynamicResource Opacity}"/>
+    </Style>
+    <Style TargetType="Image">
+        <Setter Property="Stretch" Value="Uniform"/>
+        <Setter Property="HorizontalAlignment" Value="Center"/>
+        <Setter Property="VerticalAlignment" Value="Center"/>
+    </Style>
+    <Style TargetType="ToolTip">
+        <Setter Property="Foreground" Value="{DynamicResource ForeBrush}"/>
+        <Setter Property="Background" Value="{DynamicResource BackBrush_Minor}"/>
+    </Style>
+</ResourceDictionary>

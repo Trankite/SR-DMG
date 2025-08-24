@@ -1,14 +1,14 @@
-﻿namespace SR_DMG.Source.Example
+﻿using SR_DMG.Source.Employ;
+
+namespace SR_DMG.Source.Example
 {
     /// <summary>
     /// 侵蚀隧洞 / 位面饰品
     /// </summary>
-    internal class Relic
+    public class Relic : Thinkan.ISkill
     {
-        public int Id { get; set; }
         public string Name { get; set; } = string.Empty;
         public string Tpye { get; set; } = string.Empty;
         public List<Skill> Skills { get; set; } = [];
-        public List<string> Gain { get; set; } = [];
     }
 }
