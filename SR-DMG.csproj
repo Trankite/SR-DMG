@@ -41,7 +41,6 @@
     <None Remove="Resources\UI\Mark\DMG-Boost-5.png" />
     <None Remove="Resources\UI\Mark\DMG-Boost-6.png" />
     <None Remove="Resources\UI\Mark\Effect-Rate.png" />
-    <None Remove="Resources\UI\Mark\Effect-RES.png" />
     <None Remove="Resources\UI\Mark\Element-0.png" />
     <None Remove="Resources\UI\Mark\Element-1.png" />
     <None Remove="Resources\UI\Mark\Element-2.png" />
@@ -51,6 +50,7 @@
     <None Remove="Resources\UI\Mark\Element-6.png" />
     <None Remove="Resources\UI\Mark\Energy-Rate.png" />
     <None Remove="Resources\UI\Mark\Energy-Toplimit.png" />
+    <None Remove="Resources\UI\Mark\Gain.png" />
     <None Remove="Resources\UI\Mark\Heal-Rate.png" />
     <None Remove="Resources\UI\Mark\HP.png" />
     <None Remove="Resources\UI\Mark\RES-0.png" />
@@ -70,13 +70,15 @@
     <None Remove="Resources\UI\Mark\Role-Type-7.png" />
     <None Remove="Resources\UI\Mark\SPD.png" />
     <None Remove="Resources\UI\Wall\Backgroup.png" />
-    <None Remove="Resources\UI\Wall\Backrole.png" />
     <None Remove="Resources\UI\Wall\Not-Enemy.png" />
-    <None Remove="Resources\UI\Wall\Not-Image.png" />
   </ItemGroup>
 
   <ItemGroup>
     <Content Include="SR-DMG.ico" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Xaml.Behaviors.Wpf" Version="1.1.135" />
   </ItemGroup>
 
   <ItemGroup>
@@ -97,7 +99,7 @@
     <Resource Include="Resources\UI\Mark\DMG-Boost-5.png" />
     <Resource Include="Resources\UI\Mark\DMG-Boost-6.png" />
     <Resource Include="Resources\UI\Mark\Effect-Rate.png" />
-    <Resource Include="Resources\UI\Mark\Effect-RES.png" />
+    <Resource Include="Resources\UI\Mark\Effect-Rest.png" />
     <Resource Include="Resources\UI\Mark\Element-0.png" />
     <Resource Include="Resources\UI\Mark\Element-1.png" />
     <Resource Include="Resources\UI\Mark\Element-2.png" />
@@ -107,6 +109,7 @@
     <Resource Include="Resources\UI\Mark\Element-6.png" />
     <Resource Include="Resources\UI\Mark\Energy-Rate.png" />
     <Resource Include="Resources\UI\Mark\Energy-Toplimit.png" />
+    <Resource Include="Resources\UI\Mark\Gain.png" />
     <Resource Include="Resources\UI\Mark\Heal-Rate.png" />
     <Resource Include="Resources\UI\Mark\HP.png" />
     <Resource Include="Resources\UI\Mark\RES-0.png" />
@@ -126,9 +129,7 @@
     <Resource Include="Resources\UI\Mark\Role-Type-7.png" />
     <Resource Include="Resources\UI\Mark\SPD.png" />
     <Resource Include="Resources\UI\Wall\Backgroup.png" />
-    <Resource Include="Resources\UI\Wall\Backrole.png" />
     <Resource Include="Resources\UI\Wall\Not-Enemy.png" />
-    <Resource Include="Resources\UI\Wall\Not-Image.png" />
     <Resource Include="Resources\UI\Wall\Not-Role.png" />
   </ItemGroup>
 
@@ -145,6 +146,12 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Page Update="Themes\Page\Together.xaml">
+      <CopyToOutputDirectory></CopyToOutputDirectory>
+    </Page>
   </ItemGroup>
 
 </Project>

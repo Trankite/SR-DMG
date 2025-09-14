@@ -1,489 +1,460 @@
 ﻿using SR_DMG.Source.Example;
-using SR_DMG.Source.Material;
+using SR_DMG.Source.Example.Json;
+using SR_DMG.Source.UI.Model;
 using System.Data;
 using System.IO;
 using System.Net.Http;
 using System.Text.Json;
 using System.Text.RegularExpressions;
 using System.Web;
-using System.Windows.Media;
-using static System.Text.Json.JsonElement;
+using System.Windows.Media.Imaging;
 
 namespace SR_DMG.Source.Employ
 {
-    public class Mihomo
+    public partial class Mihomo
     {
-        public static async void GetResources(int Type)
+        public const string Url_Wiki_Home = "https://act-api-takumi-static.mihoyo.com/common/blackboard/sr_wiki/v1/";
+
+        public static async void GetResources(int Target, List<int>? Pages = null)
         {
-            List<string> Fails = [];
-            (List<int> Roles, List<int> Equips, List<int> Relics, List<int> Enemy) = await GetWikiHome();
-            List<int> Pages = Type switch
+            Progress Prog = Simple.App_Progress;
+            Prog.Title = Simple.Tip_Mihomo_PullList_Title;
+            Prog.Text = Simple.Tip_Mihomo_PullList_Text;
+            Prog.Initialize();
+            List<FileCollection.UrlInfo> About = [];
+            List<FileCollection.UrlInfo> Download = [];
+            Pages ??= await GetWikiHome(Target);
+            Prog.Maxmum = Pages.Count;
+            static string GetFolderName(string Str)
             {
-                1 => Roles,
-                2 => Equips,
-                3 => Relics,
-                4 => Enemy,
-                _ => [.. Roles, .. Equips, .. Relics, .. Enemy]
-            };
-            async Task Download(List<string> Urls)
-            {
-                for (int i = 0; i < Urls.Count - 1; i += 2)
-                {
-                    if (string.IsNullOrEmpty(Urls[i + 1])) continue;
-                    if (await Internet.Download(HttpMethod.Get, Urls[i + 1], Urls[i])) continue;
-                    Fails.AddRange([Urls[i], Urls[i + 1]]);
-                }
+                List<string> Floders = [.. Str.Split(Path.DirectorySeparatorChar)];
+                return Floders[Floders.FindIndex(S => S == Simple.Fold_Resources) + 2];
             }
-            async Task Updata()
+            Prog.Title = Simple.Tip_Mihomo_Start_Download;
+            for (int i = 0; i < Pages.Count + 1; i++)
             {
-                for (int i = 0; i < Pages.Count; i++)
+                if (Prog.Canceller.IsCancellationRequested) return;
+                if (i >= Pages.Count)
                 {
-                    try
+                    if (i == 0) break;
+                    if (await Prog.Retry()) i = 0;
+                    else return;
+                }
+                try
+                {
+                    List<FileCollection> Result = await GetWikiPage(Pages[i]);
+                    Prog.Text = GetFolderName(Result[0].Basicpath);
+                    for (int n = 0; n < Result.Count; n++)
                     {
-                        List<string> Urls = await GetWikiPage(Pages[i]);
-                        if (Urls == null) continue;
-                        File.WriteAllText(Path.Combine(Urls[0], Simple.About), Urls[^1]);
-                        for (int n = 1; n < Urls.Count; n += 2)
+                        Result[n].Initialize();
+                        if (n == Result.Count - 1)
                         {
-                            Urls[n] = Path.Combine(Urls[0], Urls[n]);
+                            if (!Program.FileWrite(Result[n].Contents[0]))
+                            {
+                                About.Add(Result[n].Contents[0]);
+                            }
+                            continue;
                         }
-                        Urls.RemoveAt(0);
-                        Pages[i] = -1;
-                        await Download(Urls);
+                        foreach (FileCollection.UrlInfo Item in Result[n].Contents)
+                        {
+                            Internet Requst = new()
+                            {
+                                Url = Item.Url,
+                                Canceller = Prog.Canceller.Token
+                            };
+                            if (await Requst.Download(Item.Path)) continue;
+                            Download.Add(Item);
+                        }
                     }
-                    catch (Exception Exp)
-                    {
-                        Logger.Log(Exp, $"尝试下载资源[{Pages[i]}]时发生意外错误。");
-                    }
+                    Pages.RemoveAt(i--);
+                    Prog.Value++;
                 }
+                catch (Exception Excep) { Logger.Log(Excep); }
             }
-            int Expire = 0;
-            int Total = Pages.Count;
-            while (true)
+            while (About.Count + Download.Count > 0)
             {
-                if (Pages.Count > 0)
+                Prog.Value = 0;
+                Prog.Maxmum = About.Count + Download.Count;
+                if (!await Prog.Retry()) return;
+                for (int i = 0; i < About.Count; i++)
                 {
-                    await Updata();
-                    Pages.RemoveAll(x => x < 0);
-                }
-                if (Pages.Count + Fails.Count == 0)
-                {
-                    break;
-                }
-                else if (true)
-                {
-                    if (Fails.Count > 0)
+                    if (Prog.Canceller.IsCancellationRequested) return;
+                    Prog.Text = GetFolderName(About[i].Path);
+                    if (Program.FileWrite(About[i]))
                     {
-                        await Download(Fails);
-                        Fails.RemoveRange(0, Expire);
-                        Expire = Fails.Count;
+                        About.RemoveAt(i--);
+                        Prog.Value++;
+                    }
+                }
+                for (int i = 0; i < Download.Count; i++)
+                {
+                    if (Prog.Canceller.IsCancellationRequested) return;
+                    Internet Request = new()
+                    {
+                        Url = Download[i].Url,
+                        Canceller = Prog.Canceller.Token
+                    };
+                    Prog.Text = GetFolderName(Download[i].Path);
+                    if (await Request.Download(Download[i].Path))
+                    {
+                        Download.RemoveAt(i--);
+                        Prog.Value++;
                     }
                 }
             }
+            Prog.Completion();
         }
 
-        private static async Task<(List<int> Roles, List<int> Equips, List<int> Relics, List<int> Enemy)> GetWikiHome()
+        private static async Task<List<int>> GetWikiHome(int Target)
         {
-            string Url = $"{Simple.Url_Wiki_Home}v1/home/content/list?app_sn=sr_wiki&channel_id=17";
-            string Page = await Internet.GetResult(HttpMethod.Get, Url) ?? throw Simple.Exp_Network_Error;
-            JsonDocument Json = JsonDocument.Parse(Page);
-            ArrayEnumerator Children = Json.RootElement
-                .GetProperty("data")
-                .GetProperty("list")
-                .EnumerateArray().First()
-                .GetProperty("children")
-                .EnumerateArray();
-            List<int> JsonParse(ArrayEnumerator Children, string name)
+            List<int> Result = [];
+            HomeInfo Model = await HomeInfo.FormUrl();
+            string[] Types = ["角色", "光锥", "遗器", "敌对物种"];
+            for (int i = 0; i < Types.Length; i++)
             {
-                List<int> Content = [];
-                JsonElement Jem = Children.First(E => E.GetProperty("name").GetString() == name);
-                foreach (JsonElement E in Jem.GetProperty("list").EnumerateArray())
+                if (Target > 0 && i != Target - 1) continue;
+                foreach (var Item in Model.Data.List[0].Children.First(M => M.Name == Types[i]).List)
                 {
-                    Content.Add(E.GetProperty("content_id").GetInt32());
+                    Result.Add(Item.Content_Id);
                 }
-                return Content;
             }
-            List<int> Roles = JsonParse(Children, "角色");
-            List<int> Equips = JsonParse(Children, "光锥");
-            List<int> Relics = JsonParse(Children, "遗器");
-            List<int> Enemy = JsonParse(Children, "敌对物种");
-            return (Roles, Equips, Relics, Enemy);
+            return Result;
         }
 
-        public static async Task<List<string>> GetWikiPage(int Id)
+        [GeneratedRegex(@"data=""(.*?)""")]
+        private static partial Regex ContentRegex();
+        public static async Task<List<FileCollection>> GetWikiPage(int Target)
         {
-            string Url = $"{Simple.Url_Wiki_Home}v1/content/info?app_sn=sr_wiki&content_id={Id}";
-            string Page = await Internet.GetResult(HttpMethod.Get, Url) ?? throw Simple.Exp_Network_Error;
-            using JsonDocument Json = JsonDocument.Parse(Page);
-            JsonElement Content = Json.RootElement.GetProperty("data").GetProperty("content");
-            string Name = Content.GetProperty("title").GetString() ?? string.Empty;
-            string Icon = Content.GetProperty("icon").GetString() ?? string.Empty;
-            string Summary = Content.GetProperty("summary").GetString()?.Split('-')[0] ?? string.Empty;
-            JsonElement RoleConten = Content.GetProperty("rpg_new_tmp_content");
-            ArrayEnumerator Tags = Content.GetProperty("contents").EnumerateArray();
-            string Data = RoleConten.ValueKind == JsonValueKind.Null ?
-                (Summary == "角色" ? Tags.First(E => E.GetProperty("name").GetString()?
-                .StartsWith("基础信息") ?? false) : Tags.First()).GetProperty("text")
-                .GetString() ?? string.Empty : string.Empty;
-            using JsonDocument Extra = JsonDocument.Parse(Content.GetProperty("ext").GetString() ?? string.Empty);
-            JsonElement Table = Extra.RootElement.GetProperty(Extra.RootElement.EnumerateObject().First().Name);
-            string Filter = Table.GetProperty("filter").GetProperty("text").GetString() ?? string.Empty;
+            PageInfo Model = await PageInfo.FormUrl(Target);
+            List<FileCollection> Download = [];
+            Download.Add(new()
+            {
+                Basicpath = Simple.Fold_Mihomo_Wiki_Page(Target, Model.Data.Content.Title),
+                Contents = [new ()
+                {
+                    Path = Simple.File_Icon_Image,
+                    Url = Model.Data.Content.Icon
+                }]
+            });
+            string Input = Model.Data.Content.Contents.FirstOrDefault()?.Text ?? string.Empty;
+            if (Model.Data.Content.Summary.StartsWith("角色"))
+            {
+                Input = Model.Data.Content.Contents.FirstOrDefault(M => M.Name == "基础信息")?.Text ?? string.Empty;
+            }
             List<string> Contents = [];
-            List<string> Download = [Name, "Icon", Icon];
-            MatchCollection Mats = Regex.Matches(Data, @"data=""(.*?)""");
-            foreach (Match M in Mats)
+            MatchCollection Matches = ContentRegex().Matches(Input);
+            foreach (Match M in Matches) Contents.Add(HttpUtility.UrlDecode(M.Groups[1].Value));
+            switch (Model.Data.Content.Summary.Split('-')[0])
             {
-                Contents.Add($"{{\"s\":{HttpUtility.UrlDecode(M.Groups[1].Value)}}}");
+                case "角色": GetRole(Download, Model, Contents); break;
+                case "光锥": GetEquip(Download, Model, Contents); break;
+                case "遗器" or "位面饰品": GetRelic(Download, Contents); break;
+                case "敌人图鉴": await GetEnemy(Download, Contents); break;
+                default: Logger.Log(Simple.Tip_Mihomo_Unfind_Page(Target, Model.Data.Content.Summary)); break;
             }
-            switch (Summary)
-            {
-                case "角色":
-                    GetWikiRole(ref Download, RoleConten, Contents, Name);
-                    break;
-                case "光锥":
-                    GetWikiEquip(ref Download, Contents, Name);
-                    break;
-                case "遗器":
-                case "位面饰品":
-                    GetWikiRelic(ref Download, Contents, Name);
-                    break;
-                case "敌人图鉴":
-                    await Task.Run(() => GetWikiEnemy(ref Download, Contents, Name));
-                    break;
-                default:
-                    Logger.Log($"无效的标签：[{Id}-{Name}]{Summary}");
-                    break;
-            }
-            Directory.CreateDirectory(Download[0]);
+            Download[^1].Basicpath = Download[0].Basicpath;
+            Download[^1].Contents[0].Path = Simple.File_About;
             return Download;
         }
-        private static string GetWikiRole(ref List<string> Download, List<string> Contents, ref Role role)
+
+        [GeneratedRegex(@"【(\d+)】(.*)")]
+        private static partial Regex RanksRegex();
+        private static void GetRole(List<FileCollection> Download, PageInfo Model, List<string> Contents)
         {
-            char[] Keys = ['L', 'R'];
-            using (JsonDocument Json = JsonDocument.Parse(Contents[0]))
-            {
-                JsonElement Data = Json.RootElement.GetProperty("s").EnumerateArray().First(
-                    E => E.GetProperty("partKey").GetString() == "newMain").GetProperty("data");
-                role.Star = Data.GetProperty("star").GetInt32();
-                ArrayEnumerator Fields = Data.GetProperty("mainFields").EnumerateArray();
-                for (int i = 0; i < Keys.Length; i++)
-                {
-                    Data = Fields.FirstOrDefault(E => E.GetProperty("name" + Keys[i]).GetString() == "命途/属性");
-                    if (Data.ValueKind == JsonValueKind.Undefined) continue;
-                    string[] Tags = Data.GetProperty("value" + Keys[i]).GetString()?.Split('/', 2) ?? [];
-                    role.Type = Tags[0];
-                    role.Element = Tags[1];
-                    break;
-                }
-            }
-            using (JsonDocument Json = JsonDocument.Parse(Contents[1]))
-            {
-                foreach (JsonElement E in Json.RootElement.GetProperty("s").EnumerateArray()
-                    .First(E => E.GetProperty("partKey").GetString() == "breach").GetProperty("data")
-                    .GetProperty("attr").EnumerateArray().First(E => E.GetProperty("name_").GetString()?
-                    .StartsWith("80级") ?? false).GetProperty("attr").EnumerateArray())
-                {
-                    for (int i = 0; i < Keys.Length; i++)
-                    {
-                        int GetValue()
-                        {
-                            return Convert.ToInt32(E.GetProperty("value" + Keys[i]).GetString());
-                        }
-                        switch (E.GetProperty("name" + Keys[i]).GetString())
-                        {
-                            case "生命值": role.HP = GetValue(); break;
-                            case "攻击力": role.ATK = GetValue(); break;
-                            case "防御力": role.DEF = GetValue(); break;
-                            case "速度": role.SPD = GetValue(); break;
-                        }
-                    }
-                }
-            }
-            JsonElement ParseModules(JsonDocument Json, string name)
-            {
-                return Json.RootElement.GetProperty("s").EnumerateArray().FirstOrDefault(
-                    E => E.GetProperty("partKey").GetString() == name);
-            }
-            using (JsonDocument Json = JsonDocument.Parse(Contents[2]))
-            {
-                int Index = 1;
-                foreach (JsonElement E in ParseModules(Json, "trace").GetProperty("data")
-                    .GetProperty("attr").GetProperty("points").EnumerateArray())
-                {
-                    if (!E.TryGetProperty("name", out JsonElement Skill_Name)) continue;
-                    string[] Tags = Skill_Name.GetString()?.Split("</span>", 2) ?? [];
-                    string Tag = Simple.Get_Html_Text(Tags[0]);
-                    if (Tag.StartsWith("属性")) continue;
-                    string[] Names = Simple.Get_Html_Text(Tags[1]).Trim().Split('/');
-                    string[] Desc = E.GetProperty("desc").GetString()?.Split("<hr>") ?? [];
-                    Download.Add(Path.Combine(Simple.Trace, $"{Simple.Trace}-{Index}"));
-                    Download.Add(E.GetProperty("icon").GetString() ?? string.Empty);
-                    int Row = 1;
-                    List<List<JsonElement>> Rows = [];
-                    foreach (JsonElement Je in E.GetProperty("tableData").GetProperty("rows").EnumerateArray())
-                    {
-                        Rows.Add([.. Je.EnumerateArray()]);
-                    }
-                    for (int i = 0; i < Desc.Length; i++)
-                    {
-                        Skill skill = new()
-                        {
-                            Name = Names[Math.Min(i, Names.Length - 1)]
-                        };
-                        skill.Tag.Add(Tag);
-                        Tags = Desc[i].Split("</em>", 2);
-                        if (Tags.Length > 1)
-                        {
-                            skill.Tag.AddRange(Simple.Get_Html_Text(
-                                Tags[0].Split("</strong>", 2).Last()).Split('、'));
-                        }
-                        skill.Text = Simple.Get_Html_Text(Tags.Last());
-                        SetWikiRole(ref Rows, ref role, ref skill, ref Row);
-                        Index++;
-                    }
-                }
-                string RanksContent = GetRanksContent(Json);
-                if (!string.IsNullOrEmpty(RanksContent))
-                {
-                    return RanksContent;
-                }
-            }
-            string GetRanksContent(JsonDocument Json)
-            {
-                JsonElement Ranks = ParseModules(Json, "desc");
-                if (Ranks.ValueKind != JsonValueKind.Undefined)
-                {
-                    return Ranks.GetProperty("data").GetProperty("text").GetString() ?? string.Empty;
-                }
-                else return string.Empty;
-            }
-            using (JsonDocument Json = JsonDocument.Parse(Contents[3]))
-            {
-                return GetRanksContent(Json);
-            }
-        }
-        private static void GetWikiRole(ref List<string> Download, JsonElement RoleContent, List<string> Contents, string Name)
-        {
-            Role role = new()
-            {
-                Name = Name
-            };
+            Role Role = new();
             string RanksContent = string.Empty;
-            string ParseModules(ArrayEnumerator Modules, string name)
+            var Model_Role = Model.Data.Content.Rpg_Content;
+            Download[0].Basicpath = Program.GetPath(Simple.Fold_Resources, Simple.Fold_Roles, Download[0].Basicpath);
+            string ParseModules(string name)
             {
-                return Modules.First(E => E.GetProperty("name").GetString()?.StartsWith(name) ?? false)
-                    .GetProperty("components").EnumerateArray().First()
-                    .GetProperty("data").GetString() ?? string.Empty;
+                return Model_Role.Modules.First(M => M.Name.Contains(name)).Components[0].Data;
             }
-            if (RoleContent.ValueKind == JsonValueKind.Null)
+            if (Model_Role == null)
             {
-                RanksContent = GetWikiRole(ref Download, Contents, ref role);
+                RanksContent = GetRole(Download, Contents, Role);
             }
             else
             {
-                JsonElement UserInfo = RoleContent.GetProperty("base").GetProperty("userInfo");
-                role.Type = Simple.Get_Role_Type(UserInfo.GetProperty("baseType").GetString());
-                role.Element = Simple.Get_Element(UserInfo.GetProperty("elementId").GetString());
-                role.Star = UserInfo.GetProperty("rarity").GetInt32();
-                ArrayEnumerator Modules = RoleContent.GetProperty("modules").EnumerateArray();
-                JsonDocument Json = JsonDocument.Parse(ParseModules(Modules, "角色晋阶"));
-                RanksContent = ParseModules(Modules, "角色星魂");
-                int GetValue(JsonElement E)
+                RanksContent = Program.FormJson<RoleInfo.Role_Rank>(ParseModules("星魂")).RichText;
+                Role.Type = Simple.GetRoleType(Model_Role.Base.UserInfo.BaseType);
+                Role.Element = Simple.GetElement(Model_Role.Base.UserInfo.ElementId);
+                Role.Star = Model_Role.Base.UserInfo.Rarity;
+                Role.Name = Model.Data.Content.Title;
+                Dictionary<string, string> Dinary = [];
+                RoleInfo.Role_Ascent Model_Ascent = Program.FormJson<RoleInfo.Role_Ascent>(ParseModules("晋阶"));
+                foreach (var Item in Model_Ascent.List.First(M => M.TabName.StartsWith("80级")).Attr)
                 {
-                    return int.TryParse(E.GetProperty("value").EnumerateArray()
-                        .First().GetString(), out int Value) ? Value : 0;
+                    Dinary[Item.Key] = Item.Value[0];
                 }
-                ArrayEnumerator Attrs = Json.RootElement.GetProperty("list").EnumerateArray();
-                foreach (JsonElement E in Attrs.First().GetProperty("attr").EnumerateArray())
-                {
-                    if (E.GetProperty("key").GetString() == "速度") role.SPD = GetValue(E);
-                }
-                foreach (JsonElement E in Attrs.Last().GetProperty("attr").EnumerateArray())
-                {
-                    switch (E.GetProperty("key").GetString())
-                    {
-                        case "晋阶后生命值": role.HP = GetValue(E); break;
-                        case "晋阶后攻击力": role.ATK = GetValue(E); break;
-                        case "晋阶后防御力": role.DEF = GetValue(E); break;
-                    }
-                }
+                SetRole(Dinary, Role);
+                RoleInfo.Role_Trace Model_Trace = Program.FormJson<RoleInfo.Role_Trace>(ParseModules("行迹"));
                 int Index = 1;
-                Json = JsonDocument.Parse(ParseModules(Modules, "角色行迹"));
-                foreach (JsonElement E in Json.RootElement.GetProperty("points").EnumerateArray())
+                FileCollection File_Trace = new()
                 {
-                    if (!E.TryGetProperty("tag", out RoleContent)) continue;
-                    string Tag = RoleContent.GetString() ?? string.Empty;
-                    if (Tag.StartsWith("属性")) continue;
-                    string SubName = E.GetProperty("name").GetString() ?? string.Empty;
-                    Download.Add(Path.Combine(Simple.Trace, $"{Simple.Trace}-{Index}"));
-                    Download.Add(E.GetProperty("icon").GetString() ?? string.Empty);
-                    int Row = 1;
-                    List<List<JsonElement>> Rows = [];
-                    foreach (JsonElement Je in E.GetProperty("tableData").GetProperty("rows").EnumerateArray())
+                    Basicpath = Path.Combine(Download[0].Basicpath, Simple.Fold_Trace)
+                };
+                foreach (var PointItem in Model_Trace.Points)
+                {
+                    if (PointItem.Tag.StartsWith("属性")) continue;
+                    string Icon = $"{Simple.Fold_Trace}-{Index++}";
+                    File_Trace.Contents.Add(new() { Path = Icon, Url = PointItem.Icon });
+                    int Target = 1;
+                    foreach (var SubItem in PointItem.SubList)
                     {
-                        Rows.Add([.. Je.EnumerateArray()]);
-                    }
-                    foreach (JsonElement Je in E.GetProperty("subList").EnumerateArray())
-                    {
-                        Skill skill = new()
+                        Skill Skill = new()
                         {
-                            Tag = [Tag],
-                            Name = Je.GetProperty("subTitle").GetString() ?? string.Empty
+                            Name = SubItem.SubTitle,
+                            Text = Program.Get_Html_Text(SubItem.SubDesc),
+                            Tags = [PointItem.Tag, .. SubItem.SubTag],
+                            Icon = Icon
                         };
-                        if (string.IsNullOrEmpty(skill.Name))
-                        {
-                            skill.Name = SubName;
-                        }
-                        skill.Text = Simple.Get_Html_Text(Je.GetProperty("subDesc").GetString() ?? string.Empty);
-                        foreach (JsonElement Jem in Je.GetProperty("subTag").EnumerateArray())
-                        {
-                            skill.Tag.Add(Jem.GetString() ?? string.Empty);
-                        }
-                        SetWikiRole(ref Rows, ref role, ref skill, ref Row);
-                        Index++;
+                        if (string.IsNullOrEmpty(Skill.Name)) Skill.Name = PointItem.Name;
+                        SetRole(PointItem.TableData.Rows, Role, Skill, ref Target);
                     }
                 }
+                Download.Add(File_Trace);
             }
+            FileCollection File_Rank = new()
+            {
+                Basicpath = Path.Combine(Download[0].Basicpath, Simple.Fold_Ranks)
+            };
             string[] Ranks = Regex.Unescape(RanksContent).Split("</tr>");
             for (int i = 1; i < Ranks.Length; i += 2)
             {
-                Match Mat = Regex.Match(Simple.Get_Html_Text(Ranks[i - 1]), @"【(\d+)】(.*)");
-                if (!Mat.Success) continue;
-                Download.Add(Path.Combine(Simple.Ranks, $"{Simple.Ranks}-{Mat.Groups[1].Value}"));
-                Skill skill = new()
+                Match Match = RanksRegex().Match(Program.Get_Html_Text(Ranks[i - 1]));
+                if (!Match.Success) continue;
+                FileCollection.UrlInfo UrlInfo = new()
                 {
-                    Name = Simple.Get_Html_Text(Mat.Groups[2].Value),
-                    Text = Simple.Get_Html_Text(Ranks[i])
+                    Path = Simple.File_Mihomo_Rank_Image(Match.Groups[1].Value)
                 };
-                skill.Tag.Add($"星魂-{Mat.Groups[1].Value}");
-                role.Ranks.Add(skill);
-                Mat = Regex.Match(Ranks[i - 1], @"src=""(.*?)""");
-                Download.Add(Mat.Groups[1].Value);
+                Role.Ranks.Add(new()
+                {
+                    Name = Program.Get_Html_Text(Match.Groups[2].Value),
+                    Text = Program.Get_Html_Text(Ranks[i]),
+                    Tags = [Simple.Tag_Mihomo_Rank_Image(Match.Groups[1].Value)]
+                });
+                Match = SourceRegex().Match(Ranks[i - 1]);
+                UrlInfo.Url = Match.Groups[1].Value;
+                File_Rank.Contents.Add(UrlInfo);
             }
-            Download[0] = Program.GetPath(Simple.Roles, Download[0]);
-            Download.Add(JsonSerializer.Serialize(role, Simple.JsonOptions));
-            Directory.CreateDirectory(Path.Combine(Download[0], Simple.Ranks));
-            Directory.CreateDirectory(Path.Combine(Download[0], Simple.Trace));
+            Download.Add(File_Rank);
+            Download.Add(new()
+            {
+                Contents = [new() { Url = JsonSerializer.Serialize(Role, Simple.JsonOptions) }]
+            });
         }
-        private static void SetWikiRole(ref List<List<JsonElement>> Rows, ref Role role, ref Skill skill, ref int Row)
+
+        private static string GetRole(List<FileCollection> Download, List<string> Contents, Role Role)
+        {
+            Dictionary<string, string> Dinary = [];
+            RoleInfo.NewMain Model_NewMain = (RoleInfo.NewMain)RoleInfo.FromJson(Contents[0])[0];
+            foreach (var Item in Model_NewMain.Data.MainFields)
+            {
+                (Dinary[Item.NameL], Dinary[Item.NameR]) = (Item.ValueL, Item.ValueR);
+            }
+            string[] Tags = Dinary.GetValueOrDefault("命途/属性")?.Split('/') ?? [];
+            (Role.Name, Role.Type, Role.Element) = (Model_NewMain.Data.Name, Tags.First(), Tags.Last());
+            RoleInfo.Breach Model_Breach = (RoleInfo.Breach)RoleInfo.FromJson(Contents[1])[0];
+            foreach (var Item in Model_Breach.Data.Attr.First(M => M.Name.StartsWith("80级")).Attr)
+            {
+                (Dinary[Item.NameL], Dinary[Item.NameR]) = (Item.ValueL, Item.ValueR);
+            }
+            SetRole(Dinary, Role);
+            int Index = 1;
+            RoleInfo[] Model_Trace = RoleInfo.FromJson(Contents[2]);
+            FileCollection File_Trace = new()
+            {
+                Basicpath = Path.Combine(Download[0].Basicpath, Simple.Fold_Trace)
+            };
+            foreach (var Item in ((RoleInfo.Trace)Model_Trace.First(M => M is RoleInfo.Trace)).Data.Attr.Points)
+            {
+                Tags = Item.Name.Split("</span>", 2);
+                string Tag = Program.Get_Html_Text(Tags[0]);
+                if (Tag.StartsWith("属性")) continue;
+                string[] Names = Program.Get_Html_Text(Tags[Math.Min(1, Tags.Length - 1)]).Split('/');
+                string[] Desc = Item.Desc.Split("<hr>");
+                string Icon = $"{Simple.Fold_Trace}-{Index++}";
+                File_Trace.Contents.Add(new()
+                {
+                    Path = Icon,
+                    Url = Item.Icon
+                });
+                int Target = 1;
+                for (int i = 0; i < Desc.Length; i++)
+                {
+                    Tags = Desc[i].Split("</em>", 2);
+                    Skill Skill = new()
+                    {
+                        Name = Names[Math.Min(i, Names.Length - 1)],
+                        Text = Program.Get_Html_Text(Tags.Last()),
+                        Icon = Icon,
+                        Tags = [Tag]
+                    };
+                    if (Tags.Length > 1)
+                    {
+                        Tags = Program.Get_Html_Text(Tags[0].Split("</strong>", 2).Last()).Split('、');
+                        Skill.Tags.AddRange(Tags);
+                    }
+                    SetRole(Item.TableData.Rows, Role, Skill, ref Target);
+                }
+            }
+            Download.Add(File_Trace);
+            if (Model_Trace.FirstOrDefault(M => M is RoleInfo.Desc) is not RoleInfo.Desc Model_Desc)
+            {
+                Model_Desc = (RoleInfo.Desc)RoleInfo.FromJson(Contents[3])[0];
+            }
+            return Model_Desc.Data.Text;
+        }
+
+        [GeneratedRegex(@"【([\d%/.]+)】")]
+        private static partial Regex TraceRegex();
+        private static void SetRole(string[][] Content, Role Role, Skill Skill, ref int Index)
         {
             List<string> Parmas = [];
-            MatchCollection Mats = Regex.Matches(skill.Text, @"(【[\d%/.]+】)");
-            foreach (Match M in Mats)
-            {
-                Parmas.Add(M.Groups[1].Value);
-            }
+            MatchCollection Matchs = TraceRegex().Matches(Skill.Text);
+            foreach (Match M in Matchs) Parmas.Add(M.Groups[1].Value);
             Parmas = [.. Parmas.Distinct()];
-            for (int n = 0; n < Parmas.Count; n++)
+            for (int i = 0; i < Parmas.Count; i++)
             {
                 List<string> Values = [];
-                if (Row >= Rows[0].Count) continue;
-                foreach (List<JsonElement> Jem in Rows)
-                {
-                    Values.Add(Jem[Row].GetString() ?? string.Empty);
-                }
-                if (Row < Rows.Count - 1) Row++;
-                skill.Values.Add(Values);
+                if (Index >= Content[0].Length) continue;
+                foreach (string[] Item in Content) Values.Add(Item[Index]);
+                if (Index < Content.Length - 1) Index++;
+                Skill.Values.Add(Values);
             }
-            role.Skills.Add(skill);
+            Role.Trace.Add(Skill);
         }
-        private static void GetWikiEquip(ref List<string> Download, List<string> Contents, string Name)
+
+        private static void SetRole(Dictionary<string, string> Dinary, Role Role)
         {
-            Equip equip = new()
+            Role.Attack = (int)Program.GetFloat(Dinary.GetValueOrDefault("攻击力"));
+            Role.Health = (int)Program.GetFloat(Dinary.GetValueOrDefault("生命值"));
+            Role.Denfense = (int)Program.GetFloat(Dinary.GetValueOrDefault("防御力"));
+            Role.Speed = (int)Program.GetFloat(Dinary.GetValueOrDefault("速度"));
+            Role.Energy = (int)Program.GetFloat(Dinary.GetValueOrDefault("终结技启动所需"));
+            if (!Dinary.TryGetValue("行迹加成", out string? Result)) return;
+            Role.Trace.Add(new Skill()
             {
-                Name = Name
-            };
-            using JsonDocument Json = JsonDocument.Parse(Contents[0]);
-            ArrayEnumerator Content = Json.RootElement.GetProperty("s").EnumerateArray();
-            JsonElement ParseModules(string name)
-            {
-                return Content.First(E => E.GetProperty("partKey").GetString() == name).GetProperty("data");
-            }
-            equip.Skills[0].Tag.Add("光锥");
-            JsonElement MainContent = ParseModules("main");
-            equip.Type = MainContent.GetProperty("career").GetString() ?? string.Empty;
-            equip.Star = Convert.ToInt32(MainContent.GetProperty("rate").GetString()?.First().ToString());
-            string[] Tags = MainContent.GetProperty("skill").GetString()?.Split("</h3>", 2) ?? [];
-            equip.Skills[0].Name = Simple.Get_Html_Text(Tags[0]);
-            equip.Skills[0].Text = Simple.Get_Html_Text(Tags[1]);
-            MatchCollection Mats = Regex.Matches(equip.Skills[0].Text, @"【([\d%/.]+)】");
-            foreach (Match M in Mats)
-            {
-                equip.Skills[0].Values.Add([.. M.Groups[1].Value.Split('/')]);
-            }
-            JsonElement Material = ParseModules("value").GetProperty("material").EnumerateArray()
-                    .First(E => E.GetProperty("name").GetString()?.StartsWith("80级") ?? false);
-            equip.HP = Material.GetProperty("life").GetInt32();
-            equip.ATK = Material.GetProperty("attack").GetInt32();
-            equip.DEF = Material.GetProperty("defense").GetInt32();
-            Download[0] = Program.GetPath(Simple.Equips, Download[0]);
-            Download.Add(JsonSerializer.Serialize(equip, Simple.JsonOptions));
+                Name = Simple.Tag_Trace_Gain,
+                Tags = [Simple.Tag_Trace],
+                Values = [[.. Result.Split('、')]],
+                Text = Result
+            });
         }
-        private static void GetWikiRelic(ref List<string> Download, List<string> Contents, string Name)
+
+        private static void GetEquip(List<FileCollection> Download, PageInfo Model, List<string> Contents)
         {
-            Relic relic = new()
+            EquipInfo[] Models = EquipInfo.FromJson(Contents[0]);
+            EquipInfo.Main Model_Main = (EquipInfo.Main)Models.First(M => M is EquipInfo.Main);
+            Equip Equip = new()
             {
-                Name = Name
+                Name = Model.Data.Content.Title,
+                Skills = [new() { Tags = [Simple.Tag_Equip] }],
+                Type = Model_Main.Data.Career,
+                Star = Convert.ToInt32(Model_Main.Data.Rate[0].ToString())
             };
-            using JsonDocument Json = JsonDocument.Parse(Contents[0]);
-            foreach (JsonElement E in Json.RootElement.GetProperty("s").EnumerateArray())
+            string[] Tags = Model_Main.Data.Skill.Split("</h3>", 2);
+            Equip.Skills[0].Name = Program.Get_Html_Text(Tags[0]);
+            Equip.Skills[0].Text = Program.Get_Html_Text(Tags[1]);
+            MatchCollection Matches = TraceRegex().Matches(Equip.Skills[0].Text);
+            foreach (Match M in Matches)
             {
-                if (E.GetProperty("partKey").GetString() != "main") continue;
-                JsonElement Data = E.GetProperty("data");
-                JsonElement Content = Data.GetProperty("content").EnumerateArray().First();
-                string Relic_Type = Content.GetProperty("name").GetString() ?? string.Empty;
-                string Relic_Name = Content.GetProperty("value").GetString() ?? string.Empty;
-                int Relic_ID = Simple.Get_Relic_ID(Relic_Type);
-                relic.Tpye = Relic_ID > 4 ? "位面饰品" : "隧洞遗器";
-                string Img_Url = Data.GetProperty("image").GetString() ?? string.Empty;
-                if (Relic_ID == 0)
+                Equip.Skills[0].Values.Add([.. M.Groups[1].Value.Split('/')]);
+            }
+            EquipInfo.Value Model_Value = (EquipInfo.Value)Models.First(M => M is EquipInfo.Value);
+            var Material = Model_Value.Data.Material.First(M => M.Name.StartsWith("80级"));
+            (Equip.Health, Equip.Attack, Equip.Denfense) = (Material.Life, Material.Attack, Material.Defense);
+            Download[0].Basicpath = Program.GetPath(Simple.Fold_Resources, Simple.Fold_Equips, Download[0].Basicpath);
+            Download.Add(new()
+            {
+                Contents = [new() { Url = JsonSerializer.Serialize(Equip, Simple.JsonOptions) }]
+            });
+        }
+
+        private static void GetRelic(List<FileCollection> Download, List<string> Contents)
+        {
+            RelicInfo[] Models = RelicInfo.FromJson(Contents[0]);
+            Relic Relic = new() { Tpye = Models.Length > 4 ? Simple.Tag_Relic_Tunnel : Simple.Tag_Relic_Ornament };
+            foreach (RelicInfo Model in Models)
+            {
+                if (Model is not RelicInfo.Main Model_Main) continue;
+                int Relic_Id = Simple.GetRelicIndex(Model_Main.Data.Content[0].Name);
+                string Relic_Name = Model_Main.Data.Content[0].Value;
+                string Relic_Image = Model_Main.Data.Image;
+                if (Relic_Id == 0)
                 {
-                    relic.Name = Relic_Name;
-                    string[] Tags = Data.GetProperty("story").GetString()?.Split("</p>", 2) ?? [];
-                    for (int i = 1; i < Tags.Length; i++)
+                    Relic.Name = Relic_Name;
+                    string[] Tags = Model_Main.Data.Story.Split("</p>");
+                    for (int i = 0; i < Tags.Length - 1; i++)
                     {
-                        Skill skill = new()
+                        Skill Skill = new()
                         {
-                            Name = relic.Name,
-                            Text = Simple.Get_Html_Text(Tags[i - 1])
+                            Name = Relic_Name,
+                            Text = Program.Get_Html_Text(Tags[i]),
+                            Tags = [Relic.Tpye]
                         };
-                        skill.Tag.Add("遗器");
-                        relic.Skills.Add(skill);
+                        Relic.Skills.Add(Skill);
                     }
-                    Download[2] = Img_Url;
+                    Download[0].Contents[0].Url = Relic_Image;
+                    continue;
                 }
-                else
+                Relic.Parts[Relic_Id.ToString()] = Relic_Name;
+                Download[0].Contents.Add(new()
                 {
-                    Download.Add($"{Relic_Type}-{Relic_Name}");
-                    Download.Add(Img_Url);
-                }
+                    Path = Simple.File_Mihomo_Relic_Image(Relic_Id),
+                    Url = Relic_Image
+                });
             }
-            Download[0] = Program.GetPath(Simple.Relics, Download[0]);
-            Download.Add(JsonSerializer.Serialize(relic, Simple.JsonOptions));
+            Download[0].Basicpath = Program.GetPath(Simple.Fold_Resources, Simple.Fold_Relics, Download[0].Basicpath);
+            Download.Add(new()
+            {
+                Contents = [new() { Url = JsonSerializer.Serialize(Relic, Simple.JsonOptions) }]
+            });
         }
-        private static void GetWikiEnemy(ref List<string> Download, List<string> Contents, string Name)
+
+        [GeneratedRegex(@"src=""(.*?)""")]
+        private static partial Regex SourceRegex();
+        private static async Task GetEnemy(List<FileCollection> Download, List<string> Contents)
         {
-            Enemy enemy = new()
+            EnemyInfo[] Models = EnemyInfo.FromJson(Contents[0]);
+            EnemyInfo.Main Model_Main = (EnemyInfo.Main)Models.First(M => M is EnemyInfo.Main);
+            Enemy Enemy = new() { Name = Model_Main.Data.Name, Type = Model_Main.Data.Kind };
+            Enemy.Tag.AddRange(Program.Get_Html_Text(Model_Main.Data.Resistance).Split('、').Where(s => s != "无"));
+            MatchCollection Matches = SourceRegex().Matches(Model_Main.Data.Weak);
+            foreach (Match M in Matches)
             {
-                Name = Name
-            };
-            using JsonDocument Json = JsonDocument.Parse(Contents[0]);
-            JsonElement Data = Json.RootElement.GetProperty("s").EnumerateArray()
-                .First(E => E.GetProperty("partKey").GetString() == "main").GetProperty("data");
-            enemy.Type = Data.GetProperty("kind").GetString() ?? string.Empty;
-            enemy.Tag.AddRange(Simple.Get_Html_Text(Data.GetProperty("resistance")
-                .GetString() ?? string.Empty).Split('、').Where(s => s != "无"));
-            MatchCollection Mats = Regex.Matches(Data.GetProperty("weak")
-                .GetString() ?? string.Empty, @"src=""(.*?)""");
-            foreach (Match M in Mats)
-            {
-                Color? Weak_Color = Internet.GetColor(HttpMethod.Get, M.Groups[1].Value).Result;
-                if (Weak_Color == null) continue;
-                enemy.Weak.Add(Simple.Get_Element((Color)Weak_Color));
+                Internet Neork = new()
+                {
+                    Url = M.Groups[1].Value
+                };
+                using HttpResponseMessage? Response = await Neork.Response();
+                if (Response == null) continue;
+                BitmapImage Bmp = new();
+                Bmp.BeginInit();
+                Bmp.CacheOption = BitmapCacheOption.OnLoad;
+                Bmp.StreamSource = await Response.Content.ReadAsStreamAsync();
+                Bmp.EndInit();
+                CroppedBitmap Cmp = new(Bmp, new System.Windows.Int32Rect(Bmp.PixelWidth / 2, Bmp.PixelHeight / 2, 1, 1));
+                byte[] Pixels = new byte[4];
+                Cmp.CopyPixels(Pixels, 4, 0);
+                int Index = 0;
+                int[] Values = new int[Simple.Element_Colors.GetLength(0)];
+                for (int i = 0; i < Values.Length; i++)
+                {
+                    int Abs_R = Math.Abs(Simple.Element_Colors[i, 0] - Pixels[2]);
+                    int Abs_G = Math.Abs(Simple.Element_Colors[i, 1] - Pixels[1]);
+                    int Abs_B = Math.Abs(Simple.Element_Colors[i, 2] - Pixels[0]);
+                    Values[i] = Abs_R + Abs_G + Abs_B;
+                    if (Values[i] < Values[Index]) Index = i;
+                }
+                Enemy.Weak.Add(Simple.GetElement(Index));
             }
-            Download[0] = Program.GetPath(Simple.Enemy, Download[0]);
-            Download[2] = Data.GetProperty("image").GetString() ?? string.Empty;
-            Download.Add(JsonSerializer.Serialize(enemy, Simple.JsonOptions));
+            Download[0].Basicpath = Program.GetPath(Simple.Fold_Resources, Simple.Fold_Enemy, Download[0].Basicpath);
+            Download[0].Contents[0].Url = Model_Main.Data.Image;
+            Download.Add(new()
+            {
+                Contents = [new() { Url = JsonSerializer.Serialize(Enemy, Simple.JsonOptions) }]
+            });
         }
     }
 }

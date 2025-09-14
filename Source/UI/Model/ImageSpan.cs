@@ -1,41 +1,39 @@
-﻿using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Media;
+﻿using SR_DMG.Source.Employ;
+using System.ComponentModel;
 
 namespace SR_DMG.Source.UI.Model
 {
-    public class ImageSpan : Control
+    public class ImageSpan : INotifyPropertyChanged
     {
-        static ImageSpan()
-        {
-            DefaultStyleKeyProperty.OverrideMetadata(typeof(ImageSpan), new FrameworkPropertyMetadata(typeof(ImageSpan)));
-        }
+        private string _Icon = string.Empty;
 
-        public ImageSource Icon
-        {
-            set { SetValue(IconProperty, value); }
-            get { return (ImageSource)GetValue(IconProperty); }
-        }
-        public static readonly DependencyProperty IconProperty =
-            DependencyProperty.Register(nameof(Icon), typeof(ImageSource), typeof(ImageSpan),
-                new PropertyMetadata(null));
+        private string _Text = string.Empty;
 
-        public List<ImageSource> Images
+        private List<string> _Tags = [];
+
+        public string Icon
         {
-            set { SetValue(ImagesProperty, value); }
-            get { return (List<ImageSource>)GetValue(ImagesProperty); }
+            set => Program.SetField(ref _Icon, value, nameof(Icon), OnPropertyChanged);
+            get => _Icon;
         }
-        public static readonly DependencyProperty ImagesProperty =
-            DependencyProperty.Register(nameof(Images), typeof(List<ImageSource>), typeof(ImageSpan),
-                new PropertyMetadata(new List<ImageSource>()));
 
         public string Text
         {
-            set { SetValue(TextProperty, value); }
-            get { return (string)GetValue(TextProperty); }
+            set => Program.SetField(ref _Text, value, nameof(Text), OnPropertyChanged);
+            get => _Text;
         }
-        public static readonly DependencyProperty TextProperty =
-            DependencyProperty.Register(nameof(Text), typeof(string), typeof(ImageSpan),
-                new PropertyMetadata(string.Empty));
+
+        public List<string> Tags
+        {
+            set => Program.SetField(ref _Tags, value, nameof(Tags), OnPropertyChanged);
+            get => _Tags;
+        }
+
+        public event PropertyChangedEventHandler? PropertyChanged;
+
+        public void OnPropertyChanged(string? PropertyName)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(PropertyName));
+        }
     }
 }

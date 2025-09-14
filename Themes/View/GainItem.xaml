@@ -1,106 +1,100 @@
 ﻿<ResourceDictionary
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:local="clr-namespace:SR_DMG.Source.UI.Model">
+    xmlns:local="clr-namespace:SR_DMG.Source.UI.View">
     <Style TargetType="{x:Type local:GainItem}">
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type local:GainItem}">
-                    <Border Background="{DynamicResource BackBrush}" CornerRadius="20">
-                        <DockPanel VerticalAlignment="Center" Width="300" Margin="5">
-                            <StackPanel Orientation="Horizontal" DockPanel.Dock="Top" Height="50">
-                                <Image Source="{Binding Gain.Icon,RelativeSource={RelativeSource TemplatedParent}}" Width="50" Height="50"/>
+                    <Border Background="{StaticResource BackBrush}" CornerRadius="20">
+                        <StackPanel Orientation="Vertical" VerticalAlignment="Center" Width="300" Margin="5">
+                            <StackPanel Orientation="Horizontal" Height="50">
+                                <Image
+                                    Source="{Binding Model.Icon,RelativeSource={RelativeSource TemplatedParent},
+                                    Converter={StaticResource SourceConverter},ConverterParameter={StaticResource Icon_Gain}}"
+                                    Width="50" Height="50"/>
                                 <StackPanel Margin="5,0,5,0" Orientation="Vertical" VerticalAlignment="Center">
-                                    <Grid>
-                                        <TextBlock
-                                            Text="{Binding Gain.Title,RelativeSource={RelativeSource TemplatedParent}}"
-                                            FontWeight="{DynamicResource FontWeigh}"
-                                            FontSize="{DynamicResource FontSize}"
-                                            Foreground="Gold" TextTrimming="CharacterEllipsis"
-                                            HorizontalAlignment="Left" MaxWidth="160">
-                                            <TextBlock.ToolTip>
-                                                <ToolTip Content="{Binding Gain.Title,RelativeSource={RelativeSource TemplatedParent}}"/>
-                                            </TextBlock.ToolTip>
-                                        </TextBlock>
-                                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                                    <DockPanel>
+                                        <StackPanel Orientation="Horizontal" DockPanel.Dock="Right">
                                             <StackPanel.Resources>
                                                 <Style TargetType="Button">
-                                                    <Setter Property="Background" Value="{DynamicResource BackBrush}"/>
-                                                    <Setter Property="BorderBrush" Value="{DynamicResource BackBrush}"/>
+                                                    <Setter Property="Background" Value="{StaticResource BackBrush}"/>
+                                                    <Setter Property="BorderBrush" Value="{StaticResource BackBrush}"/>
                                                     <Setter Property="Width" Value="20"/>
                                                     <Setter Property="Height" Value="20"/>
                                                 </Style>
                                             </StackPanel.Resources>
                                             <Button Command="{Binding Event.Modify_Click,RelativeSource={RelativeSource TemplatedParent}}">
                                                 <Button.CommandParameter>
-                                                    <MultiBinding Converter="{StaticResource GainViewConvert}">
+                                                    <MultiBinding Converter="{StaticResource MultiValueConverter}">
                                                         <Binding RelativeSource="{RelativeSource AncestorType=local:GainView}"/>
                                                         <Binding RelativeSource="{RelativeSource TemplatedParent}"/>
                                                     </MultiBinding>
                                                 </Button.CommandParameter>
-                                                <Image Source="{DynamicResource Icon_Modify}"/>
+                                                <Image Source="{StaticResource Icon_Modify}"/>
                                             </Button>
                                             <Button Command="{Binding Event.Delete_Click,RelativeSource={RelativeSource TemplatedParent}}">
                                                 <Button.CommandParameter>
-                                                    <MultiBinding Converter="{StaticResource GainViewConvert}">
+                                                    <MultiBinding Converter="{StaticResource MultiValueConverter}">
                                                         <Binding RelativeSource="{RelativeSource AncestorType=local:GainView}"/>
                                                         <Binding RelativeSource="{RelativeSource TemplatedParent}"/>
                                                     </MultiBinding>
                                                 </Button.CommandParameter>
-                                                <Image Source="{DynamicResource Icon_Delete}"/>
+                                                <Image Source="{StaticResource Icon_Delete}"/>
                                             </Button>
-                                            <local:ComplexTicker Flag="{Binding Gain.Flag,RelativeSource={RelativeSource TemplatedParent},Mode=TwoWay}" Visibility="Visible">
-                                                <local:ComplexTicker.Style>
-                                                    <Style TargetType="local:ComplexTicker" BasedOn="{StaticResource {x:Type local:ComplexTicker}}">
-                                                        <Setter Property="Visibility" Value="Visible"/>
+                                            <local:PlexTicker Flag="{Binding Model.Flag,RelativeSource={RelativeSource TemplatedParent},Mode=TwoWay}" Visibility="Visible">
+                                                <local:PlexTicker.Style>
+                                                    <Style TargetType="local:PlexTicker" BasedOn="{StaticResource {x:Type local:PlexTicker}}">
                                                         <Style.Triggers>
-                                                            <DataTrigger Binding="{Binding Gain.MaxLevel,RelativeSource={RelativeSource TemplatedParent}}" Value="0">
+                                                            <DataTrigger Binding="{Binding Model.MaxLevel,RelativeSource={RelativeSource TemplatedParent}}" Value="0">
                                                                 <Setter Property="Visibility" Value="Collapsed"/>
                                                             </DataTrigger>
                                                         </Style.Triggers>
                                                     </Style>
-                                                </local:ComplexTicker.Style>
-                                            </local:ComplexTicker>
+                                                </local:PlexTicker.Style>
+                                            </local:PlexTicker>
                                         </StackPanel>
-                                    </Grid>
-                                    <local:ComplexScroll
+                                        <TextBlock
+                                            Text="{Binding Model.Title,RelativeSource={RelativeSource TemplatedParent}}"
+                                            FontWeight="{StaticResource FontWeigh}" FontSize="{StaticResource FontSize}"
+                                            Foreground="{StaticResource HighBrush}" TextTrimming="CharacterEllipsis">
+                                            <TextBlock.ToolTip>
+                                                <ToolTip Content="{Binding Model.Title,RelativeSource={RelativeSource TemplatedParent}}"/>
+                                            </TextBlock.ToolTip>
+                                        </TextBlock>
+                                    </DockPanel>
+                                    <local:PlexScroll
                                         HorizontalScrollBarVisibility="Hidden"
-                                        VerticalScrollBarVisibility="Hidden"
-                                        Width="230" Margin="0,5,0,0"
-                                        HorizontalAlignment="Left">
+                                        VerticalScrollBarVisibility="Disabled"
+                                        Margin="0,5,0,0" Width="230">
                                         <StackPanel Orientation="Horizontal">
-                                            <local:HorizontalItem Tags="{Binding Gain.Tags,RelativeSource={RelativeSource TemplatedParent}}"/>
-                                            <local:HorizontalItem Tags="{Binding Gain.Values,RelativeSource={RelativeSource TemplatedParent}}"/>
+                                            <local:HorizonItem Tags="{Binding Model.Tags,RelativeSource={RelativeSource TemplatedParent}}"/>
+                                            <local:HorizonItem Tags="{Binding Model.Values,RelativeSource={RelativeSource TemplatedParent}}"/>
                                         </StackPanel>
-                                    </local:ComplexScroll>
+                                    </local:PlexScroll>
                                 </StackPanel>
                             </StackPanel>
-                            <local:ComplexScroll
+                            <local:PlexScroll
                                 HorizontalScrollBarVisibility="Hidden"
                                 VerticalScrollBarVisibility="Hidden">
                                 <StackPanel Orientation="Vertical" Width="300">
                                     <TextBlock
-                                        Text="{Binding Gain.Text,RelativeSource={RelativeSource TemplatedParent}}"
-                                        Foreground="{DynamicResource ForeBrush}"
+                                        Text="{Binding Model.Text,RelativeSource={RelativeSource TemplatedParent}}"
+                                        Foreground="{StaticResource ForeBrush}"
                                         TextWrapping="Wrap" Margin="5"/>
-                                    <local:ComplexSlider
+                                    <local:PlexSlider
                                         Title="等级"
-                                        Value="{Binding Gain.Level,RelativeSource={RelativeSource TemplatedParent},Mode=TwoWay}"
-                                        Maximum="{Binding Gain.MaxLevel,RelativeSource={RelativeSource TemplatedParent}}">
-                                    </local:ComplexSlider>
-                                    <local:ComplexSlider
+                                        Value="{Binding Model.Level,RelativeSource={RelativeSource TemplatedParent},Mode=TwoWay}"
+                                        Maximum="{Binding Model.MaxLevel,RelativeSource={RelativeSource TemplatedParent}}">
+                                    </local:PlexSlider>
+                                    <local:PlexSlider
                                         Title="层数"
-                                        Value="{Binding Gain.Layer,RelativeSource={RelativeSource TemplatedParent},Mode=TwoWay}"
-                                        Maximum="{Binding Gain.MaxLayer,RelativeSource={RelativeSource TemplatedParent}}">
-                                    </local:ComplexSlider>
-                                    <local:ComplexSlider
-                                        Title="敌人"
-                                        Value="{Binding Gain.Enemy,RelativeSource={RelativeSource TemplatedParent},Mode=TwoWay}"
-                                        Maximum="{Binding Gain.MaxEnemy,RelativeSource={RelativeSource TemplatedParent}}">
-                                    </local:ComplexSlider>
+                                        Value="{Binding Model.Layer,RelativeSource={RelativeSource TemplatedParent},Mode=TwoWay}"
+                                        Maximum="{Binding Model.MaxLayer,RelativeSource={RelativeSource TemplatedParent}}">
+                                    </local:PlexSlider>
                                 </StackPanel>
-                            </local:ComplexScroll>
-                        </DockPanel>
+                            </local:PlexScroll>
+                        </StackPanel>
                     </Border>
                 </ControlTemplate>
             </Setter.Value>

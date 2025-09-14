@@ -1,9 +1,6 @@
-﻿using SR_DMG.Source.Material;
-using System.IO;
+﻿using System.IO;
 using System.Net.Http;
 using System.Text;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
 
 namespace SR_DMG.Source.Employ
 {
@@ -11,12 +8,23 @@ namespace SR_DMG.Source.Employ
     {
         private static readonly HttpClient Http = new() { Timeout = TimeSpan.FromSeconds(10) };
 
-        public static async Task<string?> GetResult(HttpMethod Method, string Url, string? Body = null, Dictionary<string, string>? Headers = null)
+        public HttpMethod Method = HttpMethod.Get;
+
+        public CancellationToken Canceller = new();
+
+        public Dictionary<string, string> Headers = [];
+
+        public string Url = string.Empty;
+
+        public string Body = string.Empty;
+
+        public async Task<string?> Result()
         {
-            using HttpResponseMessage? Response = await GetResponse(Method, Url, Body, Headers);
+            using HttpResponseMessage? Response = await this.Response();
             return Response == null ? null : await Response.Content.ReadAsStringAsync();
         }
-        public static async Task<HttpResponseMessage?> GetResponse(HttpMethod Method, string Url, string? Body = null, Dictionary<string, string>? Headers = null)
+
+        public async Task<HttpResponseMessage?> Response()
         {
             try
             {
@@ -24,53 +32,31 @@ namespace SR_DMG.Source.Employ
                 {
                     Content = new StringContent(Body ?? string.Empty, Encoding.UTF8, "application/json")
                 };
-                foreach (KeyValuePair<string, string> K in Headers ?? []) Request.Headers.Add(K.Key, K.Value);
-                return await Http.SendAsync(Request);
+                foreach (KeyValuePair<string, string> K in Headers) Request.Headers.Add(K.Key, K.Value);
+                return await Http.SendAsync(Request, Canceller);
             }
-            catch (Exception Exp)
-            {
-                Logger.Log(Exp); return null;
-            }
+            catch (Exception Except) { Logger.Log(Except); }
+            return null;
         }
 
-        public static async Task<bool> Download(HttpMethod Method, string Url, string FilePath, string? Body = null, Dictionary<string, string>? Headers = null)
+        public async Task<bool> Download(string FilePath, bool WithOutExtension = true)
         {
             try
             {
-                FilePath += Path.GetExtension(new Uri(Url).AbsolutePath);
-                using HttpResponseMessage? Response = await GetResponse(Method, Url, Body, Headers);
+                if (string.IsNullOrEmpty(Url)) return true;
+                if (WithOutExtension)
+                {
+                    FilePath += Path.GetExtension(new Uri(Url).AbsolutePath);
+                }
+                using HttpResponseMessage? Response = await this.Response();
                 if (Response == null) return false;
-                using Stream Stm = await Response.Content.ReadAsStreamAsync();
+                using Stream Stm = await Response.Content.ReadAsStreamAsync(Canceller);
                 using FileStream Fs = File.Create(FilePath);
-                await Stm.CopyToAsync(Fs); return true;
+                await Stm.CopyToAsync(Fs, Canceller);
+                return true;
             }
-            catch (Exception Exp)
-            {
-                Logger.Log(Exp); return false;
-            }
-        }
-
-        public static async Task<Color?> GetColor(HttpMethod Method, string Url, string? Body = null, Dictionary<string, string>? Headers = null)
-        {
-            using HttpResponseMessage? Response = await GetResponse(Method, Url, Body, Headers);
-            if (Response == null) return null;
-            try
-            {
-                BitmapImage Bmp = new();
-                Bmp.BeginInit();
-                Bmp.CacheOption = BitmapCacheOption.OnLoad;
-                Bmp.StreamSource = await Response.Content.ReadAsStreamAsync();
-                Bmp.EndInit();
-                CroppedBitmap Cmp = new(Bmp, new System.Windows.Int32Rect(
-                    Bmp.PixelWidth / 2, Bmp.PixelHeight / 2, 1, 1));
-                byte[] Pixels = new byte[4];
-                Cmp.CopyPixels(Pixels, 4, 0);
-                return Color.FromRgb(Pixels[2], Pixels[1], Pixels[0]);
-            }
-            catch (Exception Exp)
-            {
-                Logger.Log(Exp); return null;
-            }
+            catch (Exception Except) { Logger.Log(Except); }
+            return false;
         }
     }
 }

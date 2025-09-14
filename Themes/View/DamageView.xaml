@@ -1,23 +1,85 @@
 ﻿<ResourceDictionary
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:local="clr-namespace:SR_DMG.Source.UI.Model">
+    xmlns:local="clr-namespace:SR_DMG.Source.UI.View">
     <Style TargetType="{x:Type local:DamageView}">
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type local:DamageView}">
-                    <StackPanel Orientation="Horizontal" Margin="10">
-                        <StackPanel Orientation="Vertical">
-                            <local:DamageItem Title="基础值" Value="{Binding Damage.Base,RelativeSource={RelativeSource TemplatedParent}}"/>
-                            <local:DamageItem Title="暴击" Margin="0,10,0,10" Value="{Binding Damage.Crit,RelativeSource={RelativeSource TemplatedParent}}"/>
-                            <local:DamageItem Title="期望值" Value="{Binding Damage.Expect,RelativeSource={RelativeSource TemplatedParent}}"/>
-                        </StackPanel>
-                        <StackPanel Orientation="Vertical" Margin="10,0,0,0">
-                            <local:DamageItem Title="超击破" Value="{Binding Damage.Base,RelativeSource={RelativeSource TemplatedParent}}"/>
-                            <local:DamageItem Title="击破" Margin="0,10,0,10" Value="{Binding Damage.Crit,RelativeSource={RelativeSource TemplatedParent}}"/>
-                            <local:DamageItem Title="裂伤" Value="{Binding Damage.Expect,RelativeSource={RelativeSource TemplatedParent}}"/>
-                        </StackPanel>
-                    </StackPanel>
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="*"/>
+                        </Grid.RowDefinitions>
+                        <local:DamageItem
+                            Grid.Column="0" Grid.Row="1" Title="基础值"
+                            Value="{Binding Damage.Base,RelativeSource={RelativeSource TemplatedParent}}">
+                            <local:DamageItem.Enhance>
+                                <MultiBinding Converter="{StaticResource CompareConverter}">
+                                    <Binding Path="Damage.Base" RelativeSource="{RelativeSource TemplatedParent}"/>
+                                    <Binding Path="Compare.Base" RelativeSource="{RelativeSource TemplatedParent}"/>
+                                </MultiBinding>
+                            </local:DamageItem.Enhance>
+                        </local:DamageItem>
+                        <local:DamageItem
+                            Grid.Column="1" Grid.Row="1" Title="暴击"
+                            Value="{Binding Damage.Crit,RelativeSource={RelativeSource TemplatedParent}}" Margin="10,0,10,0">
+                            <local:DamageItem.Enhance>
+                                <MultiBinding Converter="{StaticResource CompareConverter}">
+                                    <Binding Path="Damage.Crit" RelativeSource="{RelativeSource TemplatedParent}"/>
+                                    <Binding Path="Compare.Crit" RelativeSource="{RelativeSource TemplatedParent}"/>
+                                </MultiBinding>
+                            </local:DamageItem.Enhance>
+                        </local:DamageItem>
+                        <local:DamageItem
+                            Grid.Column="2" Grid.Row="1" Title="期望值"
+                            Value="{Binding Damage.Expect,RelativeSource={RelativeSource TemplatedParent}}">
+                            <local:DamageItem.Enhance>
+                                <MultiBinding Converter="{StaticResource CompareConverter}">
+                                    <Binding Path="Damage.Expect" RelativeSource="{RelativeSource TemplatedParent}"/>
+                                    <Binding Path="Compare.Expect" RelativeSource="{RelativeSource TemplatedParent}"/>
+                                </MultiBinding>
+                            </local:DamageItem.Enhance>
+                        </local:DamageItem>
+                        <local:DamageItem
+                            Grid.Column="0" Grid.Row="3" Title="击破"
+                            Value="{Binding Damage.Break,RelativeSource={RelativeSource TemplatedParent}}" Margin="10,0,10,0">
+                            <local:DamageItem.Enhance>
+                                <MultiBinding Converter="{StaticResource CompareConverter}">
+                                    <Binding Path="Damage.Break" RelativeSource="{RelativeSource TemplatedParent}"/>
+                                    <Binding Path="Compare.Break" RelativeSource="{RelativeSource TemplatedParent}"/>
+                                </MultiBinding>
+                            </local:DamageItem.Enhance>
+                        </local:DamageItem>
+                        <local:DamageItem
+                            Grid.Column="1" Grid.Row="3" Title="超击破"
+                            Value="{Binding Damage.Super,RelativeSource={RelativeSource TemplatedParent}}">
+                            <local:DamageItem.Enhance>
+                                <MultiBinding Converter="{StaticResource CompareConverter}">
+                                    <Binding Path="Damage.Super" RelativeSource="{RelativeSource TemplatedParent}"/>
+                                    <Binding Path="Compare.Super" RelativeSource="{RelativeSource TemplatedParent}"/>
+                                </MultiBinding>
+                            </local:DamageItem.Enhance>
+                        </local:DamageItem>
+                        <local:DamageItem
+                            Grid.Column="2" Grid.Row="3" Title="{Binding Breaker,RelativeSource={RelativeSource TemplatedParent}}"
+                            Value="{Binding Damage.Delay,RelativeSource={RelativeSource TemplatedParent}}">
+                            <local:DamageItem.Enhance>
+                                <MultiBinding Converter="{StaticResource CompareConverter}">
+                                    <Binding Path="Damage.Delay" RelativeSource="{RelativeSource TemplatedParent}"/>
+                                    <Binding Path="Compare.Delay" RelativeSource="{RelativeSource TemplatedParent}"/>
+                                </MultiBinding>
+                            </local:DamageItem.Enhance>
+                        </local:DamageItem>
+                    </Grid>
                 </ControlTemplate>
             </Setter.Value>
         </Setter>

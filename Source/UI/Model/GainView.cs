@@ -1,44 +1,39 @@
-﻿using SR_DMG.Source.Example;
-using SR_DMG.Source.UI.Event;
-using System.Windows;
-using System.Windows.Controls;
+﻿using SR_DMG.Source.Employ;
+using System.ComponentModel;
 
 namespace SR_DMG.Source.UI.Model
 {
-    public class GainView : Control
+    public class GainView : INotifyPropertyChanged
     {
-        static GainView()
+        private bool _Dropdown;
+
+        private GainItem _Select = Simple.UnInit_GainItem;
+
+        private List<GainItem> _Items = [];
+
+        public GainItem Select
         {
-            DefaultStyleKeyProperty.OverrideMetadata(typeof(GainView), new FrameworkPropertyMetadata(typeof(GainView)));
+            set => Program.SetField(ref _Select, value, nameof(Select), OnPropertyChanged);
+            get => _Select;
         }
 
-        public static IGainView Event { get; } = new();
-
-        public Gain Select
+        public List<GainItem> Items
         {
-            set { SetValue(SelectProperty, value); }
-            get { return (Gain)GetValue(SelectProperty); }
+            set => Program.SetField(ref _Items, value, nameof(Items), OnPropertyChanged);
+            get => _Items;
         }
-        public static readonly DependencyProperty SelectProperty =
-            DependencyProperty.Register(nameof(Select), typeof(Gain), typeof(GainView),
-                new PropertyMetadata(new Gain()));
 
-        public List<Gain> Items
+        public bool Dropdown
         {
-            set { SetValue(ItemsProperty, value); }
-            get { return (List<Gain>)GetValue(ItemsProperty); }
+            set => Program.SetField(ref _Dropdown, value, nameof(Dropdown), OnPropertyChanged);
+            get => _Dropdown;
         }
-        public static readonly DependencyProperty ItemsProperty =
-            DependencyProperty.Register(nameof(Items), typeof(List<Gain>), typeof(GainView),
-                new PropertyMetadata(new List<Gain>()));
 
-        public bool IsOpen
+        public event PropertyChangedEventHandler? PropertyChanged;
+
+        public void OnPropertyChanged(string? PropertyName)
         {
-            set { SetValue(IsOpenProperty, value); }
-            get { return (bool)GetValue(IsOpenProperty); }
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(PropertyName));
         }
-        public static readonly DependencyProperty IsOpenProperty =
-            DependencyProperty.Register(nameof(IsOpen), typeof(bool), typeof(GainView),
-                new PropertyMetadata(false));
     }
 }

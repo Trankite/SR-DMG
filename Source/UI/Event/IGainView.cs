@@ -5,11 +5,17 @@ namespace SR_DMG.Source.UI.Event
 {
     public class IGainView
     {
-        public ICommand SelectItem_Click { get; } = new Command<GainView>(Obj => Obj.IsOpen = true);
-        public ICommand GainItem_Click { get; } = new Command<(GainView Gview, GainItem Gitem)>(Obj =>
+        public ICommand SelectItem_Click { get; } = new Command<GainView>(Model =>
         {
-            Obj.Gview.Select = Obj.Gitem.Gain;
-            Obj.Gview.IsOpen = false;
+            Model.Dropdown = true;
+        });
+
+        public ICommand GainItem_Click { get; } = new Command<object[]>(Pams =>
+        {
+            GainView Model_GainView = (GainView)Pams[0];
+            GainItem Model_GainItem = (GainItem)Pams[1];
+            Model_GainView.Select = Model_GainItem;
+            Model_GainView.Dropdown = false;
         });
     }
 }

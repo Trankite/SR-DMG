@@ -1,18 +1,22 @@
 ﻿<ResourceDictionary
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:local="clr-namespace:SR_DMG.Source.UI.Model">
+    xmlns:local="clr-namespace:SR_DMG.Source.UI.View"
+    xmlns:i="http://schemas.microsoft.com/xaml/behaviors">
     <Style TargetType="{x:Type local:LabelTextBox}">
+        <Setter Property="FocusVisualStyle" Value="{x:Null}"/>
+        <Setter Property="HorizontalAlignment" Value="Center"/>
+        <Setter Property="VerticalAlignment" Value="Center"/>
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type local:LabelTextBox}">
-                    <Border CornerRadius="15" Background="{DynamicResource BackBrush}" Margin="0,0,0,5">
+                    <Border CornerRadius="15" Background="{StaticResource BackBrush}">
                         <Grid Width="200" Height="30">
                             <Grid.Resources>
                                 <Style TargetType="TextBlock">
-                                    <Setter Property="Foreground" Value="{DynamicResource ForeBrush}"/>
-                                    <Setter Property="FontWeight" Value="{DynamicResource FontWeigh}"/>
-                                    <Setter Property="FontSize" Value="{DynamicResource FontSize}"/>
+                                    <Setter Property="Foreground" Value="{StaticResource ForeBrush}"/>
+                                    <Setter Property="FontWeight" Value="{StaticResource FontWeigh}"/>
+                                    <Setter Property="FontSize" Value="{StaticResource FontSize}"/>
                                     <Setter Property="VerticalAlignment" Value="Center"/>
                                 </Style>
                             </Grid.Resources>
@@ -22,14 +26,45 @@
                             </StackPanel>
                             <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
                                 <TextBox
-                                    Text="{TemplateBinding Text}"
-                                    Foreground="{DynamicResource ForeBrush}"
-                                    Background="{DynamicResource BackBrush}"
-                                    BorderBrush="{DynamicResource BackBrush}"
-                                    FontWeight="{DynamicResource FontWeigh}"
-                                    FontSize="{DynamicResource FontSize}"
-                                    TextAlignment="Right" Width="65"
-                                    VerticalAlignment="Center"/>
+                                    Foreground="{StaticResource ForeBrush}" Background="{StaticResource BackBrush}"
+                                    BorderBrush="{StaticResource BackBrush}" FontWeight="{StaticResource FontWeigh}"
+                                    FontSize="{StaticResource FontSize}" InputMethod.IsInputMethodEnabled="False"
+                                    TextAlignment="Right" Width="65" VerticalAlignment="Center"
+                                    Template="{StaticResource TextBoxSelected}">
+                                    <TextBox.Text>
+                                        <Binding Path="Text" RelativeSource="{RelativeSource TemplatedParent}">
+                                            <Binding.ValidationRules>
+                                                <StaticResource ResourceKey="Rule_IsNumber"/>
+                                            </Binding.ValidationRules>
+                                        </Binding>
+                                    </TextBox.Text>
+                                    <i:Interaction.Triggers>
+                                        <i:EventTrigger EventName="GotFocus">
+                                            <i:InvokeCommandAction
+                                                Command="{Binding Event.TextBox_GotFocus,RelativeSource={RelativeSource TemplatedParent}}"
+                                                CommandParameter="{Binding RelativeSource={RelativeSource TemplatedParent}}"/>
+                                        </i:EventTrigger>
+                                        <i:EventTrigger EventName="LostFocus">
+                                            <i:InvokeCommandAction
+                                                Command="{Binding Event.TextBox_LostFocus,RelativeSource={RelativeSource TemplatedParent}}"
+                                                CommandParameter="{Binding RelativeSource={RelativeSource TemplatedParent}}"/>
+                                        </i:EventTrigger>
+                                    </i:Interaction.Triggers>
+                                    <TextBox.InputBindings>
+                                        <KeyBinding
+                                            Key="Enter" Command="{Binding Event.TextBox_Enter,RelativeSource={RelativeSource TemplatedParent}}"
+                                            CommandParameter="{Binding RelativeSource={RelativeSource TemplatedParent}}"/>
+                                    </TextBox.InputBindings>
+                                    <TextBox.Style>
+                                        <Style TargetType="TextBox">
+                                            <Style.Triggers>
+                                                <DataTrigger Binding="{Binding DataContext.NoModify,RelativeSource={RelativeSource AncestorType=Page}}" Value="True">
+                                                    <Setter Property="IsEnabled" Value="False"/>
+                                                </DataTrigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </TextBox.Style>
+                                </TextBox>
                                 <TextBlock Text="{TemplateBinding Unit}" Width="15" Margin="5,0,10,0"/>
                             </StackPanel>
                         </Grid>

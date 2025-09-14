@@ -1,0 +1,52 @@
+﻿<ResourceDictionary
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="clr-namespace:SR_DMG.Source.UI.View">
+    <Style TargetType="{x:Type local:PlexTicker}">
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type local:PlexTicker}">
+                    <StackPanel Orientation="Horizontal" Height="20">
+                        <Button
+                            Background="{StaticResource BackBrush}"
+                            BorderBrush="{StaticResource BackBrush}"
+                            Width="20" Height="20">
+                            <Button.InputBindings>
+                                <MouseBinding
+                                Gesture="LeftClick"
+                                Command="{Binding Event.TickChanged,RelativeSource={RelativeSource TemplatedParent}}"
+                                CommandParameter="{Binding RelativeSource={RelativeSource TemplatedParent}}"/>
+                            </Button.InputBindings>
+                            <Image>
+                                <Image.Style>
+                                    <Style TargetType="Image">
+                                        <Setter Property="Source" Value="{StaticResource Icon_Not_Selected}"/>
+                                        <Style.Triggers>
+                                            <DataTrigger Binding="{Binding Flag,RelativeSource={RelativeSource TemplatedParent}}" Value="True">
+                                                <Setter Property="Source" Value="{StaticResource Icon_Selected}"/>
+                                            </DataTrigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </Image.Style>
+                            </Image>
+                        </Button>
+                        <TextBlock
+                            Text="{Binding Text,RelativeSource={RelativeSource TemplatedParent}}"
+                            Foreground="{StaticResource ForeBrush}" FontWeight="{StaticResource FontWeigh}"
+                            VerticalAlignment="Center" Margin="5,0,0,0">
+                            <TextBlock.Style>
+                                <Style TargetType="TextBlock">
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding Text,RelativeSource={RelativeSource TemplatedParent}}">
+                                            <Setter Property="Visibility" Value="Collapsed"/>
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </TextBlock.Style>
+                        </TextBlock>
+                    </StackPanel>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+</ResourceDictionary>
