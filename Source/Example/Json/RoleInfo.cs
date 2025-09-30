@@ -10,7 +10,7 @@ namespace SR_DMG.Source.Example.Json
 
         public static RoleInfo[] FromJson(string Json)
         {
-            return JsonSerializer.Deserialize<RoleInfo[]>(Json, JsonOption) ?? [];
+            return JsonSerializer.Deserialize<RoleInfo[]>(Json, JsonOptions) ?? [];
         }
 
         [JsonPropertyName(Markey)] public string PartKey = string.Empty;
@@ -111,21 +111,21 @@ namespace SR_DMG.Source.Example.Json
             }
         }
 
-        private static readonly JsonSerializerOptions JsonOption = new() { IncludeFields = true, Converters = { new RoleInfoConverter() } };
+        private static readonly JsonSerializerOptions JsonOptions = Program.GetJsonOptions(new RoleInfoConverter());
 
         public class RoleInfoConverter : JsonConverter<RoleInfo>
         {
             public override RoleInfo? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
             {
-                using JsonDocument Doc = JsonDocument.ParseValue(ref reader);
-                JsonElement Root = Doc.RootElement;
-                return (Root.TryGetProperty(Markey, out JsonElement TypeProp) ? TypeProp.GetString() : null) switch
+                using JsonDocument Document = JsonDocument.ParseValue(ref reader);
+                JsonElement RootElement = Document.RootElement;
+                return (RootElement.TryGetProperty(Markey, out JsonElement TypeProperty) ? TypeProperty.GetString() : null) switch
                 {
-                    "newMain" => JsonSerializer.Deserialize<NewMain>(Root.GetRawText(), options),
-                    "breach" => JsonSerializer.Deserialize<Breach>(Root.GetRawText(), options),
-                    "trace" => JsonSerializer.Deserialize<Trace>(Root.GetRawText(), options),
-                    "desc" => JsonSerializer.Deserialize<Desc>(Root.GetRawText(), options),
-                    _ => JsonSerializer.Deserialize<RoleInfo>(Root.GetRawText(), Simple.JsonOptions)
+                    "newMain" => JsonSerializer.Deserialize<NewMain>(RootElement.GetRawText(), options),
+                    "breach" => JsonSerializer.Deserialize<Breach>(RootElement.GetRawText(), options),
+                    "trace" => JsonSerializer.Deserialize<Trace>(RootElement.GetRawText(), options),
+                    "desc" => JsonSerializer.Deserialize<Desc>(RootElement.GetRawText(), options),
+                    _ => Program.FormJson<RoleInfo>(RootElement.GetRawText())
                 };
             }
 

@@ -55,9 +55,11 @@ namespace SR_DMG.Source.UI.Model
             get => _IsRetry;
         }
 
-        public void Initialize()
+        public void Initialize(string Title, string Text)
         {
             Value = Maxmum = 0;
+            this.Title = Title;
+            this.Text = Text;
             Dorpdown = true;
             if (Canceller.IsCancellationRequested)
             {
@@ -81,6 +83,8 @@ namespace SR_DMG.Source.UI.Model
                 if (Canceller.IsCancellationRequested) return false;
                 await Task.Delay(1000);
             }
+            Text = Simple.Tip_Progress_WillRetry;
+            await Task.Delay(2000);
             return true;
         }
 

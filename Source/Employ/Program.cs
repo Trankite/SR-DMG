@@ -1,6 +1,7 @@
-﻿using SR_DMG.Source.Example;
-using System.IO;
+﻿using System.IO;
+using System.Text.Encodings.Web;
 using System.Text.Json;
+using System.Text.Json.Serialization;
 using System.Text.RegularExpressions;
 using System.Windows;
 using System.Windows.Media;
@@ -13,12 +14,12 @@ namespace SR_DMG.Source.Employ
         private static partial Regex FloatRegex();
         public static float GetFloat(string? Str)
         {
-            if (!float.TryParse(Str, out float Value))
+            if (string.IsNullOrEmpty(Str)) return 0;
+            if (float.TryParse(Str, out float Value) || float.TryParse(FloatRegex().Match(Str).Value, out Value))
             {
-                Str = FloatRegex().Match(Str ?? string.Empty).Value;
-                if (!float.TryParse(Str, out Value)) return 0;
+                return Str.Contains('%') ? Value /= 100 : Value;
             }
-            return Value;
+            return 0;
         }
 
         public static string GetPath(params string[] FileName)
@@ -31,26 +32,42 @@ namespace SR_DMG.Source.Employ
             return (ImageSource)Application.Current.Resources[FileName];
         }
 
-        public static bool FileWrite(FileCollection.UrlInfo UrlInfo)
+        public static bool FileWrite(string FilePath, string Contents)
         {
             try
             {
-                File.WriteAllText(UrlInfo.Path, UrlInfo.Url);
+                File.WriteAllText(FilePath, Contents);
                 return true;
             }
-            catch (Exception Excep) { Logger.Log(Excep); }
+            catch (Exception Exception)
+            {
+                Logger.Log(Exception);
+            }
             return false;
         }
 
         public static void SetField<T>(ref T Field, T Value, string PropertyName, Action<string> OnChanged)
         {
             if (EqualityComparer<T>.Default.Equals(Field, Value)) return;
-            Field = Value; OnChanged?.Invoke(PropertyName);
+            Field = Value;
+            OnChanged?.Invoke(PropertyName);
         }
 
         public static T FormJson<T>(string Json) where T : new()
         {
             return JsonSerializer.Deserialize<T>(Json, Simple.JsonOptions) ?? new();
+        }
+
+        public static JsonSerializerOptions GetJsonOptions(params JsonConverter[] Converters)
+        {
+            JsonSerializerOptions Options = new()
+            {
+                IncludeFields = true,
+                WriteIndented = true,
+                Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping
+            };
+            foreach (JsonConverter Converter in Converters) Options.Converters.Add(Converter);
+            return Options;
         }
 
         [GeneratedRegex(@"(?<=>|^)(.*?)(?=<|$)")]
@@ -63,7 +80,7 @@ namespace SR_DMG.Source.Employ
             {
                 Html += M.Groups[1].Value;
             }
-            return Html;
+            return Html.Trim();
         }
     }
 }

@@ -1,6 +1,5 @@
 ﻿using SR_DMG.Source.UI.Model;
 using System.IO;
-using System.Text.Encodings.Web;
 using System.Text.Json;
 using System.Windows;
 using System.Windows.Media.Imaging;
@@ -31,14 +30,15 @@ namespace SR_DMG.Source.Employ
 
         public const string Tip_Input_Not_Number = "这不是一个有效的数值！";
         public const string Tip_Progress_Unfinished = "任务未完成，重试以继续";
+        public const string Tip_Progress_WillRetry = "即将进行重试";
         public const string Tip_Progress_Finished_Title = "任务完成";
         public const string Tip_Progress_Finished_Text = "任务已全部完成";
         public const string Tip_Mihomo_PullList_Title = "提取资源列表";
         public const string Tip_Mihomo_PullList_Text = "等待获取 WIKI 首页列表";
         public const string Tip_Mihomo_Start_Download = "开始下载资源";
 
-        public const string Lay_DateTime = "yyyy-MM-dd HH:mm:ss";
-        public const string Lay_PlusMinus = "+0.#%;-0.#%";
+        public const string Format_DateTime = "yyyy-MM-dd HH:mm:ss";
+        public const string Format_PlusMinus = "+0.#%;-0.#%";
 
         public static string File_Mihomo_Rank_Image(string id) => $"{Fold_Ranks}-{id}";
         public static string File_Mihomo_Relic_Image(int id) => $"{Fold_Relics}-{id}";
@@ -47,7 +47,7 @@ namespace SR_DMG.Source.Employ
 
         public static string Tag_Mihomo_Rank_Image(string id) => $"星魂-{id}";
 
-        public static string Tip_Mihomo_Unfind_Page(int id, string title) => $"无效的标签：[{id} {title}]";
+        public static string Tip_Mihomo_Unfind_Page(int id, string title) => $"无效的标签：{id} {title}";
 
         public static readonly string NewLine = Environment.NewLine;
 
@@ -62,7 +62,7 @@ namespace SR_DMG.Source.Employ
         public static readonly Dictionary<string, BitmapImage> AppImages = [];
         public static readonly Dictionary<string, BitmapImage> RoleImages = [];
 
-        public static readonly JsonSerializerOptions JsonOptions = new() { IncludeFields = true, WriteIndented = true, Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping };
+        public static readonly JsonSerializerOptions JsonOptions = Program.GetJsonOptions();
 
         public static readonly int[,] Element_Colors = { { 205, 205, 205 }, { 180, 20, 5 }, { 75, 165, 220 }, { 190, 90, 220 }, { 100, 205, 150 }, { 110, 100, 205 }, { 240, 220, 90 } };
 

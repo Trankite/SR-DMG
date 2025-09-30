@@ -1,13 +1,19 @@
 ﻿namespace SR_DMG.Source.Example
 {
-    public class Equip
+    public class Equip : FileCollection
     {
-        public string Name { get; set; } = string.Empty;
-        public string Type { get; set; } = string.Empty;
-        public int Star { get; set; }
-        public int Health { get; set; }
-        public int Attack { get; set; }
-        public int Denfense { get; set; }
-        public List<Skill> Skills { get; set; } = [];
+        public int Star;
+
+        public string Type = string.Empty;
+
+        public string Name = string.Empty;
+
+        public int HP;
+
+        public int ATK;
+
+        public int DEF;
+
+        public FileCollection Skill = new();
     }
 }

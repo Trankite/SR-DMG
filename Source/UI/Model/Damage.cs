@@ -66,19 +66,27 @@ namespace SR_DMG.Source.UI.Model
         public float this[string PropertyName]
         {
             get => Properties.GetValueOrDefault(PropertyName)?.GetValue(this) ?? float.NaN;
-            set => Properties.GetValueOrDefault(PropertyName)?.SetValue(this, value);
+        }
+
+        public bool TrySet(string PropertyName, float Value)
+        {
+            if (Properties.TryGetValue(PropertyName, out Property<Damage, float>? Property))
+            {
+                Property.SetValue(this, Value);
+            }
+            return false;
         }
 
         static Damage()
         {
             Property<Damage, float>.Initialize(Properties, new()
             {
-                { nameof(Base), "基础伤害" },
-                { nameof(Crit), "全暴击伤害" },
-                { nameof(Expect), "期望伤害" },
-                { nameof(Break), "击破伤害" },
-                { nameof(Super), "超击破伤害" },
-                { nameof(Delay), "持续伤害" },
+                [nameof(Base)] = "基础伤害",
+                [nameof(Crit)] = "全暴击伤害",
+                [nameof(Expect)] = "期望伤害",
+                [nameof(Break)] = "击破伤害",
+                [nameof(Super)] = "超击破伤害",
+                [nameof(Delay)] = "持续伤害"
             });
         }
     }

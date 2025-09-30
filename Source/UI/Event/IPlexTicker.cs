@@ -5,9 +5,9 @@ namespace SR_DMG.Source.UI.Event
 {
     public class IPlexTicker
     {
-        public ICommand TickChanged { get; } = new Command<PlexTicker>(Tick =>
+        public ICommand TickChanged { get; } = new Command<PlexTicker>(Model =>
         {
-            Tick.Flag = !Tick.Flag;
+            Model.Flag = !Model.Flag;
         });
     }
 }

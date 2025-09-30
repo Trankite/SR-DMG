@@ -1,9 +1,11 @@
 ﻿using SR_DMG.Source.Employ;
 using System.ComponentModel;
+using System.Data;
+using System.Text.RegularExpressions;
 
 namespace SR_DMG.Source.UI.Model
 {
-    public class Together : INotifyPropertyChanged
+    public partial class Together : INotifyPropertyChanged
     {
         private ImageSpan _Role = new();
 
@@ -11,11 +13,13 @@ namespace SR_DMG.Source.UI.Model
 
         private ImageSpan _Enemy = new();
 
-        private Roleues _Roleues = new();
+        private Roleus _Roleus = new();
 
         private Damage _Damage = new();
 
         private Damage _Compare = new();
+
+        private Equation _Equation = new();
 
         private bool _NoGain;
 
@@ -24,8 +28,6 @@ namespace SR_DMG.Source.UI.Model
         private bool _Comparing;
 
         private bool _UnSaved;
-
-        private float _Equation;
 
         private string _Icon = string.Empty;
 
@@ -51,10 +53,10 @@ namespace SR_DMG.Source.UI.Model
             get => _Enemy;
         }
 
-        public Roleues Roleues
+        public Roleus Roleus
         {
-            set => Program.SetField(ref _Roleues, value, nameof(Roleues), OnPropertyChanged);
-            get => _Roleues;
+            set => Program.SetField(ref _Roleus, value, nameof(Roleus), OnPropertyChanged);
+            get => _Roleus;
         }
 
         public Damage Damage
@@ -67,6 +69,12 @@ namespace SR_DMG.Source.UI.Model
         {
             set => Program.SetField(ref _Compare, value, nameof(Compare), OnPropertyChanged);
             get => _Compare;
+        }
+
+        public Equation Equation
+        {
+            set => Program.SetField(ref _Equation, value, nameof(Equation), OnPropertyChanged);
+            get => _Equation;
         }
 
         public bool NoGain
@@ -93,12 +101,6 @@ namespace SR_DMG.Source.UI.Model
             get => _UnSaved;
         }
 
-        public float Equation
-        {
-            set => Program.SetField(ref _Equation, value, nameof(Equation), OnPropertyChanged);
-            get => _Equation;
-        }
-
         public string Icon
         {
             set => Program.SetField(ref _Icon, value, nameof(Icon), OnPropertyChanged);
@@ -122,6 +124,47 @@ namespace SR_DMG.Source.UI.Model
         public void OnPropertyChanged(string? PropertyName)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(PropertyName));
+        }
+
+        [GeneratedRegex(@"\[(.*?)]|([\d.]+%)")]
+        private static partial Regex EquationRegex();
+        public void UpdataEquation(Equation Equation)
+        {
+            string[] Result = EquationRegex().Split(Equation.Text);
+            for (int i = 1; i < Result.Length; i += 2)
+            {
+                if (Result[i].EndsWith('%'))
+                {
+                    Result[i] = Program.GetFloat(Result[i]).ToString();
+                }
+                else
+                {
+                    Result[i] = TryGet(Result[i], out float Value) ? Value.ToString() : string.Empty;
+                }
+            }
+            try
+            {
+                string Expression = string.Join(string.Empty, Result);
+                Equation.Value = Convert.ToSingle(new DataTable().Compute(Expression, null));
+            }
+            catch
+            {
+                Equation.Value = float.NaN;
+            }
+        }
+
+        public bool TryGet(string PropertyName, out float Value)
+        {
+            Value = Roleus[PropertyName];
+            if (!float.IsNaN(Value)) return true;
+            Value = Damage[PropertyName];
+            if (!float.IsNaN(Value)) return true;
+            return false;
+        }
+
+        public bool TrySet(string PropertyName, float Value)
+        {
+            return Roleus.TrySet(PropertyName, Value) || Damage.TrySet(PropertyName, Value);
         }
     }
 }

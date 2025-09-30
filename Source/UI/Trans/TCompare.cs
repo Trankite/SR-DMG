@@ -8,7 +8,7 @@ namespace SR_DMG.Source.UI.Trans
     {
         public object? Convert(object[] values, Type targetType, object parameter, CultureInfo culture)
         {
-            return (((float)values[0] / (float)values[1]) - 1).ToString(Simple.Lay_PlusMinus);
+            return (((float)values[0] / (float)values[1]) - 1).ToString(Simple.Format_PlusMinus);
         }
 
         public object[] ConvertBack(object value, Type[] targetTypes, object parameter, CultureInfo culture)

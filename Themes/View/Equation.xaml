@@ -2,6 +2,7 @@
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:local="clr-namespace:SR_DMG.Source.UI.View"
+    xmlns:Model="clr-namespace:SR_DMG.Source.UI.Pages"
     xmlns:i="http://schemas.microsoft.com/xaml/behaviors">
     <Style TargetType="{x:Type local:Equation}">
         <Setter Property="FocusVisualStyle" Value="{x:Null}"/>
@@ -13,27 +14,58 @@
                             IsOpen="{Binding Dropdown,RelativeSource={RelativeSource TemplatedParent},Mode=TwoWay}"
                             AllowsTransparency="True" StaysOpen="False" Placement="Top" PopupAnimation="Fade">
                             <Border CornerRadius="10" Background="{StaticResource BackBrush_Minor}">
-                                <local:PlexScroll
-                                    HorizontalScrollBarVisibility="Hidden"
-                                    VerticalScrollBarVisibility="Hidden"
-                                    MaxHeight="300" Margin="0,10,0,10">
-                                    <ListBox
-                                        Foreground="{StaticResource ForeBrush}"
-                                        Background="{StaticResource BackBrush_Minor}"
-                                        BorderBrush="{StaticResource BackBrush_Minor}">
-                                        <ListBoxItem Content="攻击力"/>
-                                        <ListBoxItem Content="生命值"/>
-                                        <ListBoxItem Content="防御力"/>
-                                        <i:Interaction.Triggers>
-                                            <i:EventTrigger EventName="SelectionChanged">
-                                                <i:InvokeCommandAction
-                                                    Command="{Binding Event.ListBox_SelectionChanged,RelativeSource={RelativeSource TemplatedParent}}"
-                                                    CommandParameter="{Binding RelativeSource={RelativeSource TemplatedParent}}">
-                                                </i:InvokeCommandAction>
-                                            </i:EventTrigger>
-                                        </i:Interaction.Triggers>
-                                    </ListBox>
-                                </local:PlexScroll>
+                                <ListBox
+                                    Background="{StaticResource BackBrush_Minor}" BorderBrush="{StaticResource BackBrush_Minor}"
+                                    ScrollViewer.VerticalScrollBarVisibility="Hidden" MaxHeight="200" Margin="10">
+                                    <i:Interaction.Triggers>
+                                        <i:EventTrigger EventName="SelectionChanged">
+                                            <i:InvokeCommandAction Command="{Binding Event.ListBox_SelectionChanged,RelativeSource={RelativeSource TemplatedParent}}">
+                                                <i:InvokeCommandAction.CommandParameter>
+                                                    <MultiBinding Converter="{StaticResource MultiValueConverter}">
+                                                        <Binding RelativeSource="{RelativeSource AncestorType=ListBox}"/>
+                                                        <Binding ElementName="EquTebox"/>
+                                                    </MultiBinding>
+                                                </i:InvokeCommandAction.CommandParameter>
+                                            </i:InvokeCommandAction>
+                                        </i:EventTrigger>
+                                    </i:Interaction.Triggers>
+                                    <local:ImageLabel Title="攻击力" Image="{StaticResource Icon_ATK}"/>
+                                    <local:ImageLabel Title="生命值" Image="{StaticResource Icon_HP}"/>
+                                    <local:ImageLabel Title="防御力" Image="{StaticResource Icon_DEF}"/>
+                                    <local:ImageLabel Title="速度" Image="{StaticResource Icon_SPD}"/>
+                                    <local:ImageLabel Title="暴击率" Image="{StaticResource Icon_CRIT_Rate}"/>
+                                    <local:ImageLabel Title="暴击伤害" Image="{StaticResource Icon_CRIT_DMG}"/>
+                                    <local:ImageLabel Title="伤害提高" Image="{Binding DataContext.Roleus.Break_Element,RelativeSource={RelativeSource AncestorType=Model:Together},Converter={StaticResource ElementConverter},ConverterParameter='Icon_DMG_Boost'}"/>
+                                    <local:ImageLabel Title="无视防御" Image="{StaticResource Icon_DEF}"/>
+                                    <local:ImageLabel Title="抗性穿透" Image="{Binding DataContext.Roleus.Break_Element,RelativeSource={RelativeSource AncestorType=Model:Together},Converter={StaticResource ElementConverter},ConverterParameter='Icon_RES'}"/>
+                                    <local:ImageLabel Title="基础攻击" Image="{StaticResource Icon_ATK}"/>
+                                    <local:ImageLabel Title="基础生命" Image="{StaticResource Icon_HP}"/>
+                                    <local:ImageLabel Title="基础防御" Image="{StaticResource Icon_DEF}"/>
+                                    <local:ImageLabel Title="基础速度" Image="{StaticResource Icon_SPD}"/>
+                                    <local:ImageLabel Title="超击破" Image="{StaticResource Icon_Break_Effect}"/>
+                                    <local:ImageLabel Title="击破特攻" Image="{StaticResource Icon_Break_Effect}"/>
+                                    <local:ImageLabel Title="击破增伤" Image="{Binding DataContext.Roleus.Break_Element,RelativeSource={RelativeSource AncestorType=Model:Together},Converter={StaticResource ElementConverter},ConverterParameter='Icon_DMG_Boost'}"/>
+                                    <local:ImageLabel Title="击破效率" Image="{StaticResource Icon_Break_Effect}"/>
+                                    <local:ImageLabel Title="削韧值" Image="{StaticResource Icon_Energy_Toplimit}"/>
+                                    <local:ImageLabel Title="抗性" Image="{Binding DataContext.Roleus.Break_Element,RelativeSource={RelativeSource AncestorType=Model:Together},Converter={StaticResource ElementConverter},ConverterParameter='Icon_RES'}"/>
+                                    <local:ImageLabel Title="易伤" Image="{Binding DataContext.Roleus.Break_Element,RelativeSource={RelativeSource AncestorType=Model:Together},Converter={StaticResource ElementConverter},ConverterParameter='Icon_DMG_Boost'}"/>
+                                    <local:ImageLabel Title="免伤" Image="{StaticResource Icon_DEF}"/>
+                                    <local:ImageLabel Title="韧性值" Image="{StaticResource Icon_Energy_Toplimit}"/>
+                                    <local:ImageLabel Title="效果命中" Image="{StaticResource Icon_Effect_Rate}"/>
+                                    <local:ImageLabel Title="效果抵抗" Image="{StaticResource Icon_Effect_Rest}"/>
+                                    <local:ImageLabel Title="治疗提高" Image="{StaticResource Icon_Heal_Rate}"/>
+                                    <local:ImageLabel Title="充能效率" Image="{StaticResource Icon_Energy_Rate}"/>
+                                    <local:ImageLabel Title="特殊数值" Image="{StaticResource Icon_Energy_Toplimit}"/>
+                                    <local:ImageLabel Title="能量上限" Image="{StaticResource Icon_Energy_Toplimit}"/>
+                                    <local:ImageLabel Title="角色等级" Image="{StaticResource Icon_HP}"/>
+                                    <local:ImageLabel Title="怪物等级" Image="{StaticResource Icon_HP}"/>
+                                    <local:ImageLabel Title="基础伤害" Image="{StaticResource Icon_ATK}"/>
+                                    <local:ImageLabel Title="全暴击伤害" Image="{StaticResource Icon_ATK}"/>
+                                    <local:ImageLabel Title="期望伤害" Image="{StaticResource Icon_ATK}"/>
+                                    <local:ImageLabel Title="击破伤害" Image="{StaticResource Icon_ATK}"/>
+                                    <local:ImageLabel Title="超击破伤害" Image="{StaticResource Icon_ATK}"/>
+                                    <local:ImageLabel Title="持续伤害" Image="{StaticResource Icon_ATK}"/>
+                                </ListBox>
                             </Border>
                         </Popup>
                         <Border Height="30" CornerRadius="15" Background="{StaticResource BackBrush}">
@@ -57,20 +89,24 @@
                                     BorderBrush="{StaticResource BackBrush}" Template="{StaticResource TextBoxSelected}"
                                     Margin="5,0,5,0" VerticalAlignment="Center" Grid.Column="1" x:Name="EquTebox">
                                     <TextBox.Text>
-                                        <Binding Path="Text" RelativeSource="{RelativeSource TemplatedParent}">
+                                        <Binding Path="Model.Text" RelativeSource="{RelativeSource TemplatedParent}" Mode="TwoWay">
                                             <Binding.ValidationRules>
                                                 <StaticResource ResourceKey="Rule_IsEquation"/>
                                             </Binding.ValidationRules>
                                         </Binding>
                                     </TextBox.Text>
                                     <TextBox.ToolTip>
-                                        <ToolTip Content="{Binding Text,RelativeSource={RelativeSource TemplatedParent}}"/>
+                                        <ToolTip Content="{Binding Model.Text,RelativeSource={RelativeSource TemplatedParent}}"/>
                                     </TextBox.ToolTip>
                                     <i:Interaction.Triggers>
                                         <i:EventTrigger EventName="TextChanged">
-                                            <i:InvokeCommandAction
-                                                Command="{Binding Event.TextBox_TextChanged,RelativeSource={RelativeSource TemplatedParent}}"
-                                                CommandParameter="{Binding RelativeSource={RelativeSource TemplatedParent}}">
+                                            <i:InvokeCommandAction Command="{Binding Event.TextBox_TextChanged,RelativeSource={RelativeSource TemplatedParent}}">
+                                                <i:InvokeCommandAction.CommandParameter>
+                                                    <MultiBinding Converter="{StaticResource MultiValueConverter}">
+                                                        <Binding RelativeSource="{RelativeSource TemplatedParent}"/>
+                                                        <Binding RelativeSource="{RelativeSource AncestorType=TextBox}"/>
+                                                    </MultiBinding>
+                                                </i:InvokeCommandAction.CommandParameter>
                                             </i:InvokeCommandAction>
                                         </i:EventTrigger>
                                         <i:EventTrigger EventName="LostFocus">
@@ -85,7 +121,7 @@
                                             CommandParameter="{Binding RelativeSource={RelativeSource TemplatedParent}}"/>
                                     </TextBox.InputBindings>
                                 </TextBox>
-                                <TextBlock Grid.Column="2" Text="{Binding Value,RelativeSource={RelativeSource TemplatedParent}}"/>
+                                <TextBlock Grid.Column="2" Text="{Binding Model.Value,RelativeSource={RelativeSource TemplatedParent}}"/>
                             </Grid>
                         </Border>
                     </Grid>

@@ -1,10 +1,13 @@
 ﻿namespace SR_DMG.Source.Example
 {
-    public class Relic
+    public class Relic : FileCollection
     {
-        public string Name { get; set; } = string.Empty;
-        public string Tpye { get; set; } = string.Empty;
-        public Dictionary<string, string> Parts { get; set; } = [];
-        public List<Skill> Skills { get; set; } = [];
+        public string Type = string.Empty;
+
+        public string Name = string.Empty;
+
+        public Dictionary<string, string> Parts = [];
+
+        public FileCollection Skill = new();
     }
 }

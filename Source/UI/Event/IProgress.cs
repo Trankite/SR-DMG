@@ -5,15 +5,15 @@ namespace SR_DMG.Source.UI.Event
 {
     public class IProgress
     {
-        public ICommand Retry_Click { get; } = new Command<Progress>(Prog =>
+        public ICommand Retry_Click { get; } = new Command<Progress>(Model =>
         {
-            Prog.IsRetry = true;
+            Model.IsRetry = true;
         });
 
-        public ICommand Cancel_Click { get; } = new Command<Progress>(Prog =>
+        public ICommand Cancel_Click { get; } = new Command<Progress>(Model =>
         {
-            Prog.Canceller.Cancel();
-            Prog.Dorpdown = false;
+            Model.Canceller.Cancel();
+            Model.Dorpdown = false;
         });
     }
 }

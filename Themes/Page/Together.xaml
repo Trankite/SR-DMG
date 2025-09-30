@@ -54,79 +54,79 @@
                 </Grid.RowDefinitions>
                 <View:LabelTextBox
                     Grid.Column="0" Grid.Row="0" Title="攻击力" Image="{StaticResource Icon_ATK}"
-                    Text="{Binding Roleues.ATK,Converter={StaticResource NumberConverter},ConverterParameter='0',Mode=TwoWay}"/>
+                    Text="{Binding Roleus.ATK,Converter={StaticResource NumberConverter},ConverterParameter='0',Mode=TwoWay}"/>
                 <View:LabelTextBox
                     Grid.Column="0" Grid.Row="1" Title="生命值" Image="{StaticResource Icon_HP}"
-                    Text="{Binding Roleues.HP,Converter={StaticResource NumberConverter},ConverterParameter='0',Mode=TwoWay}"/>
+                    Text="{Binding Roleus.HP,Converter={StaticResource NumberConverter},ConverterParameter='0',Mode=TwoWay}"/>
                 <View:LabelTextBox
                     Grid.Column="0" Grid.Row="2" Title="防御力" Image="{StaticResource Icon_DEF}"
-                    Text="{Binding Roleues.DEF,Converter={StaticResource NumberConverter},ConverterParameter='0',Mode=TwoWay}"/>
+                    Text="{Binding Roleus.DEF,Converter={StaticResource NumberConverter},ConverterParameter='0',Mode=TwoWay}"/>
                 <View:LabelTextBox
                     Grid.Column="0" Grid.Row="3" Title="速度" Image="{StaticResource Icon_SPD}"
-                    Text="{Binding Roleues.SPD,Converter={StaticResource NumberConverter},ConverterParameter='0',Mode=TwoWay}"/>
+                    Text="{Binding Roleus.SPD,Converter={StaticResource NumberConverter},ConverterParameter='0',Mode=TwoWay}"/>
                 <View:LabelTextBox
                     Grid.Column="0" Grid.Row="5" Title="暴击率" Unit="%" Image="{StaticResource Icon_CRIT_Rate}"
-                    Text="{Binding Roleues.CRIT_Rate,Converter={StaticResource NumberConverter},ConverterParameter='1',Mode=TwoWay}"/>
+                    Text="{Binding Roleus.CRIT_Rate,Converter={StaticResource NumberConverter},ConverterParameter='1',Mode=TwoWay}"/>
                 <View:LabelTextBox
                     Grid.Column="0" Grid.Row="6" Title="暴击伤害" Unit="%" Image="{StaticResource Icon_CRIT_DMG}"
-                    Text="{Binding Roleues.CRIT_DMG,Converter={StaticResource NumberConverter},ConverterParameter='1',Mode=TwoWay}"/>
+                    Text="{Binding Roleus.CRIT_DMG,Converter={StaticResource NumberConverter},ConverterParameter='1',Mode=TwoWay}"/>
                 <View:LabelTextBox
                     Grid.Column="0" Grid.Row="7" Title="伤害提高" Unit="%"
-                    Image="{Binding Roleues.Break_Element,Converter={StaticResource ElementConverter},ConverterParameter='Icon_DMG_Boost'}"
-                    Text="{Binding Roleues.DMG_Boost,Converter={StaticResource NumberConverter},ConverterParameter='1',Mode=TwoWay}"/>
+                    Image="{Binding Roleus.Break_Element,Converter={StaticResource ElementConverter},ConverterParameter='Icon_DMG_Boost'}"
+                    Text="{Binding Roleus.DMG_Boost,Converter={StaticResource NumberConverter},ConverterParameter='1',Mode=TwoWay}"/>
                 <View:LabelTextBox
                     Grid.Column="0" Grid.Row="8" Title="无视防御" Unit="%" Image="{StaticResource Icon_DEF}"
-                    Text="{Binding Roleues.DEF_Reduced,Converter={StaticResource NumberConverter},ConverterParameter='1',Mode=TwoWay}"/>
+                    Text="{Binding Roleus.DEF_Reduced,Converter={StaticResource NumberConverter},ConverterParameter='1',Mode=TwoWay}"/>
                 <View:LabelTextBox
                     Grid.Column="0" Grid.Row="9" Title="抗性穿透" Unit="%"
-                    Image="{Binding Roleues.Break_Element,Converter={StaticResource ElementConverter},ConverterParameter='Icon_RES'}"
-                    Text="{Binding Roleues.RES_Reduced,Converter={StaticResource NumberConverter},ConverterParameter='1',Mode=TwoWay}"/>
+                    Image="{Binding Roleus.Break_Element,Converter={StaticResource ElementConverter},ConverterParameter='Icon_RES'}"
+                    Text="{Binding Roleus.RES_Reduced,Converter={StaticResource NumberConverter},ConverterParameter='1',Mode=TwoWay}"/>
                 <View:LabelTextBox
                     Grid.Column="0" Grid.Row="11" Title="效果命中" Unit="%" Image="{StaticResource Icon_Effect_Rate}"
-                    Text="{Binding Roleues.Effect_Rate,Converter={StaticResource NumberConverter},ConverterParameter='1',Mode=TwoWay}"/>
+                    Text="{Binding Roleus.Effect_Rate,Converter={StaticResource NumberConverter},ConverterParameter='1',Mode=TwoWay}"/>
                 <View:LabelTextBox
                     Grid.Column="0" Grid.Row="12" Title="治疗提高" Unit="%" Image="{StaticResource Icon_Heal_Rate}"
-                    Text="{Binding Roleues.Heal_Rate,Converter={StaticResource NumberConverter},ConverterParameter='1',Mode=TwoWay}"/>
+                    Text="{Binding Roleus.Heal_Rate,Converter={StaticResource NumberConverter},ConverterParameter='1',Mode=TwoWay}"/>
                 <View:LabelTextBox
                     Grid.Column="0" Grid.Row="13" Title="特殊数值" Image="{StaticResource Icon_Energy_Toplimit}"
-                    Text="{Binding Roleues.Accumulate,Converter={StaticResource NumberConverter},ConverterParameter='0',Mode=TwoWay}"/>
+                    Text="{Binding Roleus.Accumulate,Converter={StaticResource NumberConverter},ConverterParameter='0',Mode=TwoWay}"/>
                 <View:LabelTextBox
                     Grid.Column="1" Grid.Row="0" Title="基础攻击" Image="{StaticResource Icon_ATK}"
-                    Text="{Binding Roleues.ATK_Base,Converter={StaticResource NumberConverter},ConverterParameter='0',Mode=TwoWay}"/>
+                    Text="{Binding Roleus.ATK_Base,Converter={StaticResource NumberConverter},ConverterParameter='0',Mode=TwoWay}"/>
                 <View:LabelTextBox
                     Grid.Column="1" Grid.Row="1" Title="基础生命" Image="{StaticResource Icon_HP}"
-                    Text="{Binding Roleues.HP_Base,Converter={StaticResource NumberConverter},ConverterParameter='0',Mode=TwoWay}"/>
+                    Text="{Binding Roleus.HP_Base,Converter={StaticResource NumberConverter},ConverterParameter='0',Mode=TwoWay}"/>
                 <View:LabelTextBox
                     Grid.Column="1" Grid.Row="2" Title="基础防御" Image="{StaticResource Icon_DEF}"
-                    Text="{Binding Roleues.DEF_Base,Converter={StaticResource NumberConverter},ConverterParameter='0',Mode=TwoWay}"/>
+                    Text="{Binding Roleus.DEF_Base,Converter={StaticResource NumberConverter},ConverterParameter='0',Mode=TwoWay}"/>
                 <View:LabelTextBox
                     Grid.Column="1" Grid.Row="3" Title="基础速度" Image="{StaticResource Icon_SPD}"
-                    Text="{Binding Roleues.SPD_Base,Converter={StaticResource NumberConverter},ConverterParameter='0',Mode=TwoWay}"/>
+                    Text="{Binding Roleus.SPD_Base,Converter={StaticResource NumberConverter},ConverterParameter='0',Mode=TwoWay}"/>
                 <View:LabelTextBox
                     Grid.Column="1" Grid.Row="5" Title="超击破" Unit="%" Image="{StaticResource Icon_Break_Effect}"
-                    Text="{Binding Roleues.Break_Equal,Converter={StaticResource NumberConverter},ConverterParameter='1',Mode=TwoWay}"/>
+                    Text="{Binding Roleus.Break_Equal,Converter={StaticResource NumberConverter},ConverterParameter='1',Mode=TwoWay}"/>
                 <View:LabelTextBox
                     Grid.Column="1" Grid.Row="6" Title="击破特攻" Unit="%" Image="{StaticResource Icon_Break_Effect}"
-                    Text="{Binding Roleues.Break_Effect,Converter={StaticResource NumberConverter},ConverterParameter='1',Mode=TwoWay}"/>
+                    Text="{Binding Roleus.Break_Effect,Converter={StaticResource NumberConverter},ConverterParameter='1',Mode=TwoWay}"/>
                 <View:LabelTextBox
                     Grid.Column="1" Grid.Row="7" Title="击破增伤" Unit="%"
-                    Image="{Binding Roleues.Break_Element,Converter={StaticResource ElementConverter},ConverterParameter='Icon_DMG_Boost'}"
-                    Text="{Binding Roleues.Break_Boost,Converter={StaticResource NumberConverter},ConverterParameter='1',Mode=TwoWay}"/>
+                    Image="{Binding Roleus.Break_Element,Converter={StaticResource ElementConverter},ConverterParameter='Icon_DMG_Boost'}"
+                    Text="{Binding Roleus.Break_Boost,Converter={StaticResource NumberConverter},ConverterParameter='1',Mode=TwoWay}"/>
                 <View:LabelTextBox
                     Grid.Column="1" Grid.Row="8" Title="击破效率" Unit="%" Image="{StaticResource Icon_Break_Effect}"
-                    Text="{Binding Roleues.Break_Efficiency,Converter={StaticResource NumberConverter},ConverterParameter='1',Mode=TwoWay}"/>
+                    Text="{Binding Roleus.Break_Efficiency,Converter={StaticResource NumberConverter},ConverterParameter='1',Mode=TwoWay}"/>
                 <View:LabelTextBox
                     Grid.Column="1" Grid.Row="9" Title="削韧值" Image="{StaticResource Icon_Energy_Toplimit}"
-                    Text="{Binding Roleues.Toughness_Reduced,Converter={StaticResource NumberConverter},ConverterParameter='0',Mode=TwoWay}"/>
+                    Text="{Binding Roleus.Toughness_Reduced,Converter={StaticResource NumberConverter},ConverterParameter='0',Mode=TwoWay}"/>
                 <View:LabelTextBox
                     Grid.Column="1" Grid.Row="11" Title="效果抵抗" Unit="%" Image="{StaticResource Icon_Effect_Rest}"
-                    Text="{Binding Roleues.Effect_Rest,Converter={StaticResource NumberConverter},ConverterParameter='1',Mode=TwoWay}"/>
+                    Text="{Binding Roleus.Effect_Rest,Converter={StaticResource NumberConverter},ConverterParameter='1',Mode=TwoWay}"/>
                 <View:LabelTextBox
                     Grid.Column="1" Grid.Row="12" Title="充能效率" Unit="%" Image="{StaticResource Icon_Energy_Rate}"
-                    Text="{Binding Roleues.Energy_Rate,Converter={StaticResource NumberConverter},ConverterParameter='1',Mode=TwoWay}"/>
+                    Text="{Binding Roleus.Energy_Rate,Converter={StaticResource NumberConverter},ConverterParameter='1',Mode=TwoWay}"/>
                 <View:LabelTextBox
                     Grid.Column="1" Grid.Row="13" Title="能量上限" Image="{StaticResource Icon_Energy_Toplimit}"
-                    Text="{Binding Roleues.Energy_Toplimit,Converter={StaticResource NumberConverter},ConverterParameter='0',Mode=TwoWay}"/>
+                    Text="{Binding Roleus.Energy_Toplimit,Converter={StaticResource NumberConverter},ConverterParameter='0',Mode=TwoWay}"/>
             </Grid>
         </DockPanel>
         <Grid Grid.Column="3">
@@ -142,10 +142,10 @@
                         Text="{Binding Equip.Text}" Tags="{Binding Equip.Tags,Converter={StaticResource SourceConverter}}"
                         Icon="{Binding Equip.Icon,Converter={StaticResource SourceConverter},ConverterParameter={StaticResource Icon_Not_Role}}"/>
                     <View:GainView Model="{Binding Gains}" Margin="10,0,10,0"/>
-                    <Border CornerRadius="15" Background="{StaticResource BackBrush}" Width="100">
+                    <Border CornerRadius="15" Background="{StaticResource BackBrush}">
                         <UniformGrid Columns="1" Margin="10">
-                            <View:PlexTicker Text="初始值" Flag="{Binding NoGain,Mode=TwoWay}"/>
-                            <View:PlexTicker Text="重置面板" Flag="{Binding NoModify,Mode=TwoWay}"/>
+                            <View:PlexTicker Text="重置面板" Flag="{Binding NoGain,Mode=TwoWay}"/>
+                            <View:PlexTicker Text="禁止修改" Flag="{Binding NoModify,Mode=TwoWay}"/>
                             <View:PlexTicker Text="比较伤害" Flag="{Binding Comparing,Mode=TwoWay}"/>
                             <View:PlexTicker Text="等待保存" Flag="{Binding UnSaved,Mode=TwoWay}"/>
                         </UniformGrid>
@@ -154,14 +154,13 @@
             </Border>
             <View:DamageView
                 Grid.Column="0" Grid.Row="1" Damage="{Binding Damage}" Compare="{Binding Compare}"
-                Breaker="{Binding Roleues.Break_Element,Converter={StaticResource BreakerConverter}}"/>
-            <View:Equation Grid.Column="0" Grid.Row="2" Margin="0,0,0,10" Value="{Binding Equation,Mode=TwoWay}"/>
+                Breaker="{Binding Roleus.Break_Element,Converter={StaticResource BreakerConverter}}"/>
+            <View:Equation Grid.Column="0" Grid.Row="2" Margin="0,0,0,10" Model="{Binding Equation}"/>
             <Border Grid.Column="0" Grid.Row="3" CornerRadius="15" Background="{StaticResource BackBrush_Minor}">
                 <DockPanel Margin="10">
                     <View:ImageSpan
-                        DockPanel.Dock="Left" Text="{Binding Enemy.Text}"
-                        Icon="{Binding Enemy.Icon,Converter={StaticResource SourceConverter},ConverterParameter={StaticResource Icon_Not_Enemy}}"
-                        Tags="{Binding Enemy.Tags,Converter={StaticResource SourceConverter}}"/>
+                        Text="{Binding Enemy.Text}" Tags="{Binding Enemy.Tags,Converter={StaticResource SourceConverter}}"
+                        Icon="{Binding Enemy.Icon,Converter={StaticResource SourceConverter},ConverterParameter={StaticResource Icon_Not_Enemy}}"/>
                     <Grid Margin="5,0,0,0">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="*"/>
@@ -175,28 +174,28 @@
                         </Grid.RowDefinitions>
                         <View:LabelTextBox
                             Grid.Column="0" Grid.Row="0" Title="角色等级" Unit="级" Image="{StaticResource Icon_HP}"
-                            Text="{Binding Roleues.Role_Level,Converter={StaticResource NumberConverter},ConverterParameter='0',Mode=TwoWay}"/>
+                            Text="{Binding Roleus.Role_Level,Converter={StaticResource NumberConverter},ConverterParameter='0',Mode=TwoWay}"/>
                         <View:LabelTextBox
                             Grid.Column="0" Grid.Row="1" Title="抗性" Unit="%"
-                            Image="{Binding Roleues.Break_Element,Converter={StaticResource ElementConverter},ConverterParameter='Icon_RES'}"
-                            Text="{Binding Roleues.RES_Boost,Converter={StaticResource NumberConverter},ConverterParameter='1',Mode=TwoWay}"/>
+                            Image="{Binding Roleus.Break_Element,Converter={StaticResource ElementConverter},ConverterParameter='Icon_RES'}"
+                            Text="{Binding Roleus.RES_Boost,Converter={StaticResource NumberConverter},ConverterParameter='1',Mode=TwoWay}"/>
                         <View:LabelTextBox
                             Grid.Column="0" Grid.Row="2" Title="易伤" Unit="%"
-                            Image="{Binding Roleues.Break_Element,Converter={StaticResource ElementConverter},ConverterParameter='Icon_DMG_Boost'}"
-                            Text="{Binding Roleues.DMG_Taken,Converter={StaticResource NumberConverter},ConverterParameter='1',Mode=TwoWay}"/>
+                            Image="{Binding Roleus.Break_Element,Converter={StaticResource ElementConverter},ConverterParameter='Icon_DMG_Boost'}"
+                            Text="{Binding Roleus.DMG_Taken,Converter={StaticResource NumberConverter},ConverterParameter='1',Mode=TwoWay}"/>
                         <View:LabelTextBox
                             Grid.Column="1" Grid.Row="0" Title="怪物等级" Unit="级" Image="{StaticResource Icon_HP}"
-                            Text="{Binding Roleues.Enemy_Level,Converter={StaticResource NumberConverter},ConverterParameter='0',Mode=TwoWay}"/>
+                            Text="{Binding Roleus.Enemy_Level,Converter={StaticResource NumberConverter},ConverterParameter='0',Mode=TwoWay}"/>
                         <View:LabelTextBox
                             Grid.Column="1" Grid.Row="1" Title="免伤" Unit="%" Image="{StaticResource Icon_DEF}"
-                            Text="{Binding Roleues.DMG_Reduction,Converter={StaticResource NumberConverter},ConverterParameter='1',Mode=TwoWay}"/>
+                            Text="{Binding Roleus.DMG_Reduction,Converter={StaticResource NumberConverter},ConverterParameter='1',Mode=TwoWay}"/>
                         <View:LabelTextBox
                             Grid.Column="1" Grid.Row="2" Title="韧性值" Image="{StaticResource Icon_Energy_Toplimit}"
-                            Text="{Binding Roleues.Toughness,Converter={StaticResource NumberConverter},ConverterParameter='0',Mode=TwoWay}"/>
+                            Text="{Binding Roleus.Toughness,Converter={StaticResource NumberConverter},ConverterParameter='0',Mode=TwoWay}"/>
                         <Border
                             Grid.Column="0" Grid.Row="3" Grid.ColumnSpan="2" CornerRadius="15"
                             Background="{StaticResource BackBrush}" Height="30">
-                            <View:PlexSlider Title="数量" Maximum="5" Value="{Binding Roleues.Enemy_Number,Mode=TwoWay}"/>
+                            <View:PlexSlider Title="数量" Maximum="5" Value="{Binding Roleus.Enemy_Number,Mode=TwoWay}"/>
                         </Border>
                     </Grid>
                 </DockPanel>

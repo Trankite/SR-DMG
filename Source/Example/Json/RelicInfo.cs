@@ -10,7 +10,7 @@ namespace SR_DMG.Source.Example.Json
 
         public static RelicInfo[] FromJson(string Json)
         {
-            return JsonSerializer.Deserialize<RelicInfo[]>(Json, JsonOption) ?? [];
+            return JsonSerializer.Deserialize<RelicInfo[]>(Json, JsonOptions) ?? [];
         }
 
         [JsonPropertyName(Markey)] public string PartKey = string.Empty;
@@ -61,19 +61,19 @@ namespace SR_DMG.Source.Example.Json
             }
         }
 
-        private static readonly JsonSerializerOptions JsonOption = new() { IncludeFields = true, Converters = { new RelicInfoConverter() } };
+        private static readonly JsonSerializerOptions JsonOptions = Program.GetJsonOptions(new RelicInfoConverter());
 
         public class RelicInfoConverter : JsonConverter<RelicInfo>
         {
             public override RelicInfo? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
             {
-                using JsonDocument Doc = JsonDocument.ParseValue(ref reader);
-                JsonElement Root = Doc.RootElement;
-                return (Root.TryGetProperty(Markey, out JsonElement TypeProp) ? TypeProp.GetString() : null) switch
+                using JsonDocument Document = JsonDocument.ParseValue(ref reader);
+                JsonElement RootElement = Document.RootElement;
+                return (RootElement.TryGetProperty(Markey, out JsonElement TypeProp) ? TypeProp.GetString() : null) switch
                 {
-                    "main" => JsonSerializer.Deserialize<Main>(Root.GetRawText(), options),
-                    "timeline" => JsonSerializer.Deserialize<Timeline>(Root.GetRawText(), options),
-                    _ => JsonSerializer.Deserialize<RelicInfo>(Root.GetRawText(), Simple.JsonOptions)
+                    "main" => JsonSerializer.Deserialize<Main>(RootElement.GetRawText(), options),
+                    "timeline" => JsonSerializer.Deserialize<Timeline>(RootElement.GetRawText(), options),
+                    _ => Program.FormJson<RelicInfo>(RootElement.GetRawText())
                 };
             }
 

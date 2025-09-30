@@ -13,21 +13,13 @@ namespace SR_DMG.Source.UI.View
 
         public static IEquation Event { get; } = new();
 
-        public string Text
+        public Model.Equation Model
         {
-            set { SetValue(TextProperty, value); }
-            get { return (string)GetValue(TextProperty); }
+            set { SetValue(ModelProperty, value); }
+            get { return (Model.Equation)GetValue(ModelProperty); }
         }
 
-        public static readonly DependencyProperty TextProperty = DependencyProperty.Register(nameof(Text), typeof(string), typeof(Equation));
-
-        public float Value
-        {
-            set { SetValue(ValueProperty, value); }
-            get { return (float)GetValue(ValueProperty); }
-        }
-
-        public static readonly DependencyProperty ValueProperty = DependencyProperty.Register(nameof(Value), typeof(float), typeof(Equation));
+        public static readonly DependencyProperty ModelProperty = DependencyProperty.Register(nameof(Model), typeof(Model.Equation), typeof(Equation));
 
         public bool Dropdown
         {

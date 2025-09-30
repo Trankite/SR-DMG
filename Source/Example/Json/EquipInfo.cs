@@ -10,7 +10,7 @@ namespace SR_DMG.Source.Example.Json
 
         public static EquipInfo[] FromJson(string Json)
         {
-            return JsonSerializer.Deserialize<EquipInfo[]>(Json, JsonOption) ?? [];
+            return JsonSerializer.Deserialize<EquipInfo[]>(Json, JsonOptions) ?? [];
         }
 
         [JsonPropertyName(Markey)] public string PartKey = string.Empty;
@@ -80,21 +80,21 @@ namespace SR_DMG.Source.Example.Json
             }
         }
 
-        private static readonly JsonSerializerOptions JsonOption = new() { IncludeFields = true, Converters = { new EquipInfoConverter() } };
+        private static readonly JsonSerializerOptions JsonOptions = Program.GetJsonOptions(new EquipInfoConverter());
 
         public class EquipInfoConverter : JsonConverter<EquipInfo>
         {
             public override EquipInfo? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
             {
-                using JsonDocument Doc = JsonDocument.ParseValue(ref reader);
-                JsonElement Root = Doc.RootElement;
-                return (Root.TryGetProperty(Markey, out JsonElement TypeProp) ? TypeProp.GetString() : null) switch
+                using JsonDocument Document = JsonDocument.ParseValue(ref reader);
+                JsonElement RootElement = Document.RootElement;
+                return (RootElement.TryGetProperty(Markey, out JsonElement TypeProp) ? TypeProp.GetString() : null) switch
                 {
-                    "main" => JsonSerializer.Deserialize<Main>(Root.GetRawText(), options),
-                    "value" => JsonSerializer.Deserialize<Value>(Root.GetRawText(), options),
-                    "material" => JsonSerializer.Deserialize<Material>(Root.GetRawText(), options),
-                    "desc" => JsonSerializer.Deserialize<Desc>(Root.GetRawText(), options),
-                    _ => JsonSerializer.Deserialize<EquipInfo>(Root.GetRawText(), Simple.JsonOptions)
+                    "main" => JsonSerializer.Deserialize<Main>(RootElement.GetRawText(), options),
+                    "value" => JsonSerializer.Deserialize<Value>(RootElement.GetRawText(), options),
+                    "material" => JsonSerializer.Deserialize<Material>(RootElement.GetRawText(), options),
+                    "desc" => JsonSerializer.Deserialize<Desc>(RootElement.GetRawText(), options),
+                    _ => Program.FormJson<EquipInfo>(RootElement.GetRawText())
                 };
             }
 

@@ -6,19 +6,19 @@ namespace SR_DMG.Source.Employ
     {
         public static readonly List<string> Logs = [];
 
-        public static void Log(Exception Except)
+        public static void Log(Exception Exception)
         {
-            Log(Except.Message + Simple.NewLine + Except.StackTrace);
+            Log(Exception.Message + Simple.NewLine + Exception.StackTrace);
         }
 
-        public static void Log(Exception Except, string Message)
+        public static void Log(Exception Exception, string Message)
         {
-            Log($"{Except.Message}({Message})");
+            Log($"{Exception.Message}({Message})");
         }
 
         public static void Log(string Message)
         {
-            Logs.Add($"[{DateTime.Now.ToString(Simple.Lay_DateTime)}] {Message}");
+            Logs.Add($"[{DateTime.Now.ToString(Simple.Format_DateTime)}] {Message}");
         }
 
         public static void LogToFile()

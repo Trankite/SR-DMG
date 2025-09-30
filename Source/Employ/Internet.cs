@@ -21,7 +21,8 @@ namespace SR_DMG.Source.Employ
         public async Task<string?> Result()
         {
             using HttpResponseMessage? Response = await this.Response();
-            return Response == null ? null : await Response.Content.ReadAsStringAsync();
+            if (Response == null) return null;
+            return await Response.Content.ReadAsStringAsync();
         }
 
         public async Task<HttpResponseMessage?> Response()
@@ -32,22 +33,27 @@ namespace SR_DMG.Source.Employ
                 {
                     Content = new StringContent(Body ?? string.Empty, Encoding.UTF8, "application/json")
                 };
-                foreach (KeyValuePair<string, string> K in Headers) Request.Headers.Add(K.Key, K.Value);
+                foreach (KeyValuePair<string, string> Item in Headers)
+                {
+                    Request.Headers.Add(Item.Key, Item.Value);
+                }
                 return await Http.SendAsync(Request, Canceller);
             }
-            catch (Exception Except) { Logger.Log(Except); }
+            catch (Exception Exception)
+            {
+                Logger.Log(Exception);
+            }
             return null;
         }
 
-        public async Task<bool> Download(string FilePath, bool WithOutExtension = true)
+        private static readonly HashSet<string> HostWhitelist = ["act-upload.mihoyo.com"];
+
+        public async Task<bool> Download(string FilePath)
         {
             try
             {
-                if (string.IsNullOrEmpty(Url)) return true;
-                if (WithOutExtension)
-                {
-                    FilePath += Path.GetExtension(new Uri(Url).AbsolutePath);
-                }
+                if (string.IsNullOrWhiteSpace(Url)) return true;
+                if (!HostWhitelist.Contains(new Uri(Url).Host)) return true;
                 using HttpResponseMessage? Response = await this.Response();
                 if (Response == null) return false;
                 using Stream Stm = await Response.Content.ReadAsStreamAsync(Canceller);
@@ -55,7 +61,10 @@ namespace SR_DMG.Source.Employ
                 await Stm.CopyToAsync(Fs, Canceller);
                 return true;
             }
-            catch (Exception Except) { Logger.Log(Except); }
+            catch (Exception Exception)
+            {
+                Logger.Log(Exception);
+            }
             return false;
         }
     }

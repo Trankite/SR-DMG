@@ -10,7 +10,7 @@ namespace SR_DMG.Source.Example.Json
 
         public static EnemyInfo[] FromJson(string Json)
         {
-            return JsonSerializer.Deserialize<EnemyInfo[]>(Json, JsonOption) ?? [];
+            return JsonSerializer.Deserialize<EnemyInfo[]>(Json, JsonOptions) ?? [];
         }
 
         [JsonPropertyName(Markey)] public string PartKey = string.Empty;
@@ -74,20 +74,20 @@ namespace SR_DMG.Source.Example.Json
             }
         }
 
-        private static readonly JsonSerializerOptions JsonOption = new() { IncludeFields = true, Converters = { new EnemyInfoConverter() } };
+        private static readonly JsonSerializerOptions JsonOptions = Program.GetJsonOptions(new EnemyInfoConverter());
 
         public class EnemyInfoConverter : JsonConverter<EnemyInfo>
         {
             public override EnemyInfo? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
             {
-                using JsonDocument Doc = JsonDocument.ParseValue(ref reader);
-                JsonElement Root = Doc.RootElement;
-                return (Root.TryGetProperty(Markey, out JsonElement TypeProp) ? TypeProp.GetString() : null) switch
+                using JsonDocument Document = JsonDocument.ParseValue(ref reader);
+                JsonElement RootElement = Document.RootElement;
+                return (RootElement.TryGetProperty(Markey, out JsonElement TypeProp) ? TypeProp.GetString() : null) switch
                 {
-                    "main" => JsonSerializer.Deserialize<Main>(Root.GetRawText(), options),
-                    "skill" => JsonSerializer.Deserialize<Skill>(Root.GetRawText(), options),
-                    "gainMethod" => JsonSerializer.Deserialize<GainMethod>(Root.GetRawText(), options),
-                    _ => JsonSerializer.Deserialize<EnemyInfo>(Root.GetRawText(), Simple.JsonOptions)
+                    "main" => JsonSerializer.Deserialize<Main>(RootElement.GetRawText(), options),
+                    "skill" => JsonSerializer.Deserialize<Skill>(RootElement.GetRawText(), options),
+                    "gainMethod" => JsonSerializer.Deserialize<GainMethod>(RootElement.GetRawText(), options),
+                    _ => Program.FormJson<EnemyInfo>(RootElement.GetRawText())
                 };
             }
 

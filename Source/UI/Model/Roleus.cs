@@ -4,15 +4,13 @@ using System.ComponentModel;
 
 namespace SR_DMG.Source.UI.Model
 {
-    public class Roleues : INotifyPropertyChanged
+    public class Roleus : INotifyPropertyChanged
     {
         private float _Role_Level;
 
         private float _Role_Type;
 
         private float _Break_Element;
-
-        private float _DMG_Equal;
 
         private float _Enemy_Level;
 
@@ -90,12 +88,6 @@ namespace SR_DMG.Source.UI.Model
         {
             set => Program.SetField(ref _Break_Element, value, nameof(Break_Element), OnPropertyChanged);
             get => _Break_Element;
-        }
-
-        public float DMG_Equal
-        {
-            set => Program.SetField(ref _DMG_Equal, value, nameof(DMG_Equal), OnPropertyChanged);
-            get => _DMG_Equal;
         }
 
         public float Enemy_Level
@@ -285,22 +277,41 @@ namespace SR_DMG.Source.UI.Model
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(PropertyName));
         }
 
-        private static readonly Dictionary<string, Property<Roleues, float>> Properties = [];
+        private static readonly Dictionary<string, Property<Roleus, float>> Properties = [];
 
         public float this[string PropertyName]
         {
             get => Properties.GetValueOrDefault(PropertyName)?.GetValue(this) ?? float.NaN;
-            set => Properties.GetValueOrDefault(PropertyName)?.SetValue(this, value);
         }
 
-        static Roleues()
+        public bool TrySet(string PropertyName, float Value)
         {
-            Property<Roleues, float>.Initialize(Properties, new()
+            if (Properties.TryGetValue(PropertyName, out Property<Roleus, float>? Property))
+            {
+                Property.SetValue(this, Value);
+            }
+            return false;
+        }
+
+        public void UpdataDamage(Damage Damage)
+        {
+            float Factor = (_Role_Level + 20) / (_Role_Level + 20 + (_Enemy_Level + 20) * (1 - Math.Min(_DEF_Reduced, 100) * 0.01f));
+            Factor *= (1 - Math.Min(Math.Max(_RES_Boost, -100), 90) * 0.01f) * (1 + _DMG_Taken * 0.01f) * (1 - _DMG_Reduction * 0.01f);
+            Damage.Delay = Factor * Damage.Base * (1 + _DMG_Boost * 0.01f);
+            Damage.Crit = Damage.Delay * (1 + _CRIT_DMG * 0.01f);
+            Damage.Expect = Damage.Delay * (1 + _CRIT_Rate * 0.01f * _CRIT_DMG * 0.01f);
+            Factor *= (1 + _Break_Effect * 0.01f) * (1 + _Break_Boost * 0.01f) * 3767.55f;
+            Damage.Break = Factor * (_Toughness / 20 - 0.5f) * (_Role_Type switch { 0 or 1 => 2, 2 or 3 => 1, 4 => 1.5f, _ => 0.5f });
+            Damage.Super = Factor * (_Toughness_Reduced * (1 + _Break_Efficiency * 0.01f) * 0.1f);
+        }
+
+        static Roleus()
+        {
+            Property<Roleus, float>.Initialize(Properties, new()
             {
                 [nameof(Role_Level)] = "角色等级",
                 [nameof(Role_Type)] = "角色类型",
                 [nameof(Break_Element)] = "击破属性",
-                [nameof(DMG_Equal)] = "伤害数值",
                 [nameof(Enemy_Level)] = "怪物等级",
                 [nameof(Enemy_Number)] = "怪物数量",
                 [nameof(Toughness)] = "韧性",

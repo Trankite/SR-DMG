@@ -16,6 +16,7 @@
                 <ResourceDictionary Source="/Themes/View/PlexSlider.xaml"/>
                 <ResourceDictionary Source="/Themes/View/LabelTextBox.xaml"/>
                 <ResourceDictionary Source="/Themes/View/ImageSpan.xaml"/>
+                <ResourceDictionary Source="/Themes/View/ImageLabel.xaml"/>
                 <ResourceDictionary Source="/Themes/View/GainItem.xaml"/>
                 <ResourceDictionary Source="/Themes/View/GainView.xaml"/>
                 <ResourceDictionary Source="/Themes/View/DamageView.xaml"/>

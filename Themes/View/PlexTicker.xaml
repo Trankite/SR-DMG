@@ -32,8 +32,7 @@
                         </Button>
                         <TextBlock
                             Text="{Binding Text,RelativeSource={RelativeSource TemplatedParent}}"
-                            Foreground="{StaticResource ForeBrush}" FontWeight="{StaticResource FontWeigh}"
-                            VerticalAlignment="Center" Margin="5,0,0,0">
+                            Foreground="{StaticResource ForeBrush}" VerticalAlignment="Center" Margin="5,0,0,0">
                             <TextBlock.Style>
                                 <Style TargetType="TextBlock">
                                     <Style.Triggers>
