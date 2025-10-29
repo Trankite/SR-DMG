@@ -1,0 +1,95 @@
+﻿<ResourceDictionary
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:Control="clr-namespace:StarRailDamage.Source.UI.Control"
+    xmlns:UI="clr-namespace:StarRailDamage.Source.UI.Xaml.View">
+    <Style TargetType="{x:Type Border}">
+        <Setter Property="Opacity" Value="{DynamicResource BorderOpacity}"/>
+    </Style>
+
+    <Style x:Key="TextBlockToolTipStyle" TargetType="{x:Type TextBlock}">
+        <Style.Resources>
+            <Style TargetType="{x:Type ToolTip}">
+                <Setter Property="Foreground" Value="{DynamicResource MainForeBrush}"/>
+                <Setter Property="Background" Value="{DynamicResource DropBackBrush}"/>
+            </Style>
+        </Style.Resources>
+        <Setter Property="ToolTipService.ToolTip">
+            <Setter.Value>
+                <Binding Path="Text" RelativeSource="{RelativeSource Self}"/>
+            </Setter.Value>
+        </Setter>
+        <Style.Triggers>
+            <DataTrigger Binding="{Binding Text.Length,RelativeSource={RelativeSource Self}}" Value="0">
+                <Setter Property="ToolTip" Value="{x:Null}"/>
+            </DataTrigger>
+        </Style.Triggers>
+    </Style>
+
+    <Style TargetType="{x:Type Control:ScopedButton}">
+        <Setter Property="Foreground" Value="{DynamicResource MainForeBrush}"/>
+        <Setter Property="FocusBrush" Value="{DynamicResource HighBackBrush}"/>
+        <Setter Property="Background" Value="Transparent"/>
+    </Style>
+
+    <Style TargetType="{x:Type Control:ScopedCheckBox}">
+        <Setter Property="Foreground" Value="{DynamicResource MainForeBrush}"/>
+        <Setter Property="FontSize" Value="{DynamicResource MainFontSize}"/>
+        <Setter Property="Height" Value="20"/>
+    </Style>
+
+    <Style TargetType="{x:Type Control:ScopedSlider}">
+        <Setter Property="Foreground" Value="{DynamicResource MainForeBrush}"/>
+        <Setter Property="Background" Value="{DynamicResource DropBackBrush}"/>
+        <Setter Property="FocusBrush" Value="{DynamicResource HighBackBrush}"/>
+        <Setter Property="FontSize" Value="{DynamicResource DropFontSize}"/>
+        <Setter Property="FontWeight" Value="Bold"/>
+        <Setter Property="Padding" Value="5"/>
+    </Style>
+
+    <Style TargetType="{x:Type Control:ScopedTabControl}">
+        <Setter Property="Foreground" Value="{DynamicResource MainForeBrush}"/>
+        <Setter Property="Background" Value="{DynamicResource DropBackBrush}"/>
+        <Setter Property="FocusBrush" Value="{DynamicResource MainBackBrush}"/>
+        <Setter Property="Padding" Value="5"/>
+    </Style>
+
+    <Style TargetType="{x:Type Control:ScopedTextBox}">
+        <Setter Property="Foreground" Value="{DynamicResource MainForeBrush}"/>
+        <Setter Property="Background" Value="{DynamicResource DropBackBrush}"/>
+        <Setter Property="FocusBrush" Value="{DynamicResource HighBackBrush}"/>
+        <Setter Property="FontSize" Value="{DynamicResource MainFontSize}"/>
+        <Setter Property="CornerRadius" Value="10"/>
+        <Setter Property="Padding" Value="5,0,5,0"/>
+    </Style>
+
+    <Style TargetType="{x:Type UI:GainItem}">
+        <Setter Property="Foreground" Value="{DynamicResource MainForeBrush}"/>
+        <Setter Property="Background" Value="{DynamicResource MainBackBrush}"/>
+        <Setter Property="FocusBrush" Value="{DynamicResource HighBackBrush}"/>
+        <Setter Property="TitleBrush" Value="{DynamicResource GoldenBrush}"/>
+        <Setter Property="TitleFontSize" Value="{DynamicResource MainFontSize}"/>
+        <Setter Property="FontSize" Value="{DynamicResource DropFontSize}"/>
+    </Style>
+
+    <Style TargetType="{x:Type UI:HeadSculpture}">
+        <Setter Property="Foreground" Value="{DynamicResource MainForeBrush}"/>
+        <Setter Property="Background" Value="{DynamicResource MainBackBrush}"/>
+    </Style>
+
+    <Style TargetType="{x:Type UI:HorizontalMarker}">
+        <Setter Property="Foreground" Value="{DynamicResource MainForeBrush}"/>
+        <Setter Property="Background" Value="{DynamicResource DropBackBrush}"/>
+        <Setter Property="FontSize" Value="{DynamicResource DropFontSize}"/>
+        <Setter Property="Spacing" Value="5"/>
+    </Style>
+
+    <Style TargetType="{x:Type UI:LabelTextBox}">
+        <Setter Property="Foreground" Value="{DynamicResource MainForeBrush}"/>
+        <Setter Property="Background" Value="{DynamicResource MainBackBrush}"/>
+        <Setter Property="BorderBrush" Value="{DynamicResource DropBackBrush}"/>
+        <Setter Property="FocusBrush" Value="{DynamicResource HighBackBrush}"/>
+        <Setter Property="FontSize" Value="{DynamicResource MainFontSize}"/>
+        <Setter Property="FontWeight" Value="Bold"/>
+    </Style>
+</ResourceDictionary>

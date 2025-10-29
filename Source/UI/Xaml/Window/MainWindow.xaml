@@ -1,0 +1,28 @@
+﻿<local:ScopedWindow
+    x:Class="StarRailDamage.Source.UI.Xaml.Window.MainWindow"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="clr-namespace:StarRailDamage.Source.UI.Control.Panel"
+    xmlns:Control="clr-namespace:StarRailDamage.Source.UI.Control"
+    xmlns:Page="clr-namespace:StarRailDamage.Source.UI.Xaml.Page"
+    Title="Star Rail Damage Calculator" Height="700" Width="1050"
+    WindowStartupLocation="CenterScreen" ResizeMode="CanMinimize">
+    <local:ScopedWindow.Background>
+        <ImageBrush ImageSource="{StaticResource Image_Backgroup}"/>
+    </local:ScopedWindow.Background>
+    <Grid>
+        <Control:ScopedTabControl>
+            <TabItem Header="首页">
+                <Frame>
+                    <Frame.Content>
+                        <Page:CombatSimulationPage/>
+                    </Frame.Content>
+                </Frame>
+            </TabItem>
+            <TabItem Header="白厄"/>
+            <TabItem Header="丹恒•腾荒"/>
+            <TabItem Header="刻律德菈"/>
+            <TabItem Header="星期日"/>
+        </Control:ScopedTabControl>
+    </Grid>
+</local:ScopedWindow>

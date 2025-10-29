@@ -1,0 +1,60 @@
+﻿<UserControl
+    x:Class="StarRailDamage.Source.UI.Xaml.View.HeadSculpture"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="clr-namespace:StarRailDamage.Source.UI.Xaml.View">
+    <UserControl.Template>
+        <ControlTemplate TargetType="{x:Type UserControl}">
+            <Border CornerRadius="10" Background="{Binding Background,RelativeSource={RelativeSource AncestorType={x:Type local:HeadSculpture}}}">
+                <Grid Width="100" Height="150">
+                    <Grid.Resources>
+                        <Style TargetType="{x:Type TextBlock}">
+                            <Setter Property="Foreground" Value="{Binding Foreground,RelativeSource={RelativeSource AncestorType={x:Type local:HeadSculpture}}}"/>
+                            <Setter Property="FontWeight" Value="{Binding FontWeight,RelativeSource={RelativeSource AncestorType={x:Type local:HeadSculpture}}}"/>
+                            <Setter Property="FontSize" Value="{Binding FontSize,RelativeSource={RelativeSource AncestorType={x:Type local:HeadSculpture}}}"/>
+                        </Style>
+                    </Grid.Resources>
+
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+
+                    <Image Grid.Row="0" Width="100" Height="100" Source="{Binding HeadImage,RelativeSource={RelativeSource AncestorType={x:Type local:HeadSculpture}}}">
+                        <Image.Style>
+                            <Style TargetType="{x:Type Image}">
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding HeadImage,RelativeSource={RelativeSource AncestorType={x:Type local:HeadSculpture}}}" Value="{x:Null}">
+                                        <Setter Property="Source" Value="{Binding DefaultHeadImage,RelativeSource={RelativeSource AncestorType={x:Type local:HeadSculpture}}}"/>
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </Image.Style>
+                        <Image.Clip>
+                            <RectangleGeometry Rect="0,0,100,100" RadiusX="10" RadiusY="10"/>
+                        </Image.Clip>
+                    </Image>
+
+                    <ItemsControl Grid.Row="2" ItemsSource="{Binding MarkItems,RelativeSource={RelativeSource AncestorType={x:Type local:HeadSculpture}}}">
+                        <ItemsControl.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <UniformGrid Rows="1" Width="80" Height="20"/>
+                            </ItemsPanelTemplate>
+                        </ItemsControl.ItemsPanel>
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <Image Width="20" Height="20" Source="{Binding}"/>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+
+                    <TextBlock Grid.Row="4" Width="80" Text="{Binding Text,RelativeSource={RelativeSource AncestorType={x:Type local:HeadSculpture}}}" TextTrimming="CharacterEllipsis" TextAlignment="Center" HorizontalAlignment="Center" Style="{StaticResource TextBlockToolTipStyle}"/>
+                </Grid>
+            </Border>
+        </ControlTemplate>
+    </UserControl.Template>
+</UserControl>

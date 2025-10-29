@@ -1,0 +1,21 @@
+﻿<ResourceDictionary
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:system="clr-namespace:System;assembly=netstandard">
+    <system:Double x:Key="DropFontSize">12</system:Double>
+    <system:Double x:Key="MainFontSize">15</system:Double>
+    <system:Double x:Key="HighFontSize">20</system:Double>
+    
+    <system:Double x:Key="BorderOpacity">0.95</system:Double>
+    
+    <SolidColorBrush x:Key="HighBackBrush" Color="#808080"/>
+    <SolidColorBrush x:Key="MainBackBrush" Color="#323232"/>
+    <SolidColorBrush x:Key="DropBackBrush" Color="#505050"/>
+    
+    <SolidColorBrush x:Key="MainForeBrush" Color="#FFFFFF"/>
+    
+    <SolidColorBrush x:Key="GoldenBrush" Color="#FAC864"/>
+    
+    <SolidColorBrush x:Key="PlusBrush" Color="#32FA32"/>
+    <SolidColorBrush x:Key="MinuBrush" Color="#FA3232"/>
+</ResourceDictionary>

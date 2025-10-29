@@ -1,0 +1,18 @@
+﻿<Button
+    x:Class="StarRailDamage.Source.UI.Control.ScopedButton"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="clr-namespace:StarRailDamage.Source.UI.Control">
+    <Button.Template>
+        <ControlTemplate TargetType="{x:Type Button}">
+            <Border x:Name="PART_Border" CornerRadius="{Binding CornerRadius,RelativeSource={RelativeSource AncestorType={x:Type local:ScopedButton}}}" Background="{TemplateBinding Background}">
+                <ContentPresenter Margin="{TemplateBinding Padding}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+            </Border>
+            <ControlTemplate.Triggers>
+                <Trigger Property="IsMouseOver" Value="true">
+                    <Setter Property="Background" TargetName="PART_Border" Value="{Binding FocusBrush,RelativeSource={RelativeSource AncestorType={x:Type local:ScopedButton}}}"/>
+                </Trigger>
+            </ControlTemplate.Triggers>
+        </ControlTemplate>
+    </Button.Template>
+</Button>

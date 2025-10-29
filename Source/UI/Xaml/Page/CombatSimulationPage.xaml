@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<local:ScopedPage
+    x:Class="StarRailDamage.Source.UI.Xaml.Page.CombatSimulationPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="clr-namespace:StarRailDamage.Source.UI.Control.Panel"
+    xmlns:Control="clr-namespace:StarRailDamage.Source.UI.Control"
+    xmlns:UI="clr-namespace:StarRailDamage.Source.UI.Xaml.View">
+    <Grid HorizontalAlignment="Center" VerticalAlignment="Center">
+        <UI:GainView/>
+    </Grid>
+</local:ScopedPage>

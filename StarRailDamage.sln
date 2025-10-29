@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.14.36603.0 d17.14
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StarRailDamage", "StarRailDamage.csproj", "{EDC52649-E4D2-41CF-BB66-023C74600636}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{EDC52649-E4D2-41CF-BB66-023C74600636}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EDC52649-E4D2-41CF-BB66-023C74600636}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EDC52649-E4D2-41CF-BB66-023C74600636}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EDC52649-E4D2-41CF-BB66-023C74600636}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {98DBC937-FBCF-40C2-BB32-C7DA0FF2514B}
+	EndGlobalSection
+EndGlobal

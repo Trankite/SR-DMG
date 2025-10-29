@@ -1,0 +1,138 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net8.0-windows</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <UseWPF>true</UseWPF>
+    <ApplicationIcon>Source\UI\Assets\Icon\Logo\Logo.ico</ApplicationIcon>
+    <NoWin32Manifest>true</NoWin32Manifest>
+    <LangVersion>preview</LangVersion>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="Source\UI\Assets\Icon\Common\Common_Icon_Attack.png" />
+    <None Remove="Source\UI\Assets\Icon\Common\Common_Icon_Break.png" />
+    <None Remove="Source\UI\Assets\Icon\Common\Common_Icon_Charging_Efficiency.png" />
+    <None Remove="Source\UI\Assets\Icon\Common\Common_Icon_Charging_Limit.png" />
+    <None Remove="Source\UI\Assets\Icon\Common\Common_Icon_Critical_Damage.png" />
+    <None Remove="Source\UI\Assets\Icon\Common\Common_Icon_Critical_Hit_Rate.png" />
+    <None Remove="Source\UI\Assets\Icon\Common\Common_Icon_Defense.png" />
+    <None Remove="Source\UI\Assets\Icon\Common\Common_Icon_Effect_Hit_Rate.png" />
+    <None Remove="Source\UI\Assets\Icon\Common\Common_Icon_Effect_Resistance.png" />
+    <None Remove="Source\UI\Assets\Icon\Common\Common_Icon_Health.png" />
+    <None Remove="Source\UI\Assets\Icon\Common\Common_Icon_Speed.png" />
+    <None Remove="Source\UI\Assets\Icon\Common\Common_Icon_Treatment.png" />
+    <None Remove="Source\UI\Assets\Icon\Common\Common_Icon_Unknown.png" />
+    <None Remove="Source\UI\Assets\Icon\Element\Element_Damage_Fire.png" />
+    <None Remove="Source\UI\Assets\Icon\Element\Element_Damage_Ice.png" />
+    <None Remove="Source\UI\Assets\Icon\Element\Element_Damage_Imaginary.png" />
+    <None Remove="Source\UI\Assets\Icon\Element\Element_Damage_Lightning.png" />
+    <None Remove="Source\UI\Assets\Icon\Element\Element_Damage_Physical.png" />
+    <None Remove="Source\UI\Assets\Icon\Element\Element_Damage_Quantum.png" />
+    <None Remove="Source\UI\Assets\Icon\Element\Element_Damage_Wind.png" />
+    <None Remove="Source\UI\Assets\Icon\Element\Element_Icon_Fire.png" />
+    <None Remove="Source\UI\Assets\Icon\Element\Element_Icon_Ice.png" />
+    <None Remove="Source\UI\Assets\Icon\Element\Element_Icon_Imaginary.png" />
+    <None Remove="Source\UI\Assets\Icon\Element\Element_Icon_Lightning.png" />
+    <None Remove="Source\UI\Assets\Icon\Element\Element_Icon_Physical.png" />
+    <None Remove="Source\UI\Assets\Icon\Element\Element_Icon_Quantum.png" />
+    <None Remove="Source\UI\Assets\Icon\Element\Element_Icon_Wind.png" />
+    <None Remove="Source\UI\Assets\Icon\Element\Element_Resistance_Fire.png" />
+    <None Remove="Source\UI\Assets\Icon\Element\Element_Resistance_Ice.png" />
+    <None Remove="Source\UI\Assets\Icon\Element\Element_Resistance_Imaginary.png" />
+    <None Remove="Source\UI\Assets\Icon\Element\Element_Resistance_Lightning.png" />
+    <None Remove="Source\UI\Assets\Icon\Element\Element_Resistance_Physical.png" />
+    <None Remove="Source\UI\Assets\Icon\Element\Element_Resistance_Quantum.png" />
+    <None Remove="Source\UI\Assets\Icon\Element\Element_Resistance_Wind.png" />
+    <None Remove="Source\UI\Assets\Icon\Logo\Image.png" />
+    <None Remove="Source\UI\Assets\Icon\Logo\Logo.ico" />
+    <None Remove="Source\UI\Assets\Icon\Normal\Normal_Icon_Delete.png" />
+    <None Remove="Source\UI\Assets\Icon\Normal\Normal_Icon_Modify.png" />
+    <None Remove="Source\UI\Assets\Icon\Normal\Normal_Icon_Selected.png" />
+    <None Remove="Source\UI\Assets\Icon\Normal\Normal_Icon_UnSelect.png" />
+    <None Remove="Source\UI\Assets\Icon\Occupation\Occupation_Icon_Abundance.png" />
+    <None Remove="Source\UI\Assets\Icon\Occupation\Occupation_Icon_Destruction.png" />
+    <None Remove="Source\UI\Assets\Icon\Occupation\Occupation_Icon_Erudition.png" />
+    <None Remove="Source\UI\Assets\Icon\Occupation\Occupation_Icon_Harmony.png" />
+    <None Remove="Source\UI\Assets\Icon\Occupation\Occupation_Icon_Memory.png" />
+    <None Remove="Source\UI\Assets\Icon\Occupation\Occupation_Icon_Nihility.png" />
+    <None Remove="Source\UI\Assets\Icon\Occupation\Occupation_Icon_Preservation.png" />
+    <None Remove="Source\UI\Assets\Icon\Occupation\Occupation_Icon_TheHunt.png" />
+    <None Remove="Source\UI\Assets\Wall\Backgroup.png" />
+    <None Remove="Source\UI\Assets\Wall\GoldenItem.png" />
+    <None Remove="Source\UI\Assets\Wall\Monster.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="Source\UI\Assets\Icon\Logo\Logo.ico" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="Source\UI\Assets\Icon\Logo\Image.png" />
+    <Resource Include="Source\UI\Assets\Icon\Logo\Logo.ico" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="Source\UI\Assets\Icon\Common\Common_Icon_Attack.png" />
+    <Resource Include="Source\UI\Assets\Icon\Common\Common_Icon_Break.png" />
+    <Resource Include="Source\UI\Assets\Icon\Common\Common_Icon_Charging_Efficiency.png" />
+    <Resource Include="Source\UI\Assets\Icon\Common\Common_Icon_Charging_Limit.png" />
+    <Resource Include="Source\UI\Assets\Icon\Common\Common_Icon_Critical_Damage.png" />
+    <Resource Include="Source\UI\Assets\Icon\Common\Common_Icon_Critical_Hit_Rate.png" />
+    <Resource Include="Source\UI\Assets\Icon\Common\Common_Icon_Defense.png" />
+    <Resource Include="Source\UI\Assets\Icon\Common\Common_Icon_Effect_Hit_Rate.png" />
+    <Resource Include="Source\UI\Assets\Icon\Common\Common_Icon_Effect_Resistance.png" />
+    <Resource Include="Source\UI\Assets\Icon\Common\Common_Icon_Health.png" />
+    <Resource Include="Source\UI\Assets\Icon\Common\Common_Icon_Speed.png" />
+    <Resource Include="Source\UI\Assets\Icon\Common\Common_Icon_Treatment.png" />
+    <Resource Include="Source\UI\Assets\Icon\Common\Common_Icon_Unknown.png" />
+    <Resource Include="Source\UI\Assets\Icon\Element\Element_Damage_Fire.png" />
+    <Resource Include="Source\UI\Assets\Icon\Element\Element_Damage_Ice.png" />
+    <Resource Include="Source\UI\Assets\Icon\Element\Element_Damage_Imaginary.png" />
+    <Resource Include="Source\UI\Assets\Icon\Element\Element_Damage_Lightning.png" />
+    <Resource Include="Source\UI\Assets\Icon\Element\Element_Damage_Physical.png" />
+    <Resource Include="Source\UI\Assets\Icon\Element\Element_Damage_Quantum.png" />
+    <Resource Include="Source\UI\Assets\Icon\Element\Element_Damage_Wind.png" />
+    <Resource Include="Source\UI\Assets\Icon\Element\Element_Icon_Fire.png" />
+    <Resource Include="Source\UI\Assets\Icon\Element\Element_Icon_Ice.png" />
+    <Resource Include="Source\UI\Assets\Icon\Element\Element_Icon_Imaginary.png" />
+    <Resource Include="Source\UI\Assets\Icon\Element\Element_Icon_Lightning.png" />
+    <Resource Include="Source\UI\Assets\Icon\Element\Element_Icon_Physical.png" />
+    <Resource Include="Source\UI\Assets\Icon\Element\Element_Icon_Quantum.png" />
+    <Resource Include="Source\UI\Assets\Icon\Element\Element_Icon_Wind.png" />
+    <Resource Include="Source\UI\Assets\Icon\Element\Element_Resistance_Fire.png" />
+    <Resource Include="Source\UI\Assets\Icon\Element\Element_Resistance_Ice.png" />
+    <Resource Include="Source\UI\Assets\Icon\Element\Element_Resistance_Imaginary.png" />
+    <Resource Include="Source\UI\Assets\Icon\Element\Element_Resistance_Lightning.png" />
+    <Resource Include="Source\UI\Assets\Icon\Element\Element_Resistance_Physical.png" />
+    <Resource Include="Source\UI\Assets\Icon\Element\Element_Resistance_Quantum.png" />
+    <Resource Include="Source\UI\Assets\Icon\Element\Element_Resistance_Wind.png" />
+    <Resource Include="Source\UI\Assets\Icon\Normal\Normal_Icon_Delete.png" />
+    <Resource Include="Source\UI\Assets\Icon\Normal\Normal_Icon_Modify.png" />
+    <Resource Include="Source\UI\Assets\Icon\Normal\Normal_Icon_Selected.png" />
+    <Resource Include="Source\UI\Assets\Icon\Normal\Normal_Icon_UnSelect.png" />
+    <Resource Include="Source\UI\Assets\Icon\Occupation\Occupation_Icon_Abundance.png" />
+    <Resource Include="Source\UI\Assets\Icon\Occupation\Occupation_Icon_Destruction.png" />
+    <Resource Include="Source\UI\Assets\Icon\Occupation\Occupation_Icon_Erudition.png" />
+    <Resource Include="Source\UI\Assets\Icon\Occupation\Occupation_Icon_Harmony.png" />
+    <Resource Include="Source\UI\Assets\Icon\Occupation\Occupation_Icon_Memory.png" />
+    <Resource Include="Source\UI\Assets\Icon\Occupation\Occupation_Icon_Nihility.png" />
+    <Resource Include="Source\UI\Assets\Icon\Occupation\Occupation_Icon_Preservation.png" />
+    <Resource Include="Source\UI\Assets\Icon\Occupation\Occupation_Icon_TheHunt.png" />
+    <Resource Include="Source\UI\Assets\Wall\Backgroup.png" />
+    <Resource Include="Source\UI\Assets\Wall\GoldenItem.png" />
+    <Resource Include="Source\UI\Assets\Wall\Monster.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Source\Core\" />
+    <Folder Include="Source\Model\" />
+    <Folder Include="Source\Service\" />
+    <Folder Include="Source\UI\Language\zh-cn\" />
+    <Folder Include="Source\Web\Request\" />
+    <Folder Include="Source\Web\Response\" />
+  </ItemGroup>
+
+</Project>

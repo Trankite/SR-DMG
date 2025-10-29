@@ -1,0 +1,71 @@
+﻿<Slider
+    x:Class="StarRailDamage.Source.UI.Control.ScopedSlider"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="clr-namespace:StarRailDamage.Source.UI.Control">
+    <Slider.Template>
+        <ControlTemplate TargetType="{x:Type Slider}">
+            <Grid>
+                <Grid.Resources>
+                    <Style TargetType="TextBlock">
+                        <Setter Property="Foreground" Value="{Binding Foreground,RelativeSource={RelativeSource AncestorType={x:Type Slider}}}"/>
+                        <Setter Property="FontSize" Value="{Binding FontSize,RelativeSource={RelativeSource AncestorType={x:Type Slider}}}"/>
+                        <Setter Property="FontWeight" Value="{Binding FontWeight,RelativeSource={RelativeSource AncestorType={x:Type Slider}}}"/>
+                        <Setter Property="VerticalAlignment" Value="Center"/>
+                    </Style>
+                </Grid.Resources>
+                
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="{Binding Padding.Left,RelativeSource={RelativeSource AncestorType={x:Type Slider}}}"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="{Binding Padding.Right,RelativeSource={RelativeSource AncestorType={x:Type Slider}}}"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+
+                <TextBlock Grid.Column="0" Text="{Binding Text,RelativeSource={RelativeSource AncestorType={x:Type local:ScopedSlider}}}"/>
+
+                <Border Grid.Column="2" Height="5" CornerRadius="5" Background="{TemplateBinding Background}"/>
+                <Track Grid.Column="2" x:Name="PART_Track">
+                    <Track.Resources>
+                        <Style TargetType="{x:Type RepeatButton}">
+                            <Setter Property="Height" Value="5"/>
+                            <Setter Property="Template">
+                                <Setter.Value>
+                                    <ControlTemplate TargetType="RepeatButton">
+                                        <Border x:Name="Border" Background="Transparent" CornerRadius="5">
+                                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                        </Border>
+                                        <ControlTemplate.Triggers>
+                                            <Trigger Property="IsPressed" Value="True">
+                                                <Setter TargetName="Border" Property="Background" Value="{Binding FocusBrush,RelativeSource={RelativeSource AncestorType={x:Type local:ScopedSlider}}}"/>
+                                            </Trigger>
+                                        </ControlTemplate.Triggers>
+                                    </ControlTemplate>
+                                </Setter.Value>
+                            </Setter>
+                        </Style>
+                    </Track.Resources>
+
+                    <Track.DecreaseRepeatButton>
+                        <RepeatButton Command="{x:Static Slider.DecreaseLarge}"/>
+                    </Track.DecreaseRepeatButton>
+                    <Track.IncreaseRepeatButton>
+                        <RepeatButton Command="{x:Static Slider.IncreaseLarge}"/>
+                    </Track.IncreaseRepeatButton>
+                    <Track.Thumb>
+                        <Thumb Focusable="False" VerticalAlignment="Center">
+                            <Thumb.Template>
+                                <ControlTemplate TargetType="{x:Type Thumb}">
+                                    <Ellipse Width="15" Height="15" Fill="{Binding FocusBrush,RelativeSource={RelativeSource AncestorType={x:Type local:ScopedSlider}}}"/>
+                                </ControlTemplate>
+                            </Thumb.Template>
+                        </Thumb>
+                    </Track.Thumb>
+                </Track>
+
+                <TextBlock Grid.Column="4" Text="{Binding Value,ElementName=PART_Track,StringFormat={}{0:F0}}"/>
+            </Grid>
+        </ControlTemplate>
+    </Slider.Template>
+</Slider>

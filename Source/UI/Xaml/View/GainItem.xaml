@@ -1,0 +1,96 @@
+﻿<UserControl
+    x:Class="StarRailDamage.Source.UI.Xaml.View.GainItem"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="clr-namespace:StarRailDamage.Source.UI.Xaml.View"
+    xmlns:Panel="clr-namespace:StarRailDamage.Source.UI.Control.Panel"
+    xmlns:Control="clr-namespace:StarRailDamage.Source.UI.Control">
+    <UserControl.Template>
+        <ControlTemplate TargetType="{x:Type UserControl}">
+            <Border CornerRadius="20" Background="{TemplateBinding Background}">
+                <Grid Width="300" Margin="15,10,15,10" VerticalAlignment="Center">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
+                    
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+
+                    <Image Grid.Column="0" Grid.Row="0" Grid.RowSpan="2" Width="50" Height="50" Margin="0,0,5,0" Source="{Binding Icon,RelativeSource={RelativeSource AncestorType={x:Type local:GainItem}}}"/>
+
+                    <TextBlock Grid.Column="1" Grid.Row="0" Margin="5,0,5,0" TextTrimming="CharacterEllipsis" VerticalAlignment="Center">
+                        <TextBlock.Style>
+                            <Style TargetType="{x:Type TextBlock}">
+                                <Setter Property="Text" Value="{Binding Title,RelativeSource={RelativeSource AncestorType={x:Type local:GainItem}}}"/>
+                                <Setter Property="Foreground" Value="{Binding TitleBrush,RelativeSource={RelativeSource AncestorType={x:Type local:GainItem}}}"/>
+                                <Setter Property="FontSize" Value="{Binding TitleFontSize,RelativeSource={RelativeSource AncestorType={x:Type local:GainItem}}}"/>
+                                <Setter Property="FontWeight" Value="Bold"/>
+                            </Style>
+                        </TextBlock.Style>
+                    </TextBlock>
+
+                    <StackPanel Grid.Column="2" Grid.Row="0" Orientation="Horizontal">
+                        <StackPanel.Resources>
+                            <Style TargetType="{x:Type Control:ScopedButton}">
+                                <Setter Property="Background" Value="Transparent"/>
+                                <Setter Property="FocusBrush" Value="{Binding FocusBrush,RelativeSource={RelativeSource AncestorType={x:Type local:GainItem}}}"/>
+                                <Setter Property="Width" Value="20"/>
+                                <Setter Property="Height" Value="20"/>
+                            </Style>
+                        </StackPanel.Resources>
+
+                        <Control:ScopedButton Click="ModifyItem">
+                            <Image Source="{StaticResource Image_Modify}"/>
+                        </Control:ScopedButton>
+                        <Control:ScopedButton Click="DeleteItem">
+                            <Image Source="{StaticResource Image_Delete}"/>
+                        </Control:ScopedButton>
+                        <Control:ScopedCheckBox Flag="{Binding Flag,RelativeSource={RelativeSource AncestorType={x:Type local:GainItem}},Mode=TwoWay}"/>
+                    </StackPanel>
+
+                    <Panel:ScopedScrollViewer Grid.Column="1" Grid.Row="1" Grid.ColumnSpan="2" Margin="5,0,0,0" VerticalAlignment="Center" HorizontalScrollBarVisibility="Hidden" VerticalScrollBarVisibility="Disabled">
+                        <Panel:ScopedStackPanel Orientation="Horizontal" Spacing="5">
+                            <local:HorizontalMarker Items="{Binding MarkItems,RelativeSource={RelativeSource AncestorType={x:Type local:GainItem}}}" Spacing="5"/>
+                            <local:HorizontalMarker Items="{Binding TempItems,RelativeSource={RelativeSource AncestorType={x:Type local:GainItem}}}" Spacing="5"/>
+                        </Panel:ScopedStackPanel>
+                    </Panel:ScopedScrollViewer>
+
+                    <TextBlock Grid.Column="0" Grid.Row="3" Grid.ColumnSpan="3" Margin="5" TextWrapping="Wrap">
+                        <TextBlock.Style>
+                            <Style TargetType="{x:Type TextBlock}">
+                                <Setter Property="Text" Value="{Binding Text,RelativeSource={RelativeSource AncestorType={x:Type local:GainItem}}}"/>
+                                <Setter Property="Foreground" Value="{Binding Foreground,RelativeSource={RelativeSource AncestorType={x:Type local:GainItem}}}"/>
+                                <Setter Property="FontSize" Value="{Binding FontSize,RelativeSource={RelativeSource AncestorType={x:Type local:GainItem}}}"/>
+                                <Setter Property="FontWeight" Value="{Binding FontWeight,RelativeSource={RelativeSource AncestorType={x:Type local:GainItem}}}"/>
+                            </Style>
+                        </TextBlock.Style>
+                    </TextBlock>
+
+                    <Panel:ScopedScrollViewer  Grid.Column="0" Grid.Row="4" Grid.ColumnSpan="3" HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Disabled">
+                        <Panel:ScopedStackPanel Orientation="Vertical" Spacing="5">
+                            <Panel:ScopedStackPanel.Resources>
+                                <Style TargetType="{x:Type Control:ScopedSlider}" BasedOn="{StaticResource {x:Type Control:ScopedSlider}}">
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding Maximum,RelativeSource={RelativeSource Self}}" Value="0">
+                                            <Setter Property="Visibility" Value="Collapsed"/>
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </Panel:ScopedStackPanel.Resources>
+                            
+                            <Control:ScopedSlider Value="{Binding Level,RelativeSource={RelativeSource AncestorType={x:Type local:GainItem}},Mode=TwoWay}" Maximum="{Binding MaxLevel,RelativeSource={RelativeSource AncestorType={x:Type local:GainItem}}}"/>
+                            <Control:ScopedSlider Value="{Binding Layer,RelativeSource={RelativeSource AncestorType={x:Type local:GainItem}},Mode=TwoWay}" Maximum="{Binding MaxLayer,RelativeSource={RelativeSource AncestorType={x:Type local:GainItem}}}"/>
+                        </Panel:ScopedStackPanel>
+                    </Panel:ScopedScrollViewer>
+                </Grid>
+            </Border>
+        </ControlTemplate>
+    </UserControl.Template>
+</UserControl>
