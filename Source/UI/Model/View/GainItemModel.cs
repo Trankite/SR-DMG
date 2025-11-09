@@ -2,7 +2,7 @@
 using System.Collections.ObjectModel;
 using System.Windows.Media;
 
-namespace StarRailDamage.Source.UI.Model
+namespace StarRailDamage.Source.UI.Model.View
 {
     public class GainItemModel : NotifyPropertyChangedFactory
     {

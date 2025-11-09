@@ -1,46 +1,57 @@
-﻿using System.Linq.Expressions;
-using System.Reflection;
+﻿using StarRailDamage.Source.Extension;
+using System.Linq.Expressions;
 
 namespace StarRailDamage.Source.Factory.PropertyExpression
 {
     internal class PropertyExpressionFactory
     {
-        public static PropertyExpression<TSender, TValue> GetPropertyExpression<TSender, TValue>(params PropertyInfo[] properties)
+        public static PropertyExpression<TSource, TProperty> GetPropertyExpression<TSource, TProperty>(Expression<Func<TSource, TProperty>> expression)
         {
-            Type SenderType = typeof(TSender);
-            ParameterExpression KeyParameter = Expression.Parameter(SenderType);
-            ParameterExpression ValueParameter = Expression.Parameter(typeof(TValue));
-            MemberExpression PropertyAccess = Expression.Property(KeyParameter, properties.First());
-            for (int i = 1; i < properties.Length; i++)
-            {
-                PropertyAccess = Expression.Property(PropertyAccess, properties[i]);
-            }
             return new()
             {
-                GetValue = Expression.Lambda<Func<TSender, TValue>>(PropertyAccess, KeyParameter).Compile(),
-                SetValue = Expression.Lambda<Action<TSender, TValue>>(Expression.Assign(PropertyAccess, ValueParameter), KeyParameter, ValueParameter).Compile()
+                GetValue = expression.Compile(),
+                SetValue = CreatePropertySetter(expression),
+                NullCheck = CreateNullCheckExpression(expression)
             };
         }
 
-        public static PropertyInfo[] FindProperty(Type type, params string[] propertyNames)
+        public static Func<TSource, bool> CreateNullCheckExpression<TSource, TProperty>(Expression<Func<TSource, TProperty>> expression)
         {
-            PropertyInfo? CurrentProperty;
-            if (propertyNames.Length == 1)
+            ParameterExpression Parameter = expression.Parameters.First();
+            Expression NullCheckExpression = BuildNullCheck(expression.Body.MemberExpression().ThrowIfNull());
+            return Expression.Lambda<Func<TSource, bool>>(NullCheckExpression, Parameter).Compile();
+        }
+
+        private static Expression BuildNullCheck(MemberExpression memberExpression)
+        {
+            if (memberExpression.Expression is MemberExpression ParentMemberExpression)
             {
-                propertyNames = propertyNames.First().Split('.');
+                return Expression.OrElse(BuildNullCheck(ParentMemberExpression), Expression.Equal(ParentMemberExpression, Expression.Constant(null)));
             }
-            PropertyInfo[] Properties = new PropertyInfo[propertyNames.Length];
-            for (int i = 0; i < propertyNames.Length; i++)
+            else if (memberExpression.Expression is not ParameterExpression)
             {
-                CurrentProperty = type.GetProperty(propertyNames[i]);
-                ArgumentNullException.ThrowIfNull(CurrentProperty);
-                Properties[i] = CurrentProperty;
-                if (i < propertyNames.Length - 1)
-                {
-                    type = CurrentProperty.PropertyType;
-                }
+                return Expression.Equal(memberExpression, Expression.Constant(null));
             }
-            return Properties;
+            return Expression.Constant(false);
+        }
+
+        public static Action<TSource, TProperty?> CreatePropertySetter<TSource, TProperty>(Expression<Func<TSource, TProperty>> expression)
+        {
+            ParameterExpression SourceParameter = Expression.Parameter(typeof(TSource));
+            ParameterExpression PropertyParameter = Expression.Parameter(typeof(TProperty));
+            MemberExpression MemberExpression = expression.Body.MemberExpression().ThrowIfNull();
+            MemberExpression PropertyAccess = BuildPropertyAccess(SourceParameter, MemberExpression);
+            BinaryExpression AssignExpression = Expression.Assign(PropertyAccess, PropertyParameter);
+            return Expression.Lambda<Action<TSource, TProperty?>>(AssignExpression, SourceParameter, PropertyParameter).Compile();
+        }
+
+        private static MemberExpression BuildPropertyAccess(ParameterExpression parameterExpression, MemberExpression memberExpression)
+        {
+            if (memberExpression.Expression is MemberExpression parentMember)
+            {
+                return Expression.MakeMemberAccess(BuildPropertyAccess(parameterExpression, parentMember), memberExpression.Member);
+            }
+            return Expression.MakeMemberAccess(parameterExpression, memberExpression.Member);
         }
     }
 }

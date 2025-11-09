@@ -1,4 +1,4 @@
-﻿using System.Linq.Expressions;
+﻿using System.IO;
 
 namespace StarRailDamage.Source.Extension
 {
@@ -44,28 +44,40 @@ namespace StarRailDamage.Source.Extension
             return (index = value.LastIndexOf(separator)) != -1;
         }
 
-        public static string FullName<T>(this string value, Expression<Func<T>> expression)
+        public static char? Index(this string value, int index)
         {
-            return GetFullName(value, expression.Body as MemberExpression);
+            return index > 0 && index < value.Length ? value[index] : null;
         }
 
-        public static string FullName<T1, T2>(this string value, Expression<Func<T1, T2>> expression)
+        public static string Format(this string value, params object[] args)
         {
-            return GetFullName(value, expression.Body as MemberExpression);
-        }
-
-        private static string GetFullName(string value, MemberExpression? memberExpression)
-        {
-            ArgumentNullException.ThrowIfNull(memberExpression);
-            Stack<string> PathStack = new();
-            if (!string.IsNullOrEmpty(value)) PathStack.Push(value);
-            while (memberExpression != null)
+            try
             {
-                PathStack.Push(memberExpression.Member.Name);
-                if (memberExpression.Expression is not MemberExpression ParentExpression) break;
-                memberExpression = ParentExpression;
+                return string.Format(value, args);
             }
-            return string.Join('.', PathStack);
+            catch
+            {
+                return value;
+            }
+        }
+
+        public static string BuildFolder(this string value)
+        {
+            if (!string.IsNullOrEmpty(value))
+            {
+                Directory.CreateDirectory(value);
+            }
+            return value;
+        }
+
+        public static string BuildFile(this string value)
+        {
+            string? FolderPath = Path.GetDirectoryName(value);
+            if (!string.IsNullOrEmpty(FolderPath))
+            {
+                Directory.CreateDirectory(FolderPath);
+            }
+            return value;
         }
     }
 }

@@ -1,5 +1,8 @@
-﻿using StarRailDamage.Source.UI.Factory.PropertyBinding;
-using StarRailDamage.Source.UI.Model;
+﻿using StarRailDamage.Source.Core.Language;
+using StarRailDamage.Source.Extension.Language;
+using StarRailDamage.Source.Model.Text;
+using StarRailDamage.Source.UI.Factory.PropertyBinding;
+using StarRailDamage.Source.UI.Model.View;
 using System.Collections.ObjectModel;
 using System.Windows;
 using System.Windows.Controls;
@@ -9,6 +12,10 @@ namespace StarRailDamage.Source.UI.Xaml.View
 {
     public partial class GainItem : UserControl
     {
+        public static TextBinding LevelText { get; } = FixedText.CharacterSkillLevel.Binding();
+
+        public static TextBinding LayerText { get; } = FixedText.CharacterSkillLayer.Binding();
+
         private static readonly PropertyBindingFactory<GainItem> BindingFactory = new();
 
         public GainItem()

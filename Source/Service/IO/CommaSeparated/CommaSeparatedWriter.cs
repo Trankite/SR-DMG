@@ -1,0 +1,58 @@
+﻿using StarRailDamage.Source.Extension;
+using StarRailDamage.Source.Service.IO.FileStream;
+using System.IO;
+using System.Text;
+
+namespace StarRailDamage.Source.Service.IO.CommaSeparated
+{
+    internal class CommaSeparatedWriter : FileWriter
+    {
+        private bool _Separated = true;
+
+        public CommaSeparatedWriter(string filePath) : base(filePath) { }
+
+        public CommaSeparatedWriter(Stream stream) : base(stream) { }
+
+        public CommaSeparatedWriter(StreamWriter writer) : base(writer) { }
+
+        public void Write(string value)
+        {
+            _Writer?.Write(EscapeInput(value));
+            _Separated = false;
+        }
+
+        public void WriteLine(params string[] values)
+        {
+            values.Foreach(Write);
+            _Writer?.WriteLine();
+            _Separated = true;
+        }
+
+        private string EscapeInput(string value)
+        {
+            return (_Separated ? string.Empty : ',') + Escape(value);
+        }
+
+        private static string Escape(string value)
+        {
+            StringBuilder Builder = new();
+            for (int i = 0; i < value.Length; i++)
+            {
+                if (value[i] is ',' or '\n' or '\r' or '"')
+                {
+                    while (i < value.Length)
+                    {
+                        if (value[i] is '"')
+                        {
+                            Builder.Append('"');
+                        }
+                        Builder.Append(value[i++]);
+                    }
+                    return '"' + Builder.ToString() + '"';
+                }
+                else Builder.Append(value[i]);
+            }
+            return Builder.ToString();
+        }
+    }
+}

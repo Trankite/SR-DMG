@@ -1,14 +1,15 @@
-﻿using System.Configuration;
-using System.Data;
+﻿using StarRailDamage.Source.Service.Language;
 using System.Windows;
 
 namespace StarRailDamage
 {
-    /// <summary>
-    /// Interaction logic for App.xaml
-    /// </summary>
     public partial class App : Application
     {
+        protected override void OnStartup(StartupEventArgs e)
+        {
+            base.OnStartup(e);
+            LanguageReader.Load();
+            if (e.Args.Length == 0) return;
+        }
     }
-
 }

@@ -7,14 +7,14 @@
     xmlns:Control="clr-namespace:StarRailDamage.Source.UI.Control">
     <UserControl.Template>
         <ControlTemplate TargetType="{x:Type UserControl}">
-            <Border CornerRadius="20" Background="{TemplateBinding Background}">
+            <Border CornerRadius="10" Background="{TemplateBinding Background}">
                 <Grid Width="300" Margin="15,10,15,10" VerticalAlignment="Center">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="Auto"/>
                         <ColumnDefinition Width="*"/>
                         <ColumnDefinition Width="Auto"/>
                     </Grid.ColumnDefinitions>
-                    
+
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto"/>
                         <RowDefinition Height="Auto"/>
@@ -73,22 +73,20 @@
                         </TextBlock.Style>
                     </TextBlock>
 
-                    <Panel:ScopedScrollViewer  Grid.Column="0" Grid.Row="4" Grid.ColumnSpan="3" HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Disabled">
-                        <Panel:ScopedStackPanel Orientation="Vertical" Spacing="5">
-                            <Panel:ScopedStackPanel.Resources>
-                                <Style TargetType="{x:Type Control:ScopedSlider}" BasedOn="{StaticResource {x:Type Control:ScopedSlider}}">
-                                    <Style.Triggers>
-                                        <DataTrigger Binding="{Binding Maximum,RelativeSource={RelativeSource Self}}" Value="0">
-                                            <Setter Property="Visibility" Value="Collapsed"/>
-                                        </DataTrigger>
-                                    </Style.Triggers>
-                                </Style>
-                            </Panel:ScopedStackPanel.Resources>
-                            
-                            <Control:ScopedSlider Value="{Binding Level,RelativeSource={RelativeSource AncestorType={x:Type local:GainItem}},Mode=TwoWay}" Maximum="{Binding MaxLevel,RelativeSource={RelativeSource AncestorType={x:Type local:GainItem}}}"/>
-                            <Control:ScopedSlider Value="{Binding Layer,RelativeSource={RelativeSource AncestorType={x:Type local:GainItem}},Mode=TwoWay}" Maximum="{Binding MaxLayer,RelativeSource={RelativeSource AncestorType={x:Type local:GainItem}}}"/>
-                        </Panel:ScopedStackPanel>
-                    </Panel:ScopedScrollViewer>
+                    <Panel:ScopedStackPanel Grid.Column="0" Grid.Row="4" Grid.ColumnSpan="3" Orientation="Vertical" Spacing="5">
+                        <Panel:ScopedStackPanel.Resources>
+                            <Style TargetType="{x:Type Control:ScopedSlider}" BasedOn="{StaticResource {x:Type Control:ScopedSlider}}">
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding Maximum,RelativeSource={RelativeSource Self}}" Value="0">
+                                        <Setter Property="Visibility" Value="Collapsed"/>
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </Panel:ScopedStackPanel.Resources>
+
+                        <Control:ScopedSlider Text="{Binding LevelText.Text,RelativeSource={RelativeSource AncestorType={x:Type local:GainItem}}}" Value="{Binding Level,RelativeSource={RelativeSource AncestorType={x:Type local:GainItem}},Mode=TwoWay}" Maximum="{Binding MaxLevel,RelativeSource={RelativeSource AncestorType={x:Type local:GainItem}}}"/>
+                        <Control:ScopedSlider Text="{Binding LayerText.Text,RelativeSource={RelativeSource AncestorType={x:Type local:GainItem}}}" Value="{Binding Layer,RelativeSource={RelativeSource AncestorType={x:Type local:GainItem}},Mode=TwoWay}" Maximum="{Binding MaxLayer,RelativeSource={RelativeSource AncestorType={x:Type local:GainItem}}}"/>
+                    </Panel:ScopedStackPanel>
                 </Grid>
             </Border>
         </ControlTemplate>

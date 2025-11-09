@@ -6,7 +6,154 @@
     xmlns:local="clr-namespace:StarRailDamage.Source.UI.Control.Panel"
     xmlns:Control="clr-namespace:StarRailDamage.Source.UI.Control"
     xmlns:UI="clr-namespace:StarRailDamage.Source.UI.Xaml.View">
-    <Grid HorizontalAlignment="Center" VerticalAlignment="Center">
-        <UI:GainView/>
+    <Grid>
+        <Grid.Background>
+            <ImageBrush Stretch="Uniform"/>
+        </Grid.Background>
+        
+        <Grid.Resources>
+            <Style TargetType="{x:Type UI:LabelTextBox}" BasedOn="{StaticResource {x:Type UI:LabelTextBox}}">
+                <Setter Property="HorizontalAlignment" Value="Center"/>
+                <Setter Property="VerticalAlignment" Value="Center"/>
+            </Style>
+        </Grid.Resources>
+
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+
+        <Grid Grid.Column="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="10"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="10"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="10"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+
+            <Border Grid.Column="0" Grid.Row="0" Grid.ColumnSpan="2" CornerRadius="10" Background="{StaticResource DropBackBrush}">
+                <local:ScopedStackPanel Orientation="Horizontal" Height="150" Margin="10" Spacing="10">
+                    <UI:HeadSculpture/>
+                    <UI:GainView/>
+                </local:ScopedStackPanel>
+            </Border>
+
+            <UI:LabelTextBox Grid.Column="0" Grid.Row="2"/>
+            <UI:LabelTextBox Grid.Column="0" Grid.Row="3"/>
+            <UI:LabelTextBox Grid.Column="0" Grid.Row="4"/>
+            <UI:LabelTextBox Grid.Column="0" Grid.Row="5"/>
+
+            <UI:LabelTextBox Grid.Column="0" Grid.Row="7"/>
+            <UI:LabelTextBox Grid.Column="0" Grid.Row="8"/>
+            <UI:LabelTextBox Grid.Column="0" Grid.Row="9"/>
+            <UI:LabelTextBox Grid.Column="0" Grid.Row="10"/>
+            <UI:LabelTextBox Grid.Column="0" Grid.Row="11"/>
+
+            <UI:LabelTextBox Grid.Column="0" Grid.Row="13"/>
+            <UI:LabelTextBox Grid.Column="0" Grid.Row="14"/>
+            <UI:LabelTextBox Grid.Column="0" Grid.Row="15"/>
+
+            <UI:LabelTextBox Grid.Column="1" Grid.Row="2"/>
+            <UI:LabelTextBox Grid.Column="1" Grid.Row="3"/>
+            <UI:LabelTextBox Grid.Column="1" Grid.Row="4"/>
+            <UI:LabelTextBox Grid.Column="1" Grid.Row="5"/>
+
+            <UI:LabelTextBox Grid.Column="1" Grid.Row="7"/>
+            <UI:LabelTextBox Grid.Column="1" Grid.Row="8"/>
+            <UI:LabelTextBox Grid.Column="1" Grid.Row="9"/>
+            <UI:LabelTextBox Grid.Column="1" Grid.Row="10"/>
+            <UI:LabelTextBox Grid.Column="1" Grid.Row="11"/>
+
+            <UI:LabelTextBox Grid.Column="1" Grid.Row="13"/>
+            <UI:LabelTextBox Grid.Column="1" Grid.Row="14"/>
+            <UI:LabelTextBox Grid.Column="1" Grid.Row="15"/>
+        </Grid>
+
+        <Grid Grid.Column="3">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+
+            <Border Grid.Column="0" Grid.Row="0" CornerRadius="10" Background="{StaticResource DropBackBrush}">
+                <Grid Margin="10">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="10"/>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="10"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    
+                    <UI:HeadSculpture Grid.Column="0"/>
+                    
+                    <UI:GainView Grid.Column="2"/>
+                    
+                    <Border Grid.Column="4" CornerRadius="10" Background="{StaticResource MainBackBrush}">
+                        <UniformGrid Columns="1" Margin="10">
+                            <Control:ScopedCheckBox/>
+                            <Control:ScopedCheckBox/>
+                            <Control:ScopedCheckBox/>
+                            <Control:ScopedCheckBox/>
+                        </UniformGrid>
+                    </Border>
+                </Grid>
+            </Border>
+
+            <Border Grid.Column="0" Grid.Row="3" CornerRadius="15" Background="{StaticResource DropBackBrush}">
+                <Grid Margin="10">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="10"/>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="10"/>
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
+
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+
+                    <UI:HeadSculpture Grid.Column="0" Grid.Row="0" Grid.RowSpan="4"/>
+
+                    <UI:LabelTextBox Grid.Column="2" Grid.Row="0"/>
+                    <UI:LabelTextBox Grid.Column="2" Grid.Row="1"/>
+                    <UI:LabelTextBox Grid.Column="2" Grid.Row="2"/>
+
+                    <UI:LabelTextBox Grid.Column="4" Grid.Row="0"/>
+                    <UI:LabelTextBox Grid.Column="4" Grid.Row="1"/>
+                    <UI:LabelTextBox Grid.Column="4" Grid.Row="2"/>
+
+                    <Border Grid.Column="2" Grid.Row="3" Grid.ColumnSpan="3" Height="30" CornerRadius="15" Background="{StaticResource MainBackBrush}">
+                        <Control:ScopedSlider Minimum="1" Maximum="5" Margin="10,0,10,0"/>
+                    </Border>
+                </Grid>
+            </Border>
+        </Grid>
     </Grid>
 </local:ScopedPage>

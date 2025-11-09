@@ -127,9 +127,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Source\Core\" />
-    <Folder Include="Source\Model\" />
-    <Folder Include="Source\Service\" />
     <Folder Include="Source\UI\Language\zh-cn\" />
     <Folder Include="Source\Web\Request\" />
     <Folder Include="Source\Web\Response\" />

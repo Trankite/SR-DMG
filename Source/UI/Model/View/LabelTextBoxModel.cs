@@ -1,7 +1,7 @@
 ﻿using StarRailDamage.Source.UI.Factory.NotifyPropertyChanged;
 using System.Windows.Media;
 
-namespace StarRailDamage.Source.UI.Model
+namespace StarRailDamage.Source.UI.Model.View
 {
     public class LabelTextBoxModel : NotifyPropertyChangedFactory
     {

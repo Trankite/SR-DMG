@@ -7,13 +7,12 @@
         <Setter Property="Opacity" Value="{DynamicResource BorderOpacity}"/>
     </Style>
 
+    <Style TargetType="{x:Type ToolTip}">
+        <Setter Property="Foreground" Value="{DynamicResource MainForeBrush}"/>
+        <Setter Property="Background" Value="{DynamicResource DropBackBrush}"/>
+    </Style>
+
     <Style x:Key="TextBlockToolTipStyle" TargetType="{x:Type TextBlock}">
-        <Style.Resources>
-            <Style TargetType="{x:Type ToolTip}">
-                <Setter Property="Foreground" Value="{DynamicResource MainForeBrush}"/>
-                <Setter Property="Background" Value="{DynamicResource DropBackBrush}"/>
-            </Style>
-        </Style.Resources>
         <Setter Property="ToolTipService.ToolTip">
             <Setter.Value>
                 <Binding Path="Text" RelativeSource="{RelativeSource Self}"/>
@@ -34,7 +33,7 @@
 
     <Style TargetType="{x:Type Control:ScopedCheckBox}">
         <Setter Property="Foreground" Value="{DynamicResource MainForeBrush}"/>
-        <Setter Property="FontSize" Value="{DynamicResource MainFontSize}"/>
+        <Setter Property="FontSize" Value="{DynamicResource DropFontSize}"/>
         <Setter Property="Height" Value="20"/>
     </Style>
 
@@ -70,6 +69,10 @@
         <Setter Property="TitleBrush" Value="{DynamicResource GoldenBrush}"/>
         <Setter Property="TitleFontSize" Value="{DynamicResource MainFontSize}"/>
         <Setter Property="FontSize" Value="{DynamicResource DropFontSize}"/>
+    </Style>
+
+    <Style TargetType="{x:Type UI:GainView}">
+        <Setter Property="Background" Value="{DynamicResource DropBackBrush}"/>
     </Style>
 
     <Style TargetType="{x:Type UI:HeadSculpture}">

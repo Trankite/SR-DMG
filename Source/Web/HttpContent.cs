@@ -2,7 +2,7 @@
 
 namespace StarRailDamage.Source.Web
 {
-    public class HttpContent : IDisposable
+    public sealed class HttpContent : IDisposable
     {
         public required HttpClient HttpClient { get; init; }
 
@@ -18,7 +18,6 @@ namespace StarRailDamage.Source.Web
         {
             Request?.Dispose();
             Response?.Dispose();
-            GC.SuppressFinalize(this);
         }
     }
 }

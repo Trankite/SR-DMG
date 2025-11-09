@@ -2,12 +2,11 @@
 using StarRailDamage.Source.Factory.PropertyExpression;
 using System.ComponentModel;
 using System.Linq.Expressions;
-using System.Reflection;
 using System.Windows;
 
 namespace StarRailDamage.Source.UI.Factory.PropertyBinding
 {
-    public class PropertyBindingFactory<TSender> : IPropertyBindingFactory where TSender : DependencyObject
+    public class PropertyBindingFactory<TSender> : IPropertyBindingFactory<TSender> where TSender : DependencyObject
     {
         private readonly Dictionary<string, IPropertyBinding<TSender>> ModelHandlers = [];
 
@@ -15,34 +14,37 @@ namespace StarRailDamage.Source.UI.Factory.PropertyBinding
 
         private readonly Dictionary<DependencyObject, PropertyChangedEventHandler> NotifyHandlers = [];
 
-        public DependencyProperty DependBinding<TProperty>(Expression<Func<TSender, TProperty?>> modelExpression, Expression<Func<TSender, TProperty?>> dependExpression, PropertyBindingMode? bindingMode = null, object? defaultValue = null, PropertyChangedCallback? propertyChangedCallback = null, CoerceValueCallback? coerceValueCallback = null, ValidateValueCallback? validateValueCallback = null)
+        public DependencyProperty DependBinding<TValue>(Expression<Func<TSender, TValue?>> modelExpression, Expression<Func<TSender, TValue?>> dependExpression, PropertyBindingMode bindingMode = PropertyBindingMode.OneWay, object? defaultValue = null, PropertyChangedCallback? propertyChangedCallback = null, CoerceValueCallback? coerceValueCallback = null, ValidateValueCallback? validateValueCallback = null)
         {
-            string ModelProperty = string.Empty.FullName(modelExpression);
-            string DependProperty = string.Empty.FullName(dependExpression);
-            AddBinding<TProperty>(ModelProperty, DependProperty, bindingMode);
-            return DependBinding<TProperty>(DependProperty, defaultValue, propertyChangedCallback, coerceValueCallback, validateValueCallback);
+            return DependBinding<TValue>(AddBinding(modelExpression, dependExpression, bindingMode), defaultValue, propertyChangedCallback, coerceValueCallback, validateValueCallback);
         }
 
-        public void AddBinding<TValue>(string modelProperty, string dependProperty, PropertyBindingMode? bindingMode = null)
+        public string AddBinding<TValue>(Expression<Func<TSender, TValue>> modelProperty, Expression<Func<TSender, TValue>> dependProperty, PropertyBindingMode bindingMode)
         {
-            PropertyInfo[] ModelPropertyInfo = PropertyExpressionFactory.FindProperty(typeof(TSender), modelProperty);
-            PropertyExpression<TSender, TValue> ModelExpression = PropertyExpressionFactory.GetPropertyExpression<TSender, TValue>(ModelPropertyInfo);
-            PropertyInfo[] DependPropertyInfo = PropertyExpressionFactory.FindProperty(typeof(TSender), dependProperty);
-            PropertyExpression<TSender, TValue> DependExpression = PropertyExpressionFactory.GetPropertyExpression<TSender, TValue>(DependPropertyInfo);
+            PropertyExpression<TSender, TValue> ModelExpression = PropertyExpressionFactory.GetPropertyExpression(modelProperty);
+            PropertyExpression<TSender, TValue> DependExpression = PropertyExpressionFactory.GetPropertyExpression(dependProperty);
+            void DependToModel(TSender sender)
+            {
+                if (DependExpression.TryGetValue(sender, out TValue? value)) ModelExpression.TrySetValue(sender, value);
+            }
+            void ModelToDepend(TSender sender)
+            {
+                if (ModelExpression.TryGetValue(sender, out TValue? value)) DependExpression.TrySetValue(sender, value);
+            }
             PropertyBinding<TSender> PropertyBinding = new()
             {
-                BindingMode = bindingMode ?? PropertyBindingMode.OneWay,
-                DependHanlder = (sender) => ModelExpression.SetValue(sender, DependExpression.GetValue(sender)),
-                ModelHanlder = (sender) => DependExpression.SetValue(sender, ModelExpression.GetValue(sender))
+                BindingMode = bindingMode,
+                DependHanlder = DependToModel,
+                ModelHanlder = ModelToDepend
             };
-            ModelHandlers[modelProperty.FirstSplit('.').Last()] = PropertyBinding;
-            DependHandlers[dependProperty] = PropertyBinding;
+            ModelHandlers[modelProperty.FullName().FirstSplit('.').Last()] = PropertyBinding;
+            return dependProperty.FullName().Invoke(x => DependHandlers[x] = PropertyBinding);
         }
 
-        public DependencyProperty DependBinding<TProperty>(string name, object? defaultValue = null, PropertyChangedCallback? propertyChangedCallback = null, CoerceValueCallback? coerceValueCallback = null, ValidateValueCallback? validateValueCallback = null)
+        public DependencyProperty DependBinding<TValue>(string name, object? defaultValue = null, PropertyChangedCallback? propertyChangedCallback = null, CoerceValueCallback? coerceValueCallback = null, ValidateValueCallback? validateValueCallback = null)
         {
             propertyChangedCallback += DependChangedCallback;
-            return DependProperty<TProperty>(name, defaultValue, propertyChangedCallback, coerceValueCallback, validateValueCallback);
+            return DependProperty<TValue>(name, defaultValue, propertyChangedCallback, coerceValueCallback, validateValueCallback);
         }
 
         private void DependChangedCallback(DependencyObject d, DependencyPropertyChangedEventArgs e)
@@ -71,8 +73,7 @@ namespace StarRailDamage.Source.UI.Factory.PropertyBinding
             if (e.NewValue is not INotifyPropertyChanged NewNotifyProperty) return;
             void PropertyChanged(object? sender, PropertyChangedEventArgs e)
             {
-                ArgumentNullException.ThrowIfNull(e.PropertyName);
-                ModelHandlers.GetValueOrDefault(e.PropertyName)?.ModelToDepend(Sender);
+                ModelHandlers.GetValueOrDefault(e.PropertyName.ThrowIfNull())?.ModelToDepend(Sender);
             }
             NotifyHandlers[d] = PropertyChanged;
             NewNotifyProperty.PropertyChanged += PropertyChanged;

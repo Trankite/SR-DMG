@@ -2,10 +2,36 @@
     x:Class="StarRailDamage.Source.UI.Xaml.View.GainView"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:local="clr-namespace:StarRailDamage.Source.UI.Xaml.View">
+    xmlns:local="clr-namespace:StarRailDamage.Source.UI.Xaml.View"
+    xmlns:Panel="clr-namespace:StarRailDamage.Source.UI.Control.Panel"
+    xmlns:Control="clr-namespace:StarRailDamage.Source.UI.Control">
     <UserControl.Template>
         <ControlTemplate TargetType="{x:Type UserControl}">
-            <local:GainItem Model="{Binding Select,RelativeSource={RelativeSource AncestorType={x:Type local:GainView}}}"/>
+            <Grid>
+                <Panel:ScopedScrollViewer HorizontalScrollBarVisibility="Hidden" VerticalScrollBarVisibility="Hidden">
+                    <local:GainItem Model="{Binding Select,RelativeSource={RelativeSource AncestorType={x:Type local:GainView}}}" MouseLeftButtonUp="ItemDropdown"/>
+                </Panel:ScopedScrollViewer>
+
+                <Popup IsOpen="{Binding Dropdown,RelativeSource={RelativeSource AncestorType={x:Type local:GainView}},Mode=TwoWay}" AllowsTransparency="True" StaysOpen="False" Placement="Center" PopupAnimation="Fade">
+                    <Border CornerRadius="20" Background="{Binding Background,RelativeSource={RelativeSource AncestorType={x:Type local:GainView}}}">
+                        <Panel:ScopedScrollViewer Height="300" Margin="5" HorizontalScrollBarVisibility="Hidden" VerticalScrollBarVisibility="Hidden">
+                            <ItemsControl Margin="10" ItemsSource="{Binding Items,RelativeSource={RelativeSource AncestorType={x:Type local:GainView}}}">
+                                <ItemsControl.ItemsPanel>
+                                    <ItemsPanelTemplate>
+                                        <Panel:ScopedStackPanel Orientation="Vertical" Spacing="5"/>
+                                    </ItemsPanelTemplate>
+                                </ItemsControl.ItemsPanel>
+
+                                <ItemsControl.ItemTemplate>
+                                    <DataTemplate>
+                                        <local:GainItem Model="{Binding}" MouseLeftButtonUp="ItemSelected"/>
+                                    </DataTemplate>
+                                </ItemsControl.ItemTemplate>
+                            </ItemsControl>
+                        </Panel:ScopedScrollViewer>
+                    </Border>
+                </Popup>
+            </Grid>
         </ControlTemplate>
     </UserControl.Template>
 </UserControl>

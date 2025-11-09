@@ -1,7 +1,8 @@
-﻿using StarRailDamage.Source.UI.Model;
+﻿using StarRailDamage.Source.UI.Model.View;
 using System.Collections.ObjectModel;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Input;
 
 namespace StarRailDamage.Source.UI.Xaml.View
 {
@@ -10,15 +11,17 @@ namespace StarRailDamage.Source.UI.Xaml.View
         public GainView()
         {
             InitializeComponent();
-            Select = new()
-            {
-                Title = "默认的名称",
-                Text = "默认的描述",
-                MarkItems = ["默认标签1", "默认标签2", "默认标签3"],
-                TempItems = ["默认标签4", "默认标签5", "默认标签6"],
-                MaxLevel = 10,
-                MaxLayer = 15
-            };
+        }
+
+        private void ItemDropdown(object sender, MouseButtonEventArgs e)
+        {
+            if (Items?.Count > 0) Dropdown = true;
+        }
+
+        private void ItemSelected(object sender, MouseButtonEventArgs e)
+        {
+            Dropdown = false;
+            Select = ((GainItem)sender).Model;
         }
 
         public GainViewModel Model
@@ -44,5 +47,13 @@ namespace StarRailDamage.Source.UI.Xaml.View
         }
 
         private static readonly DependencyProperty SelectProperty = DependencyProperty.Register(nameof(Select), typeof(GainItemModel), typeof(GainView));
+
+        public bool Dropdown
+        {
+            get => (bool)GetValue(DropdownProperty);
+            set => SetValue(DropdownProperty, value);
+        }
+
+        private static readonly DependencyProperty DropdownProperty = DependencyProperty.Register(nameof(Dropdown), typeof(bool), typeof(GainView));
     }
 }
