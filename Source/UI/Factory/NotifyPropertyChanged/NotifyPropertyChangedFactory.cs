@@ -36,15 +36,14 @@ namespace StarRailDamage.Source.UI.Factory.NotifyPropertyChanged
             {
                 field.PropertyChanged -= Handlers.GetValueOrDefault(propertyName);
             }
-            if (value != null)
+            if (!Equals(null, field = value))
             {
                 void PropertyChanged(object? sender, PropertyChangedEventArgs e)
                 {
                     OnPropertyChanged($"{propertyName}.{e.PropertyName}");
                 }
                 Handlers[propertyName] = PropertyChanged;
-                value.PropertyChanged += PropertyChanged;
-                field = value;
+                field.PropertyChanged += PropertyChanged;
             }
             return true;
         }

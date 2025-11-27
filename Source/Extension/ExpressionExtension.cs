@@ -2,7 +2,7 @@
 
 namespace StarRailDamage.Source.Extension
 {
-    internal static class ExpressionExtension
+    public static class ExpressionExtension
     {
         public static MemberExpression? MemberExpression(this Expression expression)
         {

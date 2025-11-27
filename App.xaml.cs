@@ -9,7 +9,10 @@ namespace StarRailDamage
         {
             base.OnStartup(e);
             LanguageReader.Load();
-            if (e.Args.Length == 0) return;
+            if (e.Args.Length > 0)
+            {
+
+            }
         }
     }
 }

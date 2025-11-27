@@ -13,6 +13,10 @@ namespace StarRailDamage.Source.UI.Xaml.View
         public LabelTextBox()
         {
             InitializeComponent();
+            Unloaded += (sender, e) =>
+            {
+                BindingFactory.ClearModelBinding(Model);
+            };
         }
 
         public LabelTextBoxModel Model
@@ -21,7 +25,7 @@ namespace StarRailDamage.Source.UI.Xaml.View
             set => SetValue(ModelProperty, value);
         }
 
-        private static readonly DependencyProperty ModelProperty = BindingFactory.ModelBinding<LabelTextBoxModel>(nameof(Model));
+        public static readonly DependencyProperty ModelProperty = BindingFactory.ModelBinding(x => x.Model);
 
         public ImageSource Icon
         {
@@ -29,7 +33,7 @@ namespace StarRailDamage.Source.UI.Xaml.View
             set => SetValue(IconProperty, value);
         }
 
-        private static readonly DependencyProperty IconProperty = BindingFactory.DependBinding(x => x.Model.Icon, x => x.Icon);
+        public static readonly DependencyProperty IconProperty = BindingFactory.DependBinding(x => x.Model.Icon, x => x.Icon);
 
         public string Title
         {
@@ -37,7 +41,7 @@ namespace StarRailDamage.Source.UI.Xaml.View
             set => SetValue(TitleProperty, value);
         }
 
-        private static readonly DependencyProperty TitleProperty = BindingFactory.DependBinding(x => x.Model.Title, x => x.Title);
+        public static readonly DependencyProperty TitleProperty = BindingFactory.DependBinding(x => x.Model.Title, x => x.Title);
 
         public string Text
         {
@@ -45,7 +49,7 @@ namespace StarRailDamage.Source.UI.Xaml.View
             set => SetValue(TextProperty, value);
         }
 
-        private static readonly DependencyProperty TextProperty = BindingFactory.DependBinding(x => x.Model.Text, x => x.Text);
+        public static readonly DependencyProperty TextProperty = BindingFactory.DependBinding(x => x.Model.Text, x => x.Text);
 
         public string Unit
         {
@@ -53,7 +57,7 @@ namespace StarRailDamage.Source.UI.Xaml.View
             set => SetValue(UnitProperty, value);
         }
 
-        private static readonly DependencyProperty UnitProperty = BindingFactory.DependBinding(x => x.Model.Unit, x => x.Unit);
+        public static readonly DependencyProperty UnitProperty = BindingFactory.DependBinding(x => x.Model.Unit, x => x.Unit);
 
         public bool ReadOnly
         {
@@ -61,7 +65,7 @@ namespace StarRailDamage.Source.UI.Xaml.View
             set => SetValue(ReadOnlyProperty, value);
         }
 
-        private static readonly DependencyProperty ReadOnlyProperty = BindingFactory.DependProperty<bool>(nameof(ReadOnly));
+        public static readonly DependencyProperty ReadOnlyProperty = BindingFactory.DependProperty(x => x.ReadOnly);
 
         public SolidColorBrush FocusBrush
         {
@@ -69,6 +73,6 @@ namespace StarRailDamage.Source.UI.Xaml.View
             set => SetValue(FocusBrushProperty, value);
         }
 
-        private static readonly DependencyProperty FocusBrushProperty = BindingFactory.DependProperty<SolidColorBrush>(nameof(FocusBrush));
+        public static readonly DependencyProperty FocusBrushProperty = BindingFactory.DependProperty(x => x.FocusBrush);
     }
 }

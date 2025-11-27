@@ -9,7 +9,7 @@
         <ControlTemplate TargetType="{x:Type UserControl}">
             <Grid>
                 <Panel:ScopedScrollViewer HorizontalScrollBarVisibility="Hidden" VerticalScrollBarVisibility="Hidden">
-                    <local:GainItem Model="{Binding Select,RelativeSource={RelativeSource AncestorType={x:Type local:GainView}}}" MouseLeftButtonUp="ItemDropdown"/>
+                    <local:GainItem Model="{Binding Select,RelativeSource={RelativeSource AncestorType={x:Type local:GainView}}}" MouseLeftButtonUp="GainItemDropdown"/>
                 </Panel:ScopedScrollViewer>
 
                 <Popup IsOpen="{Binding Dropdown,RelativeSource={RelativeSource AncestorType={x:Type local:GainView}},Mode=TwoWay}" AllowsTransparency="True" StaysOpen="False" Placement="Center" PopupAnimation="Fade">
@@ -24,7 +24,7 @@
 
                                 <ItemsControl.ItemTemplate>
                                     <DataTemplate>
-                                        <local:GainItem Model="{Binding}" MouseLeftButtonUp="ItemSelected"/>
+                                        <local:GainItem Model="{Binding}" MouseLeftButtonUp="GainItemSelected" DeleteClick="GainItemDelete"/>
                                     </DataTemplate>
                                 </ItemsControl.ItemTemplate>
                             </ItemsControl>

@@ -6,7 +6,7 @@ using System.Resources;
 
 namespace StarRailDamage.Source.Service.IO.AppManifest
 {
-    internal static class AppManifestFinder
+    public static class AppManifestFinder
     {
         private static readonly string[] ApplicationResources;
 

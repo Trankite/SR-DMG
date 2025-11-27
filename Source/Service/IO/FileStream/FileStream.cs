@@ -10,11 +10,11 @@ namespace StarRailDamage.Source.Service.IO.FileStream
         {
             try
             {
-                return true.Invoke(streamReader = new StreamReader(stream));
+                return true.With(streamReader = new StreamReader(stream));
             }
             catch
             {
-                return false.Invoke(streamReader = null);
+                return false.With(streamReader = null);
             }
         }
 
@@ -22,11 +22,11 @@ namespace StarRailDamage.Source.Service.IO.FileStream
         {
             try
             {
-                return true.Invoke(streamReader = new StreamReader(filePath));
+                return true.With(streamReader = new StreamReader(filePath));
             }
             catch
             {
-                return false.Invoke(streamReader = null);
+                return false.With(streamReader = null);
             }
         }
 
@@ -34,11 +34,11 @@ namespace StarRailDamage.Source.Service.IO.FileStream
         {
             try
             {
-                return true.Invoke(streamWriter = new StreamWriter(stream));
+                return true.With(streamWriter = new StreamWriter(stream));
             }
             catch
             {
-                return false.Invoke(streamWriter = null);
+                return false.With(streamWriter = null);
             }
         }
 
@@ -46,11 +46,11 @@ namespace StarRailDamage.Source.Service.IO.FileStream
         {
             try
             {
-                return true.Invoke(streamWriter = new StreamWriter(filePath));
+                return true.With(streamWriter = new StreamWriter(filePath));
             }
             catch
             {
-                return false.Invoke(streamWriter = null);
+                return false.With(streamWriter = null);
             }
         }
     }

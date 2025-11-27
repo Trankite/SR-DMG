@@ -2,7 +2,7 @@
 
 namespace StarRailDamage.Source.Extension
 {
-    internal static class CollectionExtension
+    public static class CollectionExtension
     {
         public static T? Index<T>(this T[]? value, int index)
         {
@@ -18,18 +18,18 @@ namespace StarRailDamage.Source.Extension
         {
             if (value != null && index > 0 && index < value.Length)
             {
-                return true.Invoke(result = value[index]);
+                return true.With(result = value[index]);
             }
-            return false.Invoke(result = default);
+            return false.With(result = default);
         }
 
         public static bool IndexTry<T>(this IList<T>? value, int index, [NotNullWhen(true)] out T? result)
         {
             if (value != null && index > 0 && index < value.Count)
             {
-                return true.Invoke(result = value[index]);
+                return true.With(result = value[index]);
             }
-            return false.Invoke(result = default);
+            return false.With(result = default);
         }
 
         public static void Foreach<T>(this T[]? values, Action<T> action)

@@ -2,17 +2,31 @@
 
 namespace StarRailDamage.Source.Factory.PropertyExpression
 {
-    internal class PropertyExpression<TSender, TValue> : IPropertyExpression<TSender, TValue>
+    public class PropertyExpression<TSender, TValue> : IPropertyExpression<TSender, TValue>
     {
-        public required Func<TSender, TValue> GetValue { get; init; }
+        public Func<TSender, TValue> GetValue { get; init; }
 
-        public required Action<TSender, TValue?> SetValue { get; init; }
+        public Action<TSender, TValue?> SetValue { get; init; }
 
-        public required Func<TSender, bool> NullCheck { get; init; }
+        public Func<TSender, bool> NullCheck { get; init; }
+
+        public PropertyExpression(Func<TSender, TValue> getter, Action<TSender, TValue?> setter)
+        {
+            GetValue = getter;
+            SetValue = setter;
+            NullCheck = (sender) => false;
+        }
+
+        public PropertyExpression(Func<TSender, TValue> getter, Action<TSender, TValue?> setter, Func<TSender, bool> nullCheck)
+        {
+            GetValue = getter;
+            SetValue = setter;
+            NullCheck = nullCheck;
+        }
 
         public bool TryGetValue(TSender sender, out TValue? value)
         {
-            return NullCheck(sender) ? false.Invoke(value = default) : true.Invoke(value = GetValue(sender));
+            return NullCheck(sender) ? false.With(value = default) : true.With(value = GetValue(sender));
         }
 
         public bool TrySetValue(TSender sender, TValue? value)

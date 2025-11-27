@@ -3,19 +3,14 @@ using System.Linq.Expressions;
 
 namespace StarRailDamage.Source.Factory.PropertyExpression
 {
-    internal class PropertyExpressionFactory
+    public class PropertyExpressionFactory<TSource, TProperty> : IPropertyExpressionFactory<TSource, TProperty>
     {
-        public static PropertyExpression<TSource, TProperty> GetPropertyExpression<TSource, TProperty>(Expression<Func<TSource, TProperty>> expression)
+        public PropertyExpression<TSource, TProperty> GetPropertyExpression(Expression<Func<TSource, TProperty>> expression)
         {
-            return new()
-            {
-                GetValue = expression.Compile(),
-                SetValue = CreatePropertySetter(expression),
-                NullCheck = CreateNullCheckExpression(expression)
-            };
+            return new(expression.Compile(), GetPropertySetter(expression), GetNullCheck(expression));
         }
 
-        public static Func<TSource, bool> CreateNullCheckExpression<TSource, TProperty>(Expression<Func<TSource, TProperty>> expression)
+        public static Func<TSource, bool> GetNullCheck(Expression<Func<TSource, TProperty>> expression)
         {
             ParameterExpression Parameter = expression.Parameters.First();
             Expression NullCheckExpression = BuildNullCheck(expression.Body.MemberExpression().ThrowIfNull());
@@ -35,7 +30,7 @@ namespace StarRailDamage.Source.Factory.PropertyExpression
             return Expression.Constant(false);
         }
 
-        public static Action<TSource, TProperty?> CreatePropertySetter<TSource, TProperty>(Expression<Func<TSource, TProperty>> expression)
+        public static Action<TSource, TProperty?> GetPropertySetter(Expression<Func<TSource, TProperty>> expression)
         {
             ParameterExpression SourceParameter = Expression.Parameter(typeof(TSource));
             ParameterExpression PropertyParameter = Expression.Parameter(typeof(TProperty));

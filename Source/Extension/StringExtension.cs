@@ -1,8 +1,9 @@
-﻿using System.IO;
+﻿using System.Diagnostics.CodeAnalysis;
+using System.IO;
 
 namespace StarRailDamage.Source.Extension
 {
-    internal static class StringExtension
+    public static class StringExtension
     {
         public static string[] FirstSplit(this string value, char separator)
         {
@@ -47,6 +48,11 @@ namespace StarRailDamage.Source.Extension
         public static char? Index(this string value, int index)
         {
             return index > 0 && index < value.Length ? value[index] : null;
+        }
+
+        public static bool IndexTry(this string value, int index, [NotNullWhen(true)] out char? result)
+        {
+            return index > 0 && index < value.Length ? true.With(result = value[index]) : false.With(result = null);
         }
 
         public static string Format(this string value, params object[] args)

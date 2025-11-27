@@ -3,7 +3,7 @@ using System.IO;
 
 namespace StarRailDamage.Source.Service.IO.Manifest
 {
-    internal static class ManifestStream
+    public static class ManifestStream
     {
         public static Stream GetStream(string path)
         {

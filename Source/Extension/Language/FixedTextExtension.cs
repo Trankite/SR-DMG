@@ -3,7 +3,7 @@ using StarRailDamage.Source.Model.Text;
 
 namespace StarRailDamage.Source.Extension.Language
 {
-    internal static class FixedTextExtension
+    public static class FixedTextExtension
     {
         public static readonly Dictionary<FixedText, TextBinding> FixedTextMap = [];
 

@@ -17,7 +17,7 @@ namespace StarRailDamage.Source.UI.Control
             set => SetValue(CornerRadiusProperty, value);
         }
 
-        private static readonly DependencyProperty CornerRadiusProperty = DependencyProperty.Register(nameof(CornerRadius), typeof(double), typeof(ScopedTextBox));
+        public static readonly DependencyProperty CornerRadiusProperty = DependencyProperty.Register(nameof(CornerRadius), typeof(double), typeof(ScopedTextBox));
 
         public SolidColorBrush FocusBrush
         {
@@ -25,6 +25,6 @@ namespace StarRailDamage.Source.UI.Control
             set => SetValue(FocusBrushProperty, value);
         }
 
-        private static readonly DependencyProperty FocusBrushProperty = DependencyProperty.Register(nameof(FocusBrush), typeof(SolidColorBrush), typeof(ScopedTextBox));
+        public static readonly DependencyProperty FocusBrushProperty = DependencyProperty.Register(nameof(FocusBrush), typeof(SolidColorBrush), typeof(ScopedTextBox));
     }
 }

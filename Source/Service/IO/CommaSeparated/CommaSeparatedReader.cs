@@ -5,7 +5,7 @@ using System.IO;
 
 namespace StarRailDamage.Source.Service.IO.CommaSeparated
 {
-    internal class CommaSeparatedReader : FileReader, IEnumerable<string[]?>
+    public class CommaSeparatedReader : FileReader, IEnumerable<string[]?>
     {
         public CommaSeparatedReader(string filePath) : base(filePath) { }
 

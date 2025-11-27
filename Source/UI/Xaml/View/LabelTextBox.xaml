@@ -21,7 +21,6 @@
                             <Setter Property="Foreground" Value="{Binding Foreground,RelativeSource={RelativeSource AncestorType={x:Type local:LabelTextBox}}}"/>
                             <Setter Property="FontSize" Value="{Binding FontSize,RelativeSource={RelativeSource AncestorType={x:Type local:LabelTextBox}}}"/>
                             <Setter Property="FontWeight" Value="{Binding FontWeight,RelativeSource={RelativeSource AncestorType={x:Type local:LabelTextBox}}}"/>
-                            <Setter Property="TextTrimming" Value="CharacterEllipsis"/>
                             <Setter Property="VerticalAlignment" Value="Center"/>
                         </Style>
                         
@@ -39,11 +38,11 @@
 
                     <Image Grid.Column="0" Width="25" Height="25" Source="{Binding Icon,RelativeSource={RelativeSource AncestorType={x:Type local:LabelTextBox}}}" VerticalAlignment="Center"/>
 
-                    <TextBlock Grid.Column="1" MaxWidth="50" Text="{Binding Title,RelativeSource={RelativeSource AncestorType={x:Type local:LabelTextBox}}}" Style="{StaticResource TextBlockToolTipStyle}"/>
+                    <TextBlock Grid.Column="1" MaxWidth="50" Text="{Binding Title,RelativeSource={RelativeSource AncestorType={x:Type local:LabelTextBox}}}"/>
 
                     <Control:ScopedTextBox Grid.Column="3" Width="80" Text="{Binding Text,RelativeSource={RelativeSource AncestorType={x:Type local:LabelTextBox}},Mode=TwoWay}" IsReadOnly="{Binding ReadOnly,RelativeSource={RelativeSource AncestorType={x:Type local:LabelTextBox}}}" TextAlignment="Right"/>
 
-                    <TextBlock Grid.Column="4" Width="25" Text="{Binding Unit,RelativeSource={RelativeSource AncestorType={x:Type local:LabelTextBox}}}" Style="{StaticResource TextBlockToolTipStyle}" TextAlignment="Center"/>
+                    <TextBlock Grid.Column="4" Width="25" Text="{Binding Unit,RelativeSource={RelativeSource AncestorType={x:Type local:LabelTextBox}}}" TextAlignment="Center"/>
                 </Grid>
             </Border>
         </ControlTemplate>

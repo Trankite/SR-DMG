@@ -13,15 +13,20 @@ namespace StarRailDamage.Source.UI.Xaml.View
             InitializeComponent();
         }
 
-        private void ItemDropdown(object sender, MouseButtonEventArgs e)
+        private void GainItemDropdown(object sender, MouseButtonEventArgs e)
         {
             if (Items?.Count > 0) Dropdown = true;
         }
 
-        private void ItemSelected(object sender, MouseButtonEventArgs e)
+        private void GainItemSelected(object sender, MouseButtonEventArgs e)
         {
             Dropdown = false;
             Select = ((GainItem)sender).Model;
+        }
+
+        private void GainItemDelete(object sender, RoutedEventArgs e)
+        {
+            Items.Remove(((GainItem)sender).Model);
         }
 
         public GainViewModel Model
@@ -30,7 +35,7 @@ namespace StarRailDamage.Source.UI.Xaml.View
             set => SetValue(ModelProperty, value);
         }
 
-        private static readonly DependencyProperty ModelProperty = DependencyProperty.Register(nameof(Model), typeof(GainViewModel), typeof(GainView));
+        public static readonly DependencyProperty ModelProperty = DependencyProperty.Register(nameof(Model), typeof(GainViewModel), typeof(GainView));
 
         public ObservableCollection<GainItemModel> Items
         {
@@ -38,7 +43,7 @@ namespace StarRailDamage.Source.UI.Xaml.View
             set => SetValue(ItemsProperty, value);
         }
 
-        private static readonly DependencyProperty ItemsProperty = DependencyProperty.Register(nameof(Items), typeof(ObservableCollection<GainItemModel>), typeof(GainView));
+        public static readonly DependencyProperty ItemsProperty = DependencyProperty.Register(nameof(Items), typeof(ObservableCollection<GainItemModel>), typeof(GainView));
 
         public GainItemModel Select
         {
@@ -46,7 +51,7 @@ namespace StarRailDamage.Source.UI.Xaml.View
             set => SetValue(SelectProperty, value);
         }
 
-        private static readonly DependencyProperty SelectProperty = DependencyProperty.Register(nameof(Select), typeof(GainItemModel), typeof(GainView));
+        public static readonly DependencyProperty SelectProperty = DependencyProperty.Register(nameof(Select), typeof(GainItemModel), typeof(GainView));
 
         public bool Dropdown
         {
@@ -54,6 +59,6 @@ namespace StarRailDamage.Source.UI.Xaml.View
             set => SetValue(DropdownProperty, value);
         }
 
-        private static readonly DependencyProperty DropdownProperty = DependencyProperty.Register(nameof(Dropdown), typeof(bool), typeof(GainView));
+        public static readonly DependencyProperty DropdownProperty = DependencyProperty.Register(nameof(Dropdown), typeof(bool), typeof(GainView));
     }
 }

@@ -18,7 +18,7 @@ namespace StarRailDamage.Source.UI.Control
             set => SetValue(FlagProperty, value);
         }
 
-        private static readonly DependencyProperty FlagProperty = DependencyProperty.Register(nameof(Flag), typeof(bool), typeof(ScopedCheckBox));
+        public static readonly DependencyProperty FlagProperty = DependencyProperty.Register(nameof(Flag), typeof(bool), typeof(ScopedCheckBox));
 
         public string Text
         {
@@ -26,7 +26,7 @@ namespace StarRailDamage.Source.UI.Control
             set => SetValue(TextProperty, value);
         }
 
-        private static readonly DependencyProperty TextProperty = DependencyProperty.Register(nameof(Text), typeof(string), typeof(ScopedCheckBox), new PropertyMetadata(OnTextCharged));
+        public static readonly DependencyProperty TextProperty = DependencyProperty.Register(nameof(Text), typeof(string), typeof(ScopedCheckBox), new PropertyMetadata(OnTextCharged));
 
         private static void OnTextCharged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {

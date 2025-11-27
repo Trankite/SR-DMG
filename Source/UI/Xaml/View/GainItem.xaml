@@ -46,10 +46,10 @@
                             </Style>
                         </StackPanel.Resources>
 
-                        <Control:ScopedButton Click="ModifyItem">
+                        <Control:ScopedButton Click="ModifyItemClick">
                             <Image Source="{StaticResource Image_Modify}"/>
                         </Control:ScopedButton>
-                        <Control:ScopedButton Click="DeleteItem">
+                        <Control:ScopedButton Click="DeleteItemClick">
                             <Image Source="{StaticResource Image_Delete}"/>
                         </Control:ScopedButton>
                         <Control:ScopedCheckBox Flag="{Binding Flag,RelativeSource={RelativeSource AncestorType={x:Type local:GainItem}},Mode=TwoWay}"/>
@@ -73,20 +73,19 @@
                         </TextBlock.Style>
                     </TextBlock>
 
-                    <Panel:ScopedStackPanel Grid.Column="0" Grid.Row="4" Grid.ColumnSpan="3" Orientation="Vertical" Spacing="5">
-                        <Panel:ScopedStackPanel.Resources>
-                            <Style TargetType="{x:Type Control:ScopedSlider}" BasedOn="{StaticResource {x:Type Control:ScopedSlider}}">
-                                <Style.Triggers>
-                                    <DataTrigger Binding="{Binding Maximum,RelativeSource={RelativeSource Self}}" Value="0">
-                                        <Setter Property="Visibility" Value="Collapsed"/>
-                                    </DataTrigger>
-                                </Style.Triggers>
-                            </Style>
-                        </Panel:ScopedStackPanel.Resources>
+                    <ItemsControl Grid.Column="0" Grid.Row="4" Grid.ColumnSpan="3" ItemsSource="{Binding SliderItems,RelativeSource={RelativeSource AncestorType={x:Type local:GainItem}}}">
+                        <ItemsControl.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <Panel:ScopedStackPanel Orientation="Vertical" Spacing="5"/>
+                            </ItemsPanelTemplate>
+                        </ItemsControl.ItemsPanel>
 
-                        <Control:ScopedSlider Text="{Binding LevelText.Text,RelativeSource={RelativeSource AncestorType={x:Type local:GainItem}}}" Value="{Binding Level,RelativeSource={RelativeSource AncestorType={x:Type local:GainItem}},Mode=TwoWay}" Maximum="{Binding MaxLevel,RelativeSource={RelativeSource AncestorType={x:Type local:GainItem}}}"/>
-                        <Control:ScopedSlider Text="{Binding LayerText.Text,RelativeSource={RelativeSource AncestorType={x:Type local:GainItem}}}" Value="{Binding Layer,RelativeSource={RelativeSource AncestorType={x:Type local:GainItem}},Mode=TwoWay}" Maximum="{Binding MaxLayer,RelativeSource={RelativeSource AncestorType={x:Type local:GainItem}}}"/>
-                    </Panel:ScopedStackPanel>
+                        <ItemsControl.ItemTemplate>
+                            <ItemContainerTemplate>
+                                <Control:ScopedSlider Title="{Binding Title}" Value="{Binding Value,Mode=TwoWay}" Minimum="{Binding Minimun}" Maximum="{Binding Maximum}"/>
+                            </ItemContainerTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
                 </Grid>
             </Border>
         </ControlTemplate>

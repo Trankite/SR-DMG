@@ -12,24 +12,20 @@ namespace StarRailDamage.Source.UI.Factory.PropertyBinding
 
         private readonly Dictionary<string, IPropertyBinding<TSender>> DependHandlers = [];
 
-        private readonly Dictionary<DependencyObject, PropertyChangedEventHandler> NotifyHandlers = [];
+        private readonly Dictionary<INotifyPropertyChanged, PropertyChangedEventHandler> NotifyHandlers = [];
 
-        public DependencyProperty DependBinding<TValue>(Expression<Func<TSender, TValue?>> modelExpression, Expression<Func<TSender, TValue?>> dependExpression, PropertyBindingMode bindingMode = PropertyBindingMode.OneWay, object? defaultValue = null, PropertyChangedCallback? propertyChangedCallback = null, CoerceValueCallback? coerceValueCallback = null, ValidateValueCallback? validateValueCallback = null)
+        public string AddBinding<TProperty>(Expression<Func<TSender, TProperty>> modelProperty, Expression<Func<TSender, TProperty>> dependProperty, PropertyBindingMode bindingMode = PropertyBindingMode.OneWay)
         {
-            return DependBinding<TValue>(AddBinding(modelExpression, dependExpression, bindingMode), defaultValue, propertyChangedCallback, coerceValueCallback, validateValueCallback);
-        }
-
-        public string AddBinding<TValue>(Expression<Func<TSender, TValue>> modelProperty, Expression<Func<TSender, TValue>> dependProperty, PropertyBindingMode bindingMode)
-        {
-            PropertyExpression<TSender, TValue> ModelExpression = PropertyExpressionFactory.GetPropertyExpression(modelProperty);
-            PropertyExpression<TSender, TValue> DependExpression = PropertyExpressionFactory.GetPropertyExpression(dependProperty);
+            PropertyExpressionFactory<TSender, TProperty> Factory = new();
+            PropertyExpression<TSender, TProperty> ModelExpression = Factory.GetPropertyExpression(modelProperty);
+            PropertyExpression<TSender, TProperty> DependExpression = Factory.GetPropertyExpression(dependProperty);
             void DependToModel(TSender sender)
             {
-                if (DependExpression.TryGetValue(sender, out TValue? value)) ModelExpression.TrySetValue(sender, value);
+                if (DependExpression.TryGetValue(sender, out TProperty? value)) ModelExpression.TrySetValue(sender, value);
             }
             void ModelToDepend(TSender sender)
             {
-                if (ModelExpression.TryGetValue(sender, out TValue? value)) DependExpression.TrySetValue(sender, value);
+                if (ModelExpression.TryGetValue(sender, out TProperty? value)) DependExpression.TrySetValue(sender, value);
             }
             PropertyBinding<TSender> PropertyBinding = new()
             {
@@ -41,10 +37,14 @@ namespace StarRailDamage.Source.UI.Factory.PropertyBinding
             return dependProperty.FullName().Invoke(x => DependHandlers[x] = PropertyBinding);
         }
 
-        public DependencyProperty DependBinding<TValue>(string name, object? defaultValue = null, PropertyChangedCallback? propertyChangedCallback = null, CoerceValueCallback? coerceValueCallback = null, ValidateValueCallback? validateValueCallback = null)
+        public DependencyProperty DependBinding<TProperty>(Expression<Func<TSender, TProperty?>> modelExpression, Expression<Func<TSender, TProperty?>> dependExpression, PropertyBindingMode bindingMode = PropertyBindingMode.OneWay, object? defaultValue = null, PropertyChangedCallback? propertyChangedCallback = null, CoerceValueCallback? coerceValueCallback = null, ValidateValueCallback? validateValueCallback = null)
         {
-            propertyChangedCallback += DependChangedCallback;
-            return DependProperty<TValue>(name, defaultValue, propertyChangedCallback, coerceValueCallback, validateValueCallback);
+            return DependBinding<TProperty>(AddBinding(modelExpression, dependExpression, bindingMode), defaultValue, propertyChangedCallback, coerceValueCallback, validateValueCallback);
+        }
+
+        public DependencyProperty DependBinding<TProperty>(string name, object? defaultValue = null, PropertyChangedCallback? propertyChangedCallback = null, CoerceValueCallback? coerceValueCallback = null, ValidateValueCallback? validateValueCallback = null)
+        {
+            return DependProperty<TProperty>(name, defaultValue, propertyChangedCallback += DependChangedCallback, coerceValueCallback, validateValueCallback);
         }
 
         private void DependChangedCallback(DependencyObject d, DependencyPropertyChangedEventArgs e)
@@ -52,35 +52,50 @@ namespace StarRailDamage.Source.UI.Factory.PropertyBinding
             if (d is TSender sender) DependHandlers[e.Property.Name].DependToModel(sender);
         }
 
-        public DependencyProperty ModelBinding<TProperty>(string name, object? defaultValue = null, PropertyChangedCallback? propertyChangedCallback = null, CoerceValueCallback? coerceValueCallback = null, ValidateValueCallback? validateValueCallback = null)
+        public DependencyProperty ModelBinding<TProperty>(Expression<Func<TSender, TProperty?>> modelExpression, object? defaultValue = null, PropertyChangedCallback? propertyChangedCallback = null, CoerceValueCallback? coerceValueCallback = null, ValidateValueCallback? validateValueCallback = null) where TProperty : INotifyPropertyChanged
         {
-            propertyChangedCallback += ModelChangedCallback;
-            return DependProperty<TProperty>(name, defaultValue, propertyChangedCallback, coerceValueCallback, validateValueCallback);
+            return ModelBinding<TProperty>(modelExpression.FullName(), defaultValue, propertyChangedCallback, coerceValueCallback, validateValueCallback);
+        }
+
+        public DependencyProperty ModelBinding<TProperty>(string name, object? defaultValue = null, PropertyChangedCallback? propertyChangedCallback = null, CoerceValueCallback? coerceValueCallback = null, ValidateValueCallback? validateValueCallback = null) where TProperty : INotifyPropertyChanged
+        {
+            return DependProperty<TProperty>(name, defaultValue, propertyChangedCallback += ModelChangedCallback, coerceValueCallback, validateValueCallback);
+        }
+
+        public void ClearModelBinding<TProperty>(TProperty? model) where TProperty : INotifyPropertyChanged
+        {
+            if (model == null) return;
+            if (NotifyHandlers.Remove(model, out PropertyChangedEventHandler? PropertyChangedEventHandler))
+            {
+                model.PropertyChanged -= PropertyChangedEventHandler;
+            }
+        }
+
+        private void ModelChangedCallback(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            ClearModelBinding(e.OldValue as INotifyPropertyChanged);
+            if (d is not TSender Sender) return;
+            if (e.NewValue is not INotifyPropertyChanged NotifyProperty) return;
+            void PropertyChanged(object? sender, PropertyChangedEventArgs e)
+            {
+                ModelHandlers.GetValueOrDefault(e.PropertyName.ThrowIfNull())?.ModelToDepend(Sender);
+            }
+            NotifyHandlers[NotifyProperty] = PropertyChanged;
+            NotifyProperty.PropertyChanged += PropertyChanged;
+            foreach (IPropertyBinding<TSender> PropertyBinding in ModelHandlers.Values)
+            {
+                PropertyBinding.ModelToDepend(Sender);
+            }
+        }
+
+        public DependencyProperty DependProperty<TProperty>(Expression<Func<TSender, TProperty?>> dependExpression, object? defaultValue = null, PropertyChangedCallback? propertyChangedCallback = null, CoerceValueCallback? coerceValueCallback = null, ValidateValueCallback? validateValueCallback = null)
+        {
+            return DependProperty<TProperty>(dependExpression.FullName(), defaultValue, propertyChangedCallback, coerceValueCallback, validateValueCallback);
         }
 
         public DependencyProperty DependProperty<TProperty>(string name, object? defaultValue = null, PropertyChangedCallback? propertyChangedCallback = null, CoerceValueCallback? coerceValueCallback = null, ValidateValueCallback? validateValueCallback = null)
         {
             return DependencyProperty.Register(name, typeof(TProperty), typeof(TSender), new PropertyMetadata(defaultValue ?? default(TProperty), propertyChangedCallback, coerceValueCallback), validateValueCallback);
-        }
-
-        private void ModelChangedCallback(DependencyObject d, DependencyPropertyChangedEventArgs e)
-        {
-            if (e.OldValue is INotifyPropertyChanged OldNotifyProperty)
-            {
-                OldNotifyProperty.PropertyChanged -= NotifyHandlers.GetValueOrDefault(d);
-            }
-            if (d is not TSender Sender) return;
-            if (e.NewValue is not INotifyPropertyChanged NewNotifyProperty) return;
-            void PropertyChanged(object? sender, PropertyChangedEventArgs e)
-            {
-                ModelHandlers.GetValueOrDefault(e.PropertyName.ThrowIfNull())?.ModelToDepend(Sender);
-            }
-            NotifyHandlers[d] = PropertyChanged;
-            NewNotifyProperty.PropertyChanged += PropertyChanged;
-            foreach (IPropertyBinding<TSender> PropertyBinding in ModelHandlers.Values)
-            {
-                PropertyBinding.ModelToDepend(Sender);
-            }
         }
     }
 }

@@ -7,28 +7,11 @@
         <Setter Property="Opacity" Value="{DynamicResource BorderOpacity}"/>
     </Style>
 
-    <Style TargetType="{x:Type ToolTip}">
-        <Setter Property="Foreground" Value="{DynamicResource MainForeBrush}"/>
-        <Setter Property="Background" Value="{DynamicResource DropBackBrush}"/>
-    </Style>
-
-    <Style x:Key="TextBlockToolTipStyle" TargetType="{x:Type TextBlock}">
-        <Setter Property="ToolTipService.ToolTip">
-            <Setter.Value>
-                <Binding Path="Text" RelativeSource="{RelativeSource Self}"/>
-            </Setter.Value>
-        </Setter>
-        <Style.Triggers>
-            <DataTrigger Binding="{Binding Text.Length,RelativeSource={RelativeSource Self}}" Value="0">
-                <Setter Property="ToolTip" Value="{x:Null}"/>
-            </DataTrigger>
-        </Style.Triggers>
-    </Style>
-
     <Style TargetType="{x:Type Control:ScopedButton}">
         <Setter Property="Foreground" Value="{DynamicResource MainForeBrush}"/>
         <Setter Property="FocusBrush" Value="{DynamicResource HighBackBrush}"/>
         <Setter Property="Background" Value="Transparent"/>
+        <Setter Property="CornerRadius" Value="5"/>
     </Style>
 
     <Style TargetType="{x:Type Control:ScopedCheckBox}">
@@ -44,12 +27,16 @@
         <Setter Property="FontSize" Value="{DynamicResource DropFontSize}"/>
         <Setter Property="FontWeight" Value="Bold"/>
         <Setter Property="Padding" Value="5"/>
+        <Setter Property="SmallChange" Value="1"/>
+        <Setter Property="TickFrequency" Value="1"/>
+        <Setter Property="IsSnapToTickEnabled" Value="True"/>
     </Style>
 
     <Style TargetType="{x:Type Control:ScopedTabControl}">
         <Setter Property="Foreground" Value="{DynamicResource MainForeBrush}"/>
         <Setter Property="Background" Value="{DynamicResource DropBackBrush}"/>
         <Setter Property="FocusBrush" Value="{DynamicResource MainBackBrush}"/>
+        <Setter Property="FontSize" Value="{DynamicResource DropFontSize}"/>
         <Setter Property="Padding" Value="5"/>
     </Style>
 
@@ -62,6 +49,13 @@
         <Setter Property="Padding" Value="5,0,5,0"/>
     </Style>
 
+    <Style TargetType="{x:Type Control:ScopedToolTip}">
+        <Setter Property="Foreground" Value="{DynamicResource MainForeBrush}"/>
+        <Setter Property="Background" Value="{DynamicResource DropBackBrush}"/>
+        <Setter Property="FontSize" Value="{DynamicResource MainFontSize}"/>
+        <Setter Property="CornerRadius" Value="5"/>
+    </Style>
+    
     <Style TargetType="{x:Type UI:GainItem}">
         <Setter Property="Foreground" Value="{DynamicResource MainForeBrush}"/>
         <Setter Property="Background" Value="{DynamicResource MainBackBrush}"/>
@@ -92,6 +86,23 @@
         <Setter Property="Background" Value="{DynamicResource MainBackBrush}"/>
         <Setter Property="BorderBrush" Value="{DynamicResource DropBackBrush}"/>
         <Setter Property="FocusBrush" Value="{DynamicResource HighBackBrush}"/>
+        <Setter Property="FontSize" Value="{DynamicResource MainFontSize}"/>
+        <Setter Property="FontWeight" Value="Bold"/>
+    </Style>
+
+    <Style TargetType="{x:Type UI:NumberTextBox}">
+        <Setter Property="Foreground" Value="{DynamicResource MainForeBrush}"/>
+        <Setter Property="Background" Value="{DynamicResource DropBackBrush}"/>
+        <Setter Property="FocusBrush" Value="{DynamicResource HighBackBrush}"/>
+        <Setter Property="FontSize" Value="{DynamicResource MainFontSize}"/>
+        <Setter Property="FontWeight" Value="Bold"/>
+    </Style>
+
+    <Style TargetType="{x:Type UI:PercentSpan}">
+        <Setter Property="Foreground" Value="{DynamicResource MainForeBrush}"/>
+        <Setter Property="Background" Value="{DynamicResource MainBackBrush}"/>
+        <Setter Property="PlusBrush" Value="{DynamicResource PlusBrush}"/>
+        <Setter Property="MinuBrush" Value="{DynamicResource MinuBrush}"/>
         <Setter Property="FontSize" Value="{DynamicResource MainFontSize}"/>
         <Setter Property="FontWeight" Value="Bold"/>
     </Style>

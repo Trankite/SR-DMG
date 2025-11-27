@@ -3,7 +3,7 @@ using System.Windows;
 
 namespace StarRailDamage.Source.Service.IO.AppManifest
 {
-    internal class AppManifestStream
+    public class AppManifestStream
     {
         public static Stream GetStream(string path)
         {

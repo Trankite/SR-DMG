@@ -1,4 +1,5 @@
 ﻿using StarRailDamage.Source.UI.Factory.NotifyPropertyChanged;
+using StarRailDamage.Source.UI.Model.Control;
 using System.Collections.ObjectModel;
 using System.Windows.Media;
 
@@ -18,13 +19,7 @@ namespace StarRailDamage.Source.UI.Model.View
 
         private ObservableCollection<string> _TempItems = [];
 
-        private double _Level;
-
-        private int _MaxLevel;
-
-        private double _Layer;
-
-        private int _MaxLayer;
+        private ObservableCollection<ScopedSliderModel> _SliderItems = [];
 
         public ImageSource? Icon
         {
@@ -62,28 +57,10 @@ namespace StarRailDamage.Source.UI.Model.View
             set => SetField(ref _TempItems, value);
         }
 
-        public double Level
+        public ObservableCollection<ScopedSliderModel> SliderItems
         {
-            get => _Level;
-            set => SetField(ref _Level, value);
-        }
-
-        public int MaxLevel
-        {
-            get => _MaxLevel;
-            set => SetField(ref _MaxLevel, value);
-        }
-
-        public double Layer
-        {
-            get => _Layer;
-            set => SetField(ref _Layer, value);
-        }
-
-        public int MaxLayer
-        {
-            get => _MaxLayer;
-            set => SetField(ref _MaxLayer, value);
+            get => _SliderItems;
+            set => SetField(ref _SliderItems, value);
         }
     }
 }

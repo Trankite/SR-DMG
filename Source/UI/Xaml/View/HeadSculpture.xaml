@@ -52,7 +52,7 @@
                         </ItemsControl.ItemTemplate>
                     </ItemsControl>
 
-                    <TextBlock Grid.Row="4" Width="80" Text="{Binding Text,RelativeSource={RelativeSource AncestorType={x:Type local:HeadSculpture}}}" TextTrimming="CharacterEllipsis" TextAlignment="Center" HorizontalAlignment="Center" Style="{StaticResource TextBlockToolTipStyle}"/>
+                    <TextBlock Grid.Row="4" Width="80" Text="{Binding Text,RelativeSource={RelativeSource AncestorType={x:Type local:HeadSculpture}}}" TextTrimming="CharacterEllipsis" TextAlignment="Center" HorizontalAlignment="Center"/>
                 </Grid>
             </Border>
         </ControlTemplate>

@@ -1,7 +1,5 @@
-﻿using StarRailDamage.Source.Core.Language;
-using StarRailDamage.Source.Extension.Language;
-using StarRailDamage.Source.Model.Text;
-using StarRailDamage.Source.UI.Factory.PropertyBinding;
+﻿using StarRailDamage.Source.UI.Factory.PropertyBinding;
+using StarRailDamage.Source.UI.Model.Control;
 using StarRailDamage.Source.UI.Model.View;
 using System.Collections.ObjectModel;
 using System.Windows;
@@ -12,25 +10,33 @@ namespace StarRailDamage.Source.UI.Xaml.View
 {
     public partial class GainItem : UserControl
     {
-        public static TextBinding LevelText { get; } = FixedText.CharacterSkillLevel.Binding();
-
-        public static TextBinding LayerText { get; } = FixedText.CharacterSkillLayer.Binding();
-
         private static readonly PropertyBindingFactory<GainItem> BindingFactory = new();
 
         public GainItem()
         {
             InitializeComponent();
+            Unloaded += (sender, e) =>
+            {
+                BindingFactory.ClearModelBinding(Model);
+            };
         }
 
-        private void ModifyItem(object sender, RoutedEventArgs e)
+        private void ModifyItemClick(object sender, RoutedEventArgs e)
         {
 
         }
 
-        private void DeleteItem(object sender, RoutedEventArgs e)
+        private void DeleteItemClick(object sender, RoutedEventArgs e)
         {
+            RaiseEvent(new RoutedEventArgs(DeleteEvent, this));
+        }
 
+        public static readonly RoutedEvent DeleteEvent = EventManager.RegisterRoutedEvent(nameof(DeleteEvent), RoutingStrategy.Bubble, typeof(RoutedEventHandler), typeof(GainItem));
+
+        public event RoutedEventHandler DeleteClick
+        {
+            add => AddHandler(DeleteEvent, value);
+            remove => RemoveHandler(DeleteEvent, value);
         }
 
         public GainItemModel Model
@@ -39,7 +45,7 @@ namespace StarRailDamage.Source.UI.Xaml.View
             set => SetValue(ModelProperty, value);
         }
 
-        private static readonly DependencyProperty ModelProperty = BindingFactory.ModelBinding<GainItemModel>(nameof(Model));
+        public static readonly DependencyProperty ModelProperty = BindingFactory.ModelBinding(x => x.Model);
 
         public ImageSource Icon
         {
@@ -47,7 +53,7 @@ namespace StarRailDamage.Source.UI.Xaml.View
             set => SetValue(IconProperty, value);
         }
 
-        private static readonly DependencyProperty IconProperty = BindingFactory.DependBinding(x => x.Model.Icon, x => x.Icon);
+        public static readonly DependencyProperty IconProperty = BindingFactory.DependBinding(x => x.Model.Icon, x => x.Icon);
 
         public string Title
         {
@@ -55,7 +61,7 @@ namespace StarRailDamage.Source.UI.Xaml.View
             set => SetValue(TitleProperty, value);
         }
 
-        private static readonly DependencyProperty TitleProperty = BindingFactory.DependBinding(x => x.Model.Title, x => x.Title);
+        public static readonly DependencyProperty TitleProperty = BindingFactory.DependBinding(x => x.Model.Title, x => x.Title);
 
         public string Text
         {
@@ -63,7 +69,7 @@ namespace StarRailDamage.Source.UI.Xaml.View
             set => SetValue(TextProperty, value);
         }
 
-        private static readonly DependencyProperty TextProperty = BindingFactory.DependBinding(x => x.Model.Text, x => x.Text);
+        public static readonly DependencyProperty TextProperty = BindingFactory.DependBinding(x => x.Model.Text, x => x.Text);
 
         public bool Flag
         {
@@ -71,7 +77,7 @@ namespace StarRailDamage.Source.UI.Xaml.View
             set => SetValue(FlagProperty, value);
         }
 
-        private static readonly DependencyProperty FlagProperty = BindingFactory.DependBinding(x => x.Model.Flag, x => x.Flag, PropertyBindingMode.TwoWay);
+        public static readonly DependencyProperty FlagProperty = BindingFactory.DependBinding(x => x.Model.Flag, x => x.Flag, PropertyBindingMode.TwoWay);
 
         public ObservableCollection<string> MarkItems
         {
@@ -79,7 +85,7 @@ namespace StarRailDamage.Source.UI.Xaml.View
             set => SetValue(MarkItemsProperty, value);
         }
 
-        private static readonly DependencyProperty MarkItemsProperty = BindingFactory.DependBinding(x => x.Model.MarkItems, x => x.MarkItems);
+        public static readonly DependencyProperty MarkItemsProperty = BindingFactory.DependBinding(x => x.Model.MarkItems, x => x.MarkItems);
 
         public ObservableCollection<string> TempItems
         {
@@ -87,39 +93,15 @@ namespace StarRailDamage.Source.UI.Xaml.View
             set => SetValue(TempItemsProperty, value);
         }
 
-        private static readonly DependencyProperty TempItemsProperty = BindingFactory.DependBinding(x => x.Model.TempItems, x => x.TempItems);
+        public static readonly DependencyProperty TempItemsProperty = BindingFactory.DependBinding(x => x.Model.TempItems, x => x.TempItems);
 
-        public double Level
+        public ObservableCollection<ScopedSliderModel> SliderItems
         {
-            get => (double)GetValue(LevelProperty);
-            set => SetValue(LevelProperty, value);
+            get => (ObservableCollection<ScopedSliderModel>)GetValue(SliderItemsProperty);
+            set => SetValue(SliderItemsProperty, value);
         }
 
-        private static readonly DependencyProperty LevelProperty = BindingFactory.DependBinding(x => x.Model.Level, x => x.Level, PropertyBindingMode.TwoWay);
-
-        public int MaxLevel
-        {
-            get => (int)GetValue(MaxLevelProperty);
-            set => SetValue(MaxLevelProperty, value);
-        }
-
-        private static readonly DependencyProperty MaxLevelProperty = BindingFactory.DependBinding(x => x.Model.MaxLevel, x => x.MaxLevel);
-
-        public double Layer
-        {
-            get => (double)GetValue(LayerProperty);
-            set => SetValue(LayerProperty, value);
-        }
-
-        private static readonly DependencyProperty LayerProperty = BindingFactory.DependBinding(x => x.Model.Layer, x => x.Layer, PropertyBindingMode.TwoWay);
-
-        public int MaxLayer
-        {
-            get => (int)GetValue(MaxLayerProperty);
-            set => SetValue(MaxLayerProperty, value);
-        }
-
-        private static readonly DependencyProperty MaxLayerProperty = BindingFactory.DependBinding(x => x.Model.MaxLayer, x => x.MaxLayer);
+        public static readonly DependencyProperty SliderItemsProperty = BindingFactory.DependBinding(x => x.Model.SliderItems, x => x.SliderItems);
 
         public double TitleFontSize
         {
@@ -127,7 +109,7 @@ namespace StarRailDamage.Source.UI.Xaml.View
             set => SetValue(TitleFontSizeProperty, value);
         }
 
-        private static readonly DependencyProperty TitleFontSizeProperty = BindingFactory.DependProperty<double>(nameof(TitleFontSize));
+        public static readonly DependencyProperty TitleFontSizeProperty = BindingFactory.DependProperty(x => x.TitleFontSize);
 
         public SolidColorBrush FocusBrush
         {
@@ -135,7 +117,7 @@ namespace StarRailDamage.Source.UI.Xaml.View
             set => SetValue(FocusBrushProperty, value);
         }
 
-        private static readonly DependencyProperty FocusBrushProperty = BindingFactory.DependProperty<SolidColorBrush>(nameof(FocusBrush));
+        public static readonly DependencyProperty FocusBrushProperty = BindingFactory.DependProperty(x => x.FocusBrush);
 
         public SolidColorBrush TitleBrush
         {
@@ -143,6 +125,6 @@ namespace StarRailDamage.Source.UI.Xaml.View
             set => SetValue(TitleBrushProperty, value);
         }
 
-        private static readonly DependencyProperty TitleBrushProperty = BindingFactory.DependProperty<SolidColorBrush>(nameof(TitleBrush));
+        public static readonly DependencyProperty TitleBrushProperty = BindingFactory.DependProperty(x => x.TitleBrush);
     }
 }

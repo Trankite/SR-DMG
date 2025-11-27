@@ -27,7 +27,7 @@ namespace StarRailDamage.Source.Service.Language
                 {
                     Text = Reader.FirstOrDefault(x => x?.FirstOrDefault() == nameof(FixedText.Language)).Index(1);
                 }
-                Languages.Add((Language, Text.UseDefault(string.IsNullOrEmpty, "???")));
+                Languages.Add((Language, string.IsNullOrEmpty(Text) ? "???" : Text));
             }
             return Languages;
         }

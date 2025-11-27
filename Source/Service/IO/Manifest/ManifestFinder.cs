@@ -3,7 +3,7 @@ using System.Reflection;
 
 namespace StarRailDamage.Source.Service.IO.Manifest
 {
-    internal static class ManifestFinder
+    public static class ManifestFinder
     {
         private static readonly string[] ManifestResources;
 

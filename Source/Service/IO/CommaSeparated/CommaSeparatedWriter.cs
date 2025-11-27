@@ -5,7 +5,7 @@ using System.Text;
 
 namespace StarRailDamage.Source.Service.IO.CommaSeparated
 {
-    internal class CommaSeparatedWriter : FileWriter
+    public class CommaSeparatedWriter : FileWriter
     {
         private bool _Separated = true;
 
@@ -17,7 +17,7 @@ namespace StarRailDamage.Source.Service.IO.CommaSeparated
 
         public void Write(string value)
         {
-            _Writer?.Write(EscapeInput(value));
+            _Writer?.Write(Escaped(value));
             _Separated = false;
         }
 
@@ -28,14 +28,14 @@ namespace StarRailDamage.Source.Service.IO.CommaSeparated
             _Separated = true;
         }
 
-        private string EscapeInput(string value)
+        private string Escaped(string value)
         {
             return (_Separated ? string.Empty : ',') + Escape(value);
         }
 
-        private static string Escape(string value)
+        public static string Escape(string value)
         {
-            StringBuilder Builder = new();
+            StringBuilder StringBuilder = new();
             for (int i = 0; i < value.Length; i++)
             {
                 if (value[i] is ',' or '\n' or '\r' or '"')
@@ -44,15 +44,15 @@ namespace StarRailDamage.Source.Service.IO.CommaSeparated
                     {
                         if (value[i] is '"')
                         {
-                            Builder.Append('"');
+                            StringBuilder.Append('"');
                         }
-                        Builder.Append(value[i++]);
+                        StringBuilder.Append(value[i++]);
                     }
-                    return '"' + Builder.ToString() + '"';
+                    return '"' + StringBuilder.ToString() + '"';
                 }
-                else Builder.Append(value[i]);
+                StringBuilder.Append(value[i]);
             }
-            return Builder.ToString();
+            return StringBuilder.ToString();
         }
     }
 }

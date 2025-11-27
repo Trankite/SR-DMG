@@ -5,25 +5,31 @@
     xmlns:local="clr-namespace:StarRailDamage.Source.UI.Control">
     <Slider.Template>
         <ControlTemplate TargetType="{x:Type Slider}">
+            <ControlTemplate.Triggers>
+                <DataTrigger Binding="{Binding Maximum,RelativeSource={RelativeSource Self}}" Value="0">
+                    <Setter Property="Visibility" Value="Collapsed"/>
+                </DataTrigger>
+            </ControlTemplate.Triggers>
+
             <Grid>
                 <Grid.Resources>
                     <Style TargetType="TextBlock">
-                        <Setter Property="Foreground" Value="{Binding Foreground,RelativeSource={RelativeSource AncestorType={x:Type Slider}}}"/>
-                        <Setter Property="FontSize" Value="{Binding FontSize,RelativeSource={RelativeSource AncestorType={x:Type Slider}}}"/>
-                        <Setter Property="FontWeight" Value="{Binding FontWeight,RelativeSource={RelativeSource AncestorType={x:Type Slider}}}"/>
+                        <Setter Property="Foreground" Value="{Binding Foreground,RelativeSource={RelativeSource AncestorType={x:Type local:ScopedSlider}}}"/>
+                        <Setter Property="FontSize" Value="{Binding FontSize,RelativeSource={RelativeSource AncestorType={x:Type local:ScopedSlider}}}"/>
+                        <Setter Property="FontWeight" Value="{Binding FontWeight,RelativeSource={RelativeSource AncestorType={x:Type local:ScopedSlider}}}"/>
                         <Setter Property="VerticalAlignment" Value="Center"/>
                     </Style>
                 </Grid.Resources>
-                
+
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto"/>
-                    <ColumnDefinition Width="{Binding Padding.Left,RelativeSource={RelativeSource AncestorType={x:Type Slider}}}"/>
+                    <ColumnDefinition Width="{Binding Padding.Left,RelativeSource={RelativeSource AncestorType={x:Type local:ScopedSlider}}}"/>
                     <ColumnDefinition Width="*"/>
-                    <ColumnDefinition Width="{Binding Padding.Right,RelativeSource={RelativeSource AncestorType={x:Type Slider}}}"/>
+                    <ColumnDefinition Width="{Binding Padding.Right,RelativeSource={RelativeSource AncestorType={x:Type local:ScopedSlider}}}"/>
                     <ColumnDefinition Width="Auto"/>
                 </Grid.ColumnDefinitions>
 
-                <TextBlock Grid.Column="0" Text="{Binding Text,RelativeSource={RelativeSource AncestorType={x:Type local:ScopedSlider}}}"/>
+                <TextBlock Grid.Column="0" Text="{Binding Title,RelativeSource={RelativeSource AncestorType={x:Type local:ScopedSlider}}}"/>
 
                 <Border Grid.Column="2" Height="5" CornerRadius="5" Background="{TemplateBinding Background}"/>
                 <Track Grid.Column="2" x:Name="PART_Track">
@@ -33,12 +39,12 @@
                             <Setter Property="Template">
                                 <Setter.Value>
                                     <ControlTemplate TargetType="RepeatButton">
-                                        <Border x:Name="Border" Background="Transparent" CornerRadius="5">
+                                        <Border x:Name="PART_Border" Background="Transparent" CornerRadius="5">
                                             <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
                                         </Border>
                                         <ControlTemplate.Triggers>
                                             <Trigger Property="IsPressed" Value="True">
-                                                <Setter TargetName="Border" Property="Background" Value="{Binding FocusBrush,RelativeSource={RelativeSource AncestorType={x:Type local:ScopedSlider}}}"/>
+                                                <Setter TargetName="PART_Border" Property="Background" Value="{Binding FocusBrush,RelativeSource={RelativeSource AncestorType={x:Type local:ScopedSlider}}}"/>
                                             </Trigger>
                                         </ControlTemplate.Triggers>
                                     </ControlTemplate>

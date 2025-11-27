@@ -1,4 +1,6 @@
-﻿namespace StarRailDamage.Source.UI.Factory.PropertyBinding
+﻿using StarRailDamage.Source.Extension;
+
+namespace StarRailDamage.Source.UI.Factory.PropertyBinding
 {
     public class PropertyBinding<TSender> : IPropertyBinding<TSender>
     {
@@ -8,28 +10,23 @@
 
         public PropertyBindingMode BindingMode { get; set; }
 
-        public bool IsModelToDepend => BindingMode is PropertyBindingMode.OneWay or PropertyBindingMode.TwoWay;
+        public bool IsModelToDepend => (BindingMode & PropertyBindingMode.OneWay) > 0;
 
-        public bool IsDependToModel => BindingMode is PropertyBindingMode.OneWayToSource or PropertyBindingMode.TwoWay;
+        public bool IsDependToModel => (BindingMode & PropertyBindingMode.OneWayToSource) > 0;
 
         public bool DependToModel(TSender sender)
         {
-            return PropertyBinding<TSender>.PropertyCharge(sender, IsDependToModel, DependHanlder);
+            return PropertyBinding<TSender>.PropertyChange(sender, IsDependToModel, DependHanlder);
         }
 
         public bool ModelToDepend(TSender sender)
         {
-            return PropertyBinding<TSender>.PropertyCharge(sender, IsModelToDepend, ModelHanlder);
+            return PropertyBinding<TSender>.PropertyChange(sender, IsModelToDepend, ModelHanlder);
         }
 
-        private static bool PropertyCharge(TSender sender, bool isBinding, Action<TSender> handler)
+        private static bool PropertyChange(TSender sender, bool isBinding, Action<TSender> handler)
         {
-            if (isBinding)
-            {
-                handler(sender);
-                return true;
-            }
-            return false;
+            return isBinding && true.Invoke(handler, sender);
         }
     }
 }
