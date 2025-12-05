@@ -1,5 +1,5 @@
-﻿using StarRailDamage.Source.UI.Factory.NotifyPropertyChanged;
-using System.Windows.Controls;
+﻿using StarRailDamage.Source.UI.Control.Panel;
+using StarRailDamage.Source.UI.Factory.NotifyPropertyChanged;
 
 namespace StarRailDamage.Source.UI.Model.Control
 {
@@ -7,7 +7,7 @@ namespace StarRailDamage.Source.UI.Model.Control
     {
         private string _Header = string.Empty;
 
-        private Page? _Content;
+        private ScopedPage? _Content;
 
         public ScopedTabItemModel() { }
 
@@ -16,7 +16,7 @@ namespace StarRailDamage.Source.UI.Model.Control
             _Header = header;
         }
 
-        public ScopedTabItemModel(string header, Page? content) : this(header)
+        public ScopedTabItemModel(string header, ScopedPage? content) : this(header)
         {
             _Content = content;
         }
@@ -27,7 +27,7 @@ namespace StarRailDamage.Source.UI.Model.Control
             set => SetField(ref _Header, value);
         }
 
-        public Page? Content
+        public ScopedPage? Content
         {
             get => _Content;
             set => SetField(ref _Content, value);

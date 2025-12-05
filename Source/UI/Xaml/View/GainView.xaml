@@ -24,7 +24,7 @@
 
                                 <ItemsControl.ItemTemplate>
                                     <DataTemplate>
-                                        <local:GainItem Model="{Binding}" MouseLeftButtonUp="GainItemSelected" DeleteClick="GainItemDelete"/>
+                                        <local:GainItem Model="{Binding}" MouseLeftButtonUp="GainItemSelected" DeleteClick="DeleteItemClick"/>
                                     </DataTemplate>
                                 </ItemsControl.ItemTemplate>
                             </ItemsControl>

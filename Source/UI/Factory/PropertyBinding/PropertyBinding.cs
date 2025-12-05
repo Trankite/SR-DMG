@@ -10,9 +10,9 @@ namespace StarRailDamage.Source.UI.Factory.PropertyBinding
 
         public PropertyBindingMode BindingMode { get; set; }
 
-        public bool IsModelToDepend => (BindingMode & PropertyBindingMode.OneWay) > 0;
+        public bool IsModelToDepend => (BindingMode & PropertyBindingMode.OneWay) == PropertyBindingMode.OneWay;
 
-        public bool IsDependToModel => (BindingMode & PropertyBindingMode.OneWayToSource) > 0;
+        public bool IsDependToModel => (BindingMode & PropertyBindingMode.OneWayToSource) == PropertyBindingMode.OneWayToSource;
 
         public bool DependToModel(TSender sender)
         {

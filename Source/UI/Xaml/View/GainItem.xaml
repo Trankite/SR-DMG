@@ -25,20 +25,18 @@
 
                     <Image Grid.Column="0" Grid.Row="0" Grid.RowSpan="2" Width="50" Height="50" Margin="0,0,5,0" Source="{Binding Icon,RelativeSource={RelativeSource AncestorType={x:Type local:GainItem}}}"/>
 
-                    <TextBlock Grid.Column="1" Grid.Row="0" Margin="5,0,5,0" TextTrimming="CharacterEllipsis" VerticalAlignment="Center">
-                        <TextBlock.Style>
-                            <Style TargetType="{x:Type TextBlock}">
-                                <Setter Property="Text" Value="{Binding Title,RelativeSource={RelativeSource AncestorType={x:Type local:GainItem}}}"/>
+                    <Control:ScopedTextBlock Grid.Column="1" Grid.Row="0" Margin="5,0,5,0" Text="{Binding Title,RelativeSource={RelativeSource AncestorType={x:Type local:GainItem}}}" TipText="{Binding Title,RelativeSource={RelativeSource AncestorType={x:Type local:GainItem}}}" TipOnlyTrim="True" TextTrimming="CharacterEllipsis" FontWeight="Bold" VerticalAlignment="Center">
+                        <Control:ScopedTextBlock.Style>
+                            <Style TargetType="{x:Type Control:ScopedTextBlock}">
                                 <Setter Property="Foreground" Value="{Binding TitleBrush,RelativeSource={RelativeSource AncestorType={x:Type local:GainItem}}}"/>
                                 <Setter Property="FontSize" Value="{Binding TitleFontSize,RelativeSource={RelativeSource AncestorType={x:Type local:GainItem}}}"/>
-                                <Setter Property="FontWeight" Value="Bold"/>
                             </Style>
-                        </TextBlock.Style>
-                    </TextBlock>
+                        </Control:ScopedTextBlock.Style>
+                    </Control:ScopedTextBlock>
 
                     <StackPanel Grid.Column="2" Grid.Row="0" Orientation="Horizontal">
                         <StackPanel.Resources>
-                            <Style TargetType="{x:Type Control:ScopedButton}">
+                            <Style TargetType="{x:Type Control:ScopedButton}" BasedOn="{StaticResource {x:Type Control:ScopedButton}}">
                                 <Setter Property="Background" Value="Transparent"/>
                                 <Setter Property="FocusBrush" Value="{Binding FocusBrush,RelativeSource={RelativeSource AncestorType={x:Type local:GainItem}}}"/>
                                 <Setter Property="Width" Value="20"/>
@@ -62,10 +60,9 @@
                         </Panel:ScopedStackPanel>
                     </Panel:ScopedScrollViewer>
 
-                    <TextBlock Grid.Column="0" Grid.Row="3" Grid.ColumnSpan="3" Margin="5" TextWrapping="Wrap">
+                    <TextBlock Grid.Column="0" Grid.Row="3" Grid.ColumnSpan="3" Margin="5" Text="{Binding Text,RelativeSource={RelativeSource AncestorType={x:Type local:GainItem}}}" TextWrapping="Wrap">
                         <TextBlock.Style>
                             <Style TargetType="{x:Type TextBlock}">
-                                <Setter Property="Text" Value="{Binding Text,RelativeSource={RelativeSource AncestorType={x:Type local:GainItem}}}"/>
                                 <Setter Property="Foreground" Value="{Binding Foreground,RelativeSource={RelativeSource AncestorType={x:Type local:GainItem}}}"/>
                                 <Setter Property="FontSize" Value="{Binding FontSize,RelativeSource={RelativeSource AncestorType={x:Type local:GainItem}}}"/>
                                 <Setter Property="FontWeight" Value="{Binding FontWeight,RelativeSource={RelativeSource AncestorType={x:Type local:GainItem}}}"/>

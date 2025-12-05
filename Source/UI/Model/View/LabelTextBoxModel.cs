@@ -13,7 +13,7 @@ namespace StarRailDamage.Source.UI.Model.View
 
         private string _Unit = string.Empty;
 
-        private int _Round;
+        private int _Digits;
 
         public ImageSource? Icon
         {
@@ -39,10 +39,10 @@ namespace StarRailDamage.Source.UI.Model.View
             set => SetField(ref _Unit, value);
         }
 
-        public int Round
+        public int Digits
         {
-            get => _Round;
-            set => SetField(ref _Round, value);
+            get => _Digits;
+            set => SetField(ref _Digits, value);
         }
     }
 }

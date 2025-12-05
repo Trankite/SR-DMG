@@ -32,7 +32,7 @@ namespace StarRailDamage.Source.Factory.PrefixedTree
 
         public bool TryGetValue([NotNullWhen(true)] out TValue? value)
         {
-            return (value = Value) != null;
+            return !Equals(value = Value, null);
         }
     }
 }

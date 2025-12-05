@@ -10,6 +10,11 @@ namespace StarRailDamage.Source.UI.Control
             InitializeComponent();
         }
 
+        public ScopedToolTip(string text) : this()
+        {
+            Text = text;
+        }
+
         public string Text
         {
             get => (string)GetValue(TextProperty);

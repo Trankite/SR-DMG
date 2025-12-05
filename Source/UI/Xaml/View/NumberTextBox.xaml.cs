@@ -1,7 +1,11 @@
-﻿using StarRailDamage.Source.UI.Factory.PropertyBinding;
+﻿using StarRailDamage.Source.Core.Language;
+using StarRailDamage.Source.Extension;
+using StarRailDamage.Source.Model.Text;
+using StarRailDamage.Source.UI.Factory.PropertyBinding;
 using StarRailDamage.Source.UI.Model.View;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Input;
 using System.Windows.Media;
 
 namespace StarRailDamage.Source.UI.Xaml.View
@@ -10,13 +14,21 @@ namespace StarRailDamage.Source.UI.Xaml.View
     {
         private static readonly PropertyBindingFactory<NumberTextBox> BindingFactory = new();
 
+        public static TextBinding TitleTextBinding { get; } = FixedText.NumberTextBoxTitle.Binding();
+
         public NumberTextBox()
         {
             InitializeComponent();
+            this.SetFocusable();
             Unloaded += (sender, e) =>
             {
                 BindingFactory.ClearModelBinding(Model);
             };
+        }
+
+        private void TextBoxKeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.Key == Key.Enter) Focus();
         }
 
         public NumberTextBoxModel Model
@@ -26,14 +38,6 @@ namespace StarRailDamage.Source.UI.Xaml.View
         }
 
         public static readonly DependencyProperty ModelProperty = BindingFactory.ModelBinding(x => x.Model);
-
-        public string Title
-        {
-            get => (string)GetValue(TitleProperty);
-            set => SetValue(TitleProperty, value);
-        }
-
-        public static readonly DependencyProperty TitleProperty = BindingFactory.DependBinding(x => x.Model.Title, x => x.Title);
 
         public string Text
         {

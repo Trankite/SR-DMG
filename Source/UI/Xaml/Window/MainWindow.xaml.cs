@@ -12,7 +12,7 @@ namespace StarRailDamage.Source.UI.Xaml.Window
         public MainWindow()
         {
             InitializeComponent();
-            TabItems = [new("首页", new CombatSimulationPage()), new("白厄"), new("丹恒•腾荒"), new("刻律德菈"), new("星期日"),];
+            TabItems = [new("首页", new CombatPage()), new("白厄"), new("丹恒•腾荒"), new("刻律德菈"), new("星期日"),];
         }
 
         private void TabItemClose(object sender, RoutedEventArgs e)
@@ -20,6 +20,11 @@ namespace StarRailDamage.Source.UI.Xaml.Window
             if (e.OriginalSource is not ScopedTabItem ScopedTabItem) return;
             if (ScopedTabItem.Content is ScopedTabItemModel ScopedTabItemModel)
             {
+                if (TabItems.IndexOf(ScopedTabItemModel) == 0) return;
+                if (e.Source is ScopedTabControl ScopedTabControl)
+                {
+                    ScopedTabControl.ClearEventBinding(ScopedTabItem);
+                }
                 TabItems.Remove(ScopedTabItemModel);
             }
         }

@@ -55,8 +55,12 @@ namespace StarRailDamage.Source.Extension
             return index > 0 && index < value.Length ? true.With(result = value[index]) : false.With(result = null);
         }
 
-        public static string Format(this string value, params object[] args)
+        public static string Format(this string? value, params object[] args)
         {
+            if (string.IsNullOrEmpty(value))
+            {
+                return string.Empty;
+            }
             try
             {
                 return string.Format(value, args);

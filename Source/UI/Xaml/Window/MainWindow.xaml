@@ -6,12 +6,17 @@
     xmlns:Control="clr-namespace:StarRailDamage.Source.UI.Control"
     xmlns:Page="clr-namespace:StarRailDamage.Source.UI.Xaml.Page"
     xmlns:Window="clr-namespace:StarRailDamage.Source.UI.Xaml.Window"
-    Title="Star Rail Damage Calculator" Height="700" Width="1050"
+    Title="Star Rail Damage Calculator" Height="720" Width="1080"
     WindowStartupLocation="CenterScreen" ResizeMode="CanMinimize">
+    <Window.DataContext>
+        <Binding RelativeSource="{RelativeSource Self}"/>
+    </Window.DataContext>
+    
     <local:ScopedWindow.Background>
         <ImageBrush ImageSource="{StaticResource Image_Backgroup}"/>
     </local:ScopedWindow.Background>
+    
     <Grid>
-        <Control:ScopedTabControl ItemsSource="{Binding TabItems,RelativeSource={RelativeSource AncestorType={x:Type Window:MainWindow}}}" SelectedIndex="{Binding SelectedIndex,RelativeSource={RelativeSource AncestorType={x:Type Window:MainWindow}},Mode=TwoWay}" TabItemClose="TabItemClose"/>
+        <Control:ScopedTabControl ItemsSource="{Binding TabItems}" SelectedIndex="{Binding SelectedIndex,Mode=TwoWay}" TabItemClose="TabItemClose"/>
     </Grid>
 </local:ScopedWindow>

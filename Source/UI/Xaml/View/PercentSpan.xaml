@@ -7,35 +7,37 @@
     <UserControl.Template>
         <ControlTemplate TargetType="{x:Type UserControl}">
             <Border CornerRadius="15" Background="{TemplateBinding Background}">
-                <UniformGrid Columns="1" Margin="10">
-                    <UniformGrid.Resources>
-                        <Style TargetType="TextBlock">
+                <Grid Margin="10">
+                    <Grid.Resources>
+                        <Style TargetType="{x:Type Control:ScopedTextBlock}">
                             <Setter Property="Foreground" Value="{Binding Foreground,RelativeSource={RelativeSource AncestorType={x:Type local:PercentSpan}}}"/>
                             <Setter Property="FontSize" Value="{Binding FontSize,RelativeSource={RelativeSource AncestorType={x:Type local:PercentSpan}}}"/>
-                            <Setter Property="FontWeight" Value="{Binding FontWeight,RelativeSource={RelativeSource AncestorType={x:Type local:PercentSpan}}}"/>
                             <Setter Property="HorizontalAlignment" Value="Center"/>
-                            <Setter Property="VerticalAlignment" Value="Center"/>
                         </Style>
-                    </UniformGrid.Resources>
+                    </Grid.Resources>
 
-                    <TextBlock Text="{Binding Title,RelativeSource={RelativeSource AncestorType={x:Type local:PercentSpan}}}" TextTrimming="CharacterEllipsis">
-                        <TextBlock.ToolTip>
-                            <Control:ScopedToolTip Text="{Binding PlacementTarget.Text,RelativeSource={RelativeSource Self}}"/>
-                        </TextBlock.ToolTip>
-                    </TextBlock>
-                    <TextBlock Text="{Binding Value,RelativeSource={RelativeSource AncestorType={x:Type local:PercentSpan}},StringFormat={}{0:F0}}"/>
-                    <TextBlock Text="{Binding Percent,RelativeSource={RelativeSource AncestorType={x:Type local:PercentSpan}},StringFormat={}{0:+0.#%;-0.#%;0;}}" Foreground="{Binding TempBrush,RelativeSource={RelativeSource AncestorType={x:Type local:PercentSpan}}}">
-                        <TextBlock.Style>
-                            <Style TargetType="{x:Type TextBlock}" BasedOn="{StaticResource {x:Type TextBlock}}">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+
+                    <Control:ScopedTextBlock Grid.Row="0" Text="{Binding Title,RelativeSource={RelativeSource AncestorType={x:Type local:PercentSpan}}}" TipText="{Binding Title,RelativeSource={RelativeSource AncestorType={x:Type local:PercentSpan}}}" TipOnlyTrim="True" TextTrimming="CharacterEllipsis" FontWeight="Bold"/>
+                    <Control:ScopedTextBlock Grid.Row="2" Text="{Binding Value,RelativeSource={RelativeSource AncestorType={x:Type local:PercentSpan}},StringFormat={}{0:F0}}"/>
+                    <Control:ScopedTextBlock Grid.Row="4" Text="{Binding Percent,RelativeSource={RelativeSource AncestorType={x:Type local:PercentSpan}},StringFormat={}{0:+0.#%;-0.#%;0;}}" Foreground="{Binding TempBrush,RelativeSource={RelativeSource AncestorType={x:Type local:PercentSpan}}}" FontSize="{Binding DropFontSize,RelativeSource={RelativeSource AncestorType={x:Type local:PercentSpan}}}">
+                        <Control:ScopedTextBlock.Style>
+                            <Style TargetType="{x:Type Control:ScopedTextBlock}" BasedOn="{StaticResource {x:Type Control:ScopedTextBlock}}">
                                 <Style.Triggers>
                                     <DataTrigger Binding="{Binding Text,RelativeSource={RelativeSource Self}}" Value="0">
                                         <Setter Property="Visibility" Value="Collapsed"/>
                                     </DataTrigger>
                                 </Style.Triggers>
                             </Style>
-                        </TextBlock.Style>
-                    </TextBlock>
-                </UniformGrid>
+                        </Control:ScopedTextBlock.Style>
+                    </Control:ScopedTextBlock>
+                </Grid>
             </Border>
         </ControlTemplate>
     </UserControl.Template>

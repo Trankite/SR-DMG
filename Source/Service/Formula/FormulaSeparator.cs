@@ -8,18 +8,18 @@ namespace StarRailDamage.Source.Service.Formula
 {
     public static class FormulaSeparator
     {
-        public static TernaryFormulaNode? TernaryParse(string formula)
+        public static FormulaNode? Parse(string formula)
         {
             int Frequency = 1;
             Stack<FormulaSymbol> Symbols = new();
-            Stack<TernaryFormulaNode?> Arguments = new();
+            Stack<FormulaNode?> Arguments = new();
             for (int i = 0; i < formula.Length; i++)
             {
                 FormulaSymbol FormulaSymbol = NextFormulaSymbol(formula, ref i);
                 if (FormulaSymbol != FormulaSymbol.None)
                 {
                     if (!AppendSymbol(FormulaSymbol, Arguments, Symbols, ref Frequency)) return null;
-                    if (Frequency > 2)
+                    if (Frequency >= 2)
                     {
                         FormulaSymbol = AppendArgument(Arguments, formula, ref i, FormulaSymbol);
                     }
@@ -41,11 +41,11 @@ namespace StarRailDamage.Source.Service.Formula
             return Arguments.PopOrDefault();
         }
 
-        private static bool FormulaSymbolPerform(Stack<TernaryFormulaNode?> arguments, Stack<FormulaSymbol> symbols)
+        private static bool FormulaSymbolPerform(Stack<FormulaNode?> arguments, Stack<FormulaSymbol> symbols)
         {
             if (arguments.Count >= 2 && symbols.Count >= 1)
             {
-                return true.Invoke(arguments.Push, new TernaryFormulaNode(arguments.Pop(), symbols.Pop(), arguments.Pop()));
+                return true.Invoke(arguments.Push, new FormulaNode(arguments.Pop(), symbols.Pop(), arguments.Pop()));
             }
             return false;
         }
@@ -67,7 +67,7 @@ namespace StarRailDamage.Source.Service.Formula
             return symbolNode.Value;
         }
 
-        private static FormulaSymbol AppendArgument(Stack<TernaryFormulaNode?> arguments, string formula, ref int index, FormulaSymbol? formulaSymbol = null)
+        private static FormulaSymbol AppendArgument(Stack<FormulaNode?> arguments, string formula, ref int index, FormulaSymbol? formulaSymbol = null)
         {
             StringBuilder StringBuilder = new();
             StringBuilder.Append(formulaSymbol?.Symbol());
@@ -82,11 +82,11 @@ namespace StarRailDamage.Source.Service.Formula
                 }
                 else StringBuilder.Append(formula[index]);
             }
-            arguments.Push(new TernaryFormulaNode(StringBuilder.ToString()));
+            arguments.Push(new FormulaNode(StringBuilder.ToString()));
             return FormulaSymbol;
         }
 
-        private static bool AppendSymbol(FormulaSymbol formulaSymbol, Stack<TernaryFormulaNode?> arguments, Stack<FormulaSymbol> symbols, ref int frequency)
+        private static bool AppendSymbol(FormulaSymbol formulaSymbol, Stack<FormulaNode?> arguments, Stack<FormulaSymbol> symbols, ref int frequency)
         {
             if (formulaSymbol == FormulaSymbol.End)
             {

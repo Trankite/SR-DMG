@@ -13,8 +13,12 @@ namespace StarRailDamage.Source.UI.Control
 
         private void TabItemCloseClick(object sender, RoutedEventArgs e)
         {
-            (sender as ScopedTabItem)?.TabItemClose -= TabItemCloseClick;
             if (!e.Handled) RaiseEvent(new RoutedEventArgs(TabItemCloseEvent, sender));
+        }
+
+        public void ClearEventBinding(object sender)
+        {
+            (sender as ScopedTabItem)?.TabItemClose -= TabItemCloseClick;
         }
 
         public static readonly RoutedEvent TabItemCloseEvent = EventManager.RegisterRoutedEvent(nameof(TabItemCloseEvent), RoutingStrategy.Bubble, typeof(RoutedEventHandler), typeof(ScopedTabControl));

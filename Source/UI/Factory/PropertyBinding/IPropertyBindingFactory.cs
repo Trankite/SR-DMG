@@ -8,9 +8,9 @@ namespace StarRailDamage.Source.UI.Factory.PropertyBinding
     {
         string AddBinding<TProperty>(Expression<Func<TSender, TProperty>> modelProperty, Expression<Func<TSender, TProperty>> dependProperty, PropertyBindingMode bindingMode = PropertyBindingMode.OneWay);
 
-        DependencyProperty ModelBinding<TProperty>(string name, object? defaultValue = null, PropertyChangedCallback? propertyChangedCallback = null, CoerceValueCallback? coerceValueCallback = null, ValidateValueCallback? validateValueCallback = null) where TProperty : INotifyPropertyChanged;
+        DependencyProperty ModelBinding<TProperty>(string name, TProperty? defaultValue = default, PropertyChangedCallback? propertyChangedCallback = null, CoerceValueCallback? coerceValueCallback = null, ValidateValueCallback? validateValueCallback = null) where TProperty : INotifyPropertyChanged;
 
-        DependencyProperty DependBinding<TProperty>(string name, object? defaultValue = null, PropertyChangedCallback? propertyChangedCallback = null, CoerceValueCallback? coerceValueCallback = null, ValidateValueCallback? validateValueCallback = null);
+        DependencyProperty DependBinding<TProperty>(string name, TProperty? defaultValue = default, PropertyChangedCallback? propertyChangedCallback = null, CoerceValueCallback? coerceValueCallback = null, ValidateValueCallback? validateValueCallback = null);
 
         void ClearModelBinding<TProperty>(TProperty? model) where TProperty : INotifyPropertyChanged;
     }

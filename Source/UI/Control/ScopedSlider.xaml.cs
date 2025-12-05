@@ -3,12 +3,16 @@ using StarRailDamage.Source.UI.Factory.PropertyBinding;
 using StarRailDamage.Source.UI.Model.Control;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Controls.Primitives;
 using System.Windows.Media;
+using System.Windows.Media.Animation;
 
 namespace StarRailDamage.Source.UI.Control
 {
     public partial class ScopedSlider : Slider
     {
+        private static readonly Duration ThumbDuration = new(TimeSpan.FromMilliseconds(500));
+
         private static readonly PropertyBindingFactory<ScopedSlider> BindingFactory = new();
 
         public ScopedSlider()
@@ -16,19 +20,40 @@ namespace StarRailDamage.Source.UI.Control
             InitializeComponent();
         }
 
+        protected override void OnThumbDragCompleted(DragCompletedEventArgs e)
+        {
+            double Target = GetTickValue(Value);
+            DoubleAnimation Animation = new(Target, ThumbDuration);
+            Animation.Completed += (sender, e) =>
+            {
+                Value = Target;
+                BeginAnimation(ValueProperty, null);
+            };
+            BeginAnimation(ValueProperty, Animation);
+        }
+
         protected override void OnValueChanged(double oldValue, double newValue)
         {
-            base.OnValueChanged(oldValue, newValue.With(Model?.Value = newValue));
+            if (Model == null) return;
+            if (Math.Abs(Model.Value - newValue) >= SmallChange)
+            {
+                Model.Value = GetTickValue(newValue);
+            }
+        }
+
+        private double GetTickValue(double value)
+        {
+            return Math.Round(value / TickFrequency) * TickFrequency;
         }
 
         protected override void OnMinimumChanged(double oldMinimum, double newMinimum)
         {
-            base.OnMinimumChanged(oldMinimum, newMinimum.With(Model?.Minimun = newMinimum));
+            Model?.Minimun = newMinimum;
         }
 
         protected override void OnMaximumChanged(double oldMaximum, double newMaximum)
         {
-            base.OnMaximumChanged(oldMaximum, newMaximum.With(Model?.Maximum = newMaximum));
+            Model?.Maximum = newMaximum;
         }
 
         public ScopedSliderModel Model

@@ -28,8 +28,6 @@
         <Setter Property="FontWeight" Value="Bold"/>
         <Setter Property="Padding" Value="5"/>
         <Setter Property="SmallChange" Value="1"/>
-        <Setter Property="TickFrequency" Value="1"/>
-        <Setter Property="IsSnapToTickEnabled" Value="True"/>
     </Style>
 
     <Style TargetType="{x:Type Control:ScopedTabControl}">
@@ -52,10 +50,11 @@
     <Style TargetType="{x:Type Control:ScopedToolTip}">
         <Setter Property="Foreground" Value="{DynamicResource MainForeBrush}"/>
         <Setter Property="Background" Value="{DynamicResource DropBackBrush}"/>
-        <Setter Property="FontSize" Value="{DynamicResource MainFontSize}"/>
+        <Setter Property="FontSize" Value="{DynamicResource DropFontSize}"/>
+        <Setter Property="Padding" Value="10,5,10,5"/>
         <Setter Property="CornerRadius" Value="5"/>
     </Style>
-    
+
     <Style TargetType="{x:Type UI:GainItem}">
         <Setter Property="Foreground" Value="{DynamicResource MainForeBrush}"/>
         <Setter Property="Background" Value="{DynamicResource MainBackBrush}"/>
@@ -104,6 +103,6 @@
         <Setter Property="PlusBrush" Value="{DynamicResource PlusBrush}"/>
         <Setter Property="MinuBrush" Value="{DynamicResource MinuBrush}"/>
         <Setter Property="FontSize" Value="{DynamicResource MainFontSize}"/>
-        <Setter Property="FontWeight" Value="Bold"/>
+        <Setter Property="DropFontSize" Value="{DynamicResource DropFontSize}"/>
     </Style>
 </ResourceDictionary>

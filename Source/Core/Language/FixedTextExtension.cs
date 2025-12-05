@@ -1,7 +1,7 @@
-﻿using StarRailDamage.Source.Core.Language;
+﻿using StarRailDamage.Source.Extension;
 using StarRailDamage.Source.Model.Text;
 
-namespace StarRailDamage.Source.Extension.Language
+namespace StarRailDamage.Source.Core.Language
 {
     public static class FixedTextExtension
     {
@@ -23,6 +23,11 @@ namespace StarRailDamage.Source.Extension.Language
         public static string Text(this FixedText fixedText)
         {
             return fixedText.Binding().Text;
+        }
+
+        public static string Text(this FixedText fixedText, params string[] args)
+        {
+            return fixedText.Binding().Text.Format(args);
         }
     }
 }

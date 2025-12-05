@@ -5,17 +5,22 @@
     xmlns:local="clr-namespace:StarRailDamage.Source.UI.Control">
     <UserControl.Template>
         <ControlTemplate TargetType="{x:Type UserControl}">
-            <StackPanel Orientation="Horizontal" Height="{TemplateBinding Height}">
-                <StackPanel.Resources>
-                    <Style TargetType="{x:Type TextBlock}">
+            <Grid Height="{TemplateBinding Height}">
+                <Grid.Resources>
+                    <Style TargetType="{x:Type local:ScopedTextBlock}">
                         <Setter Property="Foreground" Value="{Binding Foreground,RelativeSource={RelativeSource AncestorType={x:Type local:ScopedCheckBox}}}"/>
                         <Setter Property="FontSize" Value="{Binding FontSize,RelativeSource={RelativeSource AncestorType={x:Type local:ScopedCheckBox}}}"/>
                         <Setter Property="FontWeight" Value="{Binding FontWeight,RelativeSource={RelativeSource AncestorType={x:Type local:ScopedCheckBox}}}"/>
                         <Setter Property="Margin" Value="{Binding Padding,RelativeSource={RelativeSource AncestorType={x:Type local:ScopedCheckBox}}}"/>
                     </Style>
-                </StackPanel.Resources>
+                </Grid.Resources>
 
-                <local:ScopedButton Width="{TemplateBinding Height}" Height="{TemplateBinding Height}" CornerRadius="5" Click="CheckedCharge">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+
+                <local:ScopedButton Grid.Column="0" Width="{TemplateBinding Height}" Height="{TemplateBinding Height}" CornerRadius="5" Click="CheckedCharge">
                     <Image>
                         <Image.Style>
                             <Style TargetType="{x:Type Image}">
@@ -30,18 +35,18 @@
                     </Image>
                 </local:ScopedButton>
 
-                <TextBlock Text="{Binding Text,RelativeSource={RelativeSource AncestorType={x:Type local:ScopedCheckBox}}}" Margin="{TemplateBinding Padding}" VerticalAlignment="Center">
-                    <TextBlock.Style>
-                        <Style TargetType="{x:Type TextBlock}">
+                <local:ScopedTextBlock Grid.Column="1" Text="{Binding Text,RelativeSource={RelativeSource AncestorType={x:Type local:ScopedCheckBox}}}" TipText="{Binding Text,RelativeSource={RelativeSource AncestorType={x:Type local:ScopedCheckBox}}}" TipOnlyTrim="True" TextTrimming="CharacterEllipsis" Margin="{TemplateBinding Padding}" VerticalAlignment="Center">
+                    <local:ScopedTextBlock.Style>
+                        <Style TargetType="{x:Type local:ScopedTextBlock}">
                             <Style.Triggers>
                                 <DataTrigger Binding="{Binding Text,RelativeSource={RelativeSource AncestorType={x:Type local:ScopedCheckBox}}}" Value="{x:Null}">
                                     <Setter Property="Visibility" Value="Collapsed"/>
                                 </DataTrigger>
                             </Style.Triggers>
                         </Style>
-                    </TextBlock.Style>
-                </TextBlock>
-            </StackPanel>
+                    </local:ScopedTextBlock.Style>
+                </local:ScopedTextBlock>
+            </Grid>
         </ControlTemplate>
     </UserControl.Template>
 </UserControl>

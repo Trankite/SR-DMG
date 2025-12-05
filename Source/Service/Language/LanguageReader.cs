@@ -1,5 +1,4 @@
 ﻿using StarRailDamage.Source.Core.Language;
-using StarRailDamage.Source.Extension.Language;
 using StarRailDamage.Source.Model.Text;
 using StarRailDamage.Source.Service.IO.CommaSeparated;
 
@@ -7,33 +6,45 @@ namespace StarRailDamage.Source.Service.Language
 {
     public static class LanguageReader
     {
-        public static void Load(string language = LanguageManager.DefaultLanguage)
+        public static int Load(string language)
         {
-            Load(language, nameof(FixedText), FixedTextExtension.FixedTextMap);
-            Load(language, nameof(UnFixedText), UnFixedTextExtension.UnFixedTextMap);
-            LanguageManager.Language = language;
-        }
-
-        private static void Load<T>(string language, string name, Dictionary<T, TextBinding> languageMap) where T : Enum
-        {
-            using CommaSeparatedReader Reader = new(LanguageManager.GetPath(language, name));
-            Dictionary<string, T> EnumDictionary = Enum.GetNames(typeof(T)).ToDictionary(name => name, name => (T)Enum.Parse(typeof(T), name));
+            int LoadedCount = 0;
+            using CommaSeparatedReader Reader = new(LanguageManager.GetPath(language));
+            if (!Reader.Success) return -1;
+            Dictionary<string, FixedText> FixedTextMap = GetFixedTextMap();
             foreach (string[]? Line in Reader)
             {
                 if (Line == null || Line.Length < 2) continue;
-                if (EnumDictionary.TryGetValue(Line[0], out T? Enum))
+                if (FixedTextMap.TryGetValue(Line[0], out FixedText FixedText))
                 {
-                    if (string.IsNullOrEmpty(Line[1])) continue;
-                    if (languageMap.TryGetValue(Enum, out TextBinding? TextBinding))
-                    {
-                        TextBinding.Text = Line[1];
-                    }
-                    else
-                    {
-                        languageMap[Enum] = new() { Text = Line[1] };
-                    }
+                    if (AppendFixedText(FixedText, Line[1])) LoadedCount++;
                 }
             }
+            return FixedTextMap.Count - LoadedCount;
+        }
+
+        private static Dictionary<string, FixedText> GetFixedTextMap()
+        {
+            Dictionary<string, FixedText> FixedTextMap = [];
+            foreach (FixedText FixedText in Enum.GetValues(typeof(FixedText)))
+            {
+                FixedTextMap[FixedText.ToString()] = FixedText;
+            }
+            return FixedTextMap;
+        }
+
+        private static bool AppendFixedText(FixedText fixedText, string? text)
+        {
+            if (string.IsNullOrEmpty(text)) return false;
+            if (FixedTextExtension.FixedTextMap.TryGetValue(fixedText, out TextBinding? TextBinding))
+            {
+                TextBinding.Text = text;
+            }
+            else
+            {
+                FixedTextExtension.FixedTextMap[fixedText] = new TextBinding(text);
+            }
+            return true;
         }
     }
 }

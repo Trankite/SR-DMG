@@ -12,6 +12,11 @@
             return EqualityComparer<T>.Default.Equals(value, default);
         }
 
+        public static KeyValuePair<TKey, TValue> ToPair<TKey, TValue>(this TKey key, TValue value)
+        {
+            return new KeyValuePair<TKey, TValue>(key, value);
+        }
+
         public static T Invoke<T>(this T value, Action action)
         {
             action.Invoke();

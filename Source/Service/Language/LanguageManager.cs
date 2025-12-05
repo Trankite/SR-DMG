@@ -1,6 +1,7 @@
 ﻿using StarRailDamage.Source.Core.Language;
 using StarRailDamage.Source.Core.Setting;
 using StarRailDamage.Source.Extension;
+using StarRailDamage.Source.Model.Text;
 using StarRailDamage.Source.Service.IO.CommaSeparated;
 using System.IO;
 
@@ -10,41 +11,48 @@ namespace StarRailDamage.Source.Service.Language
     {
         public const string DefaultLanguage = "zh-cn";
 
+        public static readonly TextBinding LanguageText = FixedText.Language.Binding();
+
         public static string Language { get; set; } = DefaultLanguage;
 
-        public static List<(string Language, string Text)> GetLanguages()
+        /// <returns>
+        /// -1：读取文件时发生错误，否则为缺失的数量。
+        /// </returns>
+        public static int Load(string language = DefaultLanguage)
         {
-            DirectoryInfo DirectoryInfo = new(GetFolder());
-            List<(string Language, string Text)> Languages = [];
+            int UnLoadedCount = LanguageReader.Load(language);
+            if (UnLoadedCount >= 0)
+            {
+                Language = language;
+            }
+            return UnLoadedCount;
+        }
+
+        public static Dictionary<string, string> GetLanguages()
+        {
+            string FolderPath = GetFolder();
+            Dictionary<string, string> LanguageMap = [];
+            if (!Directory.Exists(FolderPath)) return LanguageMap;
+            DirectoryInfo DirectoryInfo = new(FolderPath);
             foreach (DirectoryInfo DirectoryItem in DirectoryInfo.GetDirectories())
             {
                 string Language = DirectoryItem.Name;
-                string FixedTextPath = GetFixedTextPath(Language);
-                if (!File.Exists(FixedTextPath) || !File.Exists(GetUnFixedTextPath(Language))) continue;
+                string FixedTextPath = GetPath(Language);
+                if (!File.Exists(FixedTextPath)) continue;
                 using CommaSeparatedReader Reader = new(FixedTextPath);
                 string? Text = null;
                 if (Reader.Success)
                 {
                     Text = Reader.FirstOrDefault(x => x?.FirstOrDefault() == nameof(FixedText.Language)).Index(1);
                 }
-                Languages.Add((Language, string.IsNullOrEmpty(Text) ? "???" : Text));
+                LanguageMap[Language] = string.IsNullOrEmpty(Text) ? "???" : Text;
             }
-            return Languages;
+            return LanguageMap;
         }
 
-        public static string GetFixedTextPath(string language)
+        public static string GetPath(string language)
         {
-            return GetPath(language, nameof(FixedText));
-        }
-
-        public static string GetUnFixedTextPath(string language)
-        {
-            return GetPath(language, nameof(UnFixedText));
-        }
-
-        public static string GetPath(string language, string name)
-        {
-            return Path.Combine(GetFolder(), language, name + ".csv");
+            return Path.Combine(GetFolder(), language, nameof(FixedText) + ".csv");
         }
 
         public static string GetFolder()

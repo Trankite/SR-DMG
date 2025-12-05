@@ -4,17 +4,9 @@ namespace StarRailDamage.Source.UI.Model.View
 {
     public class NumberTextBoxModel : NotifyPropertyChangedFactory
     {
-        private string _Title = string.Empty;
-
         private string _Text = string.Empty;
 
         private double _Value;
-
-        public string Title
-        {
-            get => _Title;
-            set => SetField(ref _Title, value);
-        }
 
         public string Text
         {

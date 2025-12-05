@@ -6,6 +6,13 @@ namespace StarRailDamage.Source.Model.Text
     {
         private string _Text = string.Empty;
 
+        public TextBinding() { }
+
+        public TextBinding(string text)
+        {
+            _Text = text;
+        }
+
         public string Text
         {
             get => _Text;

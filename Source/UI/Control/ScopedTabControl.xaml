@@ -29,7 +29,7 @@
 
     <TabControl.ItemTemplate>
         <DataTemplate>
-            <TextBlock Text="{Binding Header}" Foreground="{Binding Foreground,RelativeSource={RelativeSource AncestorType={x:Type local:ScopedTabControl}}}" FontSize="{Binding FontSize,RelativeSource={RelativeSource AncestorType={x:Type local:ScopedTabControl}}}" FontWeight="{Binding FontWeight,RelativeSource={RelativeSource AncestorType={x:Type local:ScopedTabControl}}}"/>
+            <local:ScopedTextBlock Text="{Binding Header}" TipText="{Binding Header}" TipOnlyTrim="True" TextTrimming="CharacterEllipsis" Foreground="{Binding Foreground,RelativeSource={RelativeSource AncestorType={x:Type local:ScopedTabControl}}}" FontSize="{Binding FontSize,RelativeSource={RelativeSource AncestorType={x:Type local:ScopedTabControl}}}" FontWeight="{Binding FontWeight,RelativeSource={RelativeSource AncestorType={x:Type local:ScopedTabControl}}}"/>
         </DataTemplate>
     </TabControl.ItemTemplate>
 

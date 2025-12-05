@@ -8,7 +8,7 @@
         <ControlTemplate TargetType="{x:Type UserControl}">
             <Grid>
                 <Grid.Resources>
-                    <Style TargetType="{x:Type TextBlock}">
+                    <Style TargetType="{x:Type Control:ScopedTextBlock}">
                         <Setter Property="Foreground" Value="{Binding Foreground,RelativeSource={RelativeSource AncestorType={x:Type local:NumberTextBox}}}"/>
                         <Setter Property="FontSize" Value="{Binding FontSize,RelativeSource={RelativeSource AncestorType={x:Type local:NumberTextBox}}}"/>
                         <Setter Property="FontWeight" Value="{Binding FontWeight,RelativeSource={RelativeSource AncestorType={x:Type local:NumberTextBox}}}"/>
@@ -23,9 +23,9 @@
                     <ColumnDefinition Width="Auto"/>
                 </Grid.ColumnDefinitions>
 
-                <TextBlock Grid.Column="0" Text="{Binding Title,RelativeSource={RelativeSource AncestorType={x:Type local:NumberTextBox}}}"/>
-                <Control:ScopedTextBox Grid.Column="2" CornerRadius="10" Text="{Binding Text,RelativeSource={RelativeSource AncestorType={x:Type local:NumberTextBox}},Mode=TwoWay}" Background="{TemplateBinding Background}" FocusBrush="{Binding FocusBrush,RelativeSource={RelativeSource AncestorType={x:Type local:NumberTextBox}}}"/>
-                <TextBlock Grid.Column="4" Text="{Binding Value,RelativeSource={RelativeSource AncestorType={x:Type local:NumberTextBox}},StringFormat={}{0:0.#####}}"/>
+                <Control:ScopedTextBlock Grid.Column="0" MaxWidth="50" Text="{Binding TitleTextBinding.Text,RelativeSource={RelativeSource AncestorType={x:Type local:NumberTextBox}}}" TipText="{Binding TitleTextBinding.Text,RelativeSource={RelativeSource AncestorType={x:Type local:NumberTextBox}}}" TipOnlyTrim="True" TextTrimming="CharacterEllipsis"/>
+                <Control:ScopedTextBox Grid.Column="2" CornerRadius="10" Text="{Binding Text,RelativeSource={RelativeSource AncestorType={x:Type local:NumberTextBox}},Mode=TwoWay}" Background="{TemplateBinding Background}" FocusBrush="{Binding FocusBrush,RelativeSource={RelativeSource AncestorType={x:Type local:NumberTextBox}}}" KeyDown="TextBoxKeyDown"/>
+                <Control:ScopedTextBlock Grid.Column="4" Text="{Binding Value,RelativeSource={RelativeSource AncestorType={x:Type local:NumberTextBox}},StringFormat={}{0:0.#####}}"/>
             </Grid>
         </ControlTemplate>
     </UserControl.Template>

@@ -8,7 +8,7 @@ namespace StarRailDamage
         protected override void OnStartup(StartupEventArgs e)
         {
             base.OnStartup(e);
-            LanguageReader.Load();
+            LanguageManager.Load();
             if (e.Args.Length > 0)
             {
 

@@ -1,5 +1,4 @@
-﻿using StarRailDamage.Source.Extension;
-using StarRailDamage.Source.UI.Factory.PropertyBinding;
+﻿using StarRailDamage.Source.UI.Factory.PropertyBinding;
 using StarRailDamage.Source.UI.Model.View;
 using System.Windows;
 using System.Windows.Controls;
@@ -18,6 +17,22 @@ namespace StarRailDamage.Source.UI.Xaml.View
             {
                 BindingFactory.ClearModelBinding(Model);
             };
+        }
+
+        private static void ValueChangedCallback(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            if (d is PercentSpan PercentSpan)
+            {
+                PercentSpan.Percent = PercentSpan.Value / PercentSpan.TempValue - 1;
+            }
+        }
+
+        private static void PercentChangedCallback(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            if (d is PercentSpan PercentSpan)
+            {
+                PercentSpan.TempBrush = PercentSpan.Percent >= 0 ? PercentSpan.PlusBrush : PercentSpan.MinuBrush;
+            }
         }
 
         public PercentSpanModel Model
@@ -39,26 +54,26 @@ namespace StarRailDamage.Source.UI.Xaml.View
         public double Value
         {
             get => (double)GetValue(ValueProperty);
-            set => SetValue(ValueProperty.With(Percent = value / TempValue - 1), value);
+            set => SetValue(ValueProperty, value);
         }
 
-        public static readonly DependencyProperty ValueProperty = BindingFactory.DependBinding(x => x.Model.Value, x => x.Value);
+        public static readonly DependencyProperty ValueProperty = BindingFactory.DependBinding(x => x.Model.Value, x => x.Value, PropertyBindingMode.OneWay, default, ValueChangedCallback);
 
         public double TempValue
         {
             get => (double)GetValue(TempValueProperty);
-            set => SetValue(TempValueProperty.With(Percent = Value / value - 1), value);
+            set => SetValue(TempValueProperty, value);
         }
 
-        public static readonly DependencyProperty TempValueProperty = BindingFactory.DependBinding(x => x.Model.TempValue, x => x.TempValue);
+        public static readonly DependencyProperty TempValueProperty = BindingFactory.DependBinding(x => x.Model.TempValue, x => x.TempValue, PropertyBindingMode.OneWay, default, ValueChangedCallback);
 
         public double Percent
         {
             get => (double)GetValue(PercentProperty);
-            set => SetValue(PercentProperty.With(TempBrush = value >= 0 ? PlusBrush : MinuBrush), value);
+            set => SetValue(PercentProperty, value);
         }
 
-        public static readonly DependencyProperty PercentProperty = BindingFactory.DependBinding(x => x.Model.Percent, x => x.Percent);
+        public static readonly DependencyProperty PercentProperty = BindingFactory.DependBinding(x => x.Model.Percent, x => x.Percent, PropertyBindingMode.OneWay, default, PercentChangedCallback);
 
         public SolidColorBrush PlusBrush
         {
@@ -83,5 +98,13 @@ namespace StarRailDamage.Source.UI.Xaml.View
         }
 
         public static readonly DependencyProperty TempBrushProperty = BindingFactory.DependProperty(x => x.TempBrush);
+
+        public double DropFontSize
+        {
+            get => (double)GetValue(DropFontSizeProperty);
+            set => SetValue(DropFontSizeProperty, value);
+        }
+
+        public static readonly DependencyProperty DropFontSizeProperty = BindingFactory.DependProperty(x => x.DropFontSize);
     }
 }

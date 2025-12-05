@@ -24,9 +24,17 @@ namespace StarRailDamage.Source.UI.Xaml.View
             Select = ((GainItem)sender).Model;
         }
 
-        private void GainItemDelete(object sender, RoutedEventArgs e)
+        private void DeleteItemClick(object sender, RoutedEventArgs e)
         {
-            Items.Remove(((GainItem)sender).Model);
+            RaiseEvent(new RoutedEventArgs(DeleteEvent, sender));
+        }
+
+        public static readonly RoutedEvent DeleteEvent = EventManager.RegisterRoutedEvent(nameof(DeleteEvent), RoutingStrategy.Bubble, typeof(RoutedEventHandler), typeof(GainView));
+
+        public event RoutedEventHandler DeleteClick
+        {
+            add => AddHandler(DeleteEvent, value);
+            remove => RemoveHandler(DeleteEvent, value);
         }
 
         public GainViewModel Model

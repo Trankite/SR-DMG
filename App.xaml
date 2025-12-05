@@ -9,7 +9,7 @@
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="/Source/UI/Xaml/Style/DefaultStyle.xaml"/>
                 <ResourceDictionary Source="/Source/UI/Xaml/Style/FixedImages.xaml"/>
-                <ResourceDictionary Source="/Source/UI/Xaml/Style/ModeSettings.xaml"/>
+                <ResourceDictionary Source="/Source/UI/Xaml/Style/LocalSettings.xaml"/>
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </Application.Resources>

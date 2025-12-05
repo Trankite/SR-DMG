@@ -19,7 +19,7 @@
                     </Style>
                 </Border.Style>
                 
-                <TextBlock Text="{Binding Text,RelativeSource={RelativeSource AncestorType={x:Type local:ScopedToolTip}}}" Margin="5" Foreground="{TemplateBinding Foreground}" FontSize="{TemplateBinding FontSize}" FontWeight="{TemplateBinding FontWeight}"/>
+                <TextBlock Text="{Binding Text,RelativeSource={RelativeSource AncestorType={x:Type local:ScopedToolTip}}}" Margin="{TemplateBinding Padding}" Foreground="{TemplateBinding Foreground}" FontSize="{TemplateBinding FontSize}" FontWeight="{TemplateBinding FontWeight}"/>
             </Border>
         </ControlTemplate>
     </ToolTip.Template>
