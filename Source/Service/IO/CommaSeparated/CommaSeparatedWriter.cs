@@ -1,11 +1,11 @@
 ﻿using StarRailDamage.Source.Extension;
-using StarRailDamage.Source.Service.IO.FileStream;
+using StarRailDamage.Source.Service.IO.FiledStream;
 using System.IO;
 using System.Text;
 
 namespace StarRailDamage.Source.Service.IO.CommaSeparated
 {
-    public class CommaSeparatedWriter : FileWriter
+    public class CommaSeparatedWriter : FiledWriter
     {
         private bool _Separated = true;
 

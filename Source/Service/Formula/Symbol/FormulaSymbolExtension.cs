@@ -1,4 +1,4 @@
-﻿using StarRailDamage.Source.Factory.PrefixedTree;
+﻿using StarRailDamage.Source.Model.DataStruct.PrefixedTree;
 
 namespace StarRailDamage.Source.Service.Formula.Symbol
 {

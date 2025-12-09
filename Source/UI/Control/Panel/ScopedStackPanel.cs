@@ -38,7 +38,7 @@ namespace StarRailDamage.Source.UI.Control.Panel
             for (int i = 0; i < Children.Count; i++)
             {
                 UIElement Child = Children[i];
-                if (Child == null) continue;
+                if (Child is null) continue;
                 Size ChildSize = Child.DesiredSize;
                 Rect FinalRect;
                 if (Orientation == Orientation.Horizontal)

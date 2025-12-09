@@ -26,12 +26,12 @@ namespace StarRailDamage.Source.Factory.PropertyExpression
 
         public bool TryGetValue(TSender sender, out TValue? value)
         {
-            return NullCheck(sender) ? false.With(value = default) : true.With(value = GetValue(sender));
+            return !NullCheck(sender) ? true.Configure(value = GetValue(sender)) : false.Configure(value = default);
         }
 
         public bool TrySetValue(TSender sender, TValue? value)
         {
-            return !NullCheck(sender) && true.Invoke(() => SetValue(sender, value));
+            return !NullCheck(sender) && true.Configure(() => SetValue(sender, value));
         }
     }
 }

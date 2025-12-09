@@ -1,7 +1,7 @@
-using StarRailDamage.Source.Core.Character.Attribute;
-using StarRailDamage.Source.Core.Character.Damage;
-using StarRailDamage.Source.Core.Character.Element;
 using StarRailDamage.Source.Core.Language;
+using StarRailDamage.Source.Model.Metadata.Character.Attribute;
+using StarRailDamage.Source.Model.Metadata.Character.Damage;
+using StarRailDamage.Source.Model.Metadata.Character.Element;
 using StarRailDamage.Source.Model.Text;
 using StarRailDamage.Source.UI.Control.Panel;
 using StarRailDamage.Source.UI.Factory.PropertyBinding;
@@ -75,67 +75,67 @@ namespace StarRailDamage.Source.UI.Xaml.Page
 
         public static readonly DependencyProperty ComparedDamageModelProperty = BindingFactory.DependProperty(x => x.ComparedDamageModel, new CharacterDamageModel());
 
-        public static CharacterAttributeInfoModel CharacterLevelAttributeInfo { get; } = CharacterAttribute.CharacterLevel.GetInfoModel();
+        public static CharacterAttributeInfoModel CharacterLevelAttributeInfo { get; } = CharacterAttribute.CharacterLevel.GetModel();
 
-        public static CharacterAttributeInfoModel MonsterLevelAttributeInfo { get; } = CharacterAttribute.MonsterLevel.GetInfoModel();
+        public static CharacterAttributeInfoModel MonsterLevelAttributeInfo { get; } = CharacterAttribute.MonsterLevel.GetModel();
 
-        public static CharacterAttributeInfoModel ElementResistanceAttributeInfo { get; } = CharacterAttribute.ElementResistance.GetInfoModel();
+        public static CharacterAttributeInfoModel ElementResistanceAttributeInfo { get; } = CharacterAttribute.ElementResistance.GetModel();
 
-        public static CharacterAttributeInfoModel DamageImmunityAttributeInfo { get; } = CharacterAttribute.DamageImmunity.GetInfoModel();
+        public static CharacterAttributeInfoModel DamageImmunityAttributeInfo { get; } = CharacterAttribute.DamageImmunity.GetModel();
 
-        public static CharacterAttributeInfoModel DamageMoreProneAttributeInfo { get; } = CharacterAttribute.DamageMoreProne.GetInfoModel();
+        public static CharacterAttributeInfoModel DamageMoreProneAttributeInfo { get; } = CharacterAttribute.DamageMoreProne.GetModel();
 
-        public static CharacterAttributeInfoModel ToughnessAttributeInfo { get; } = CharacterAttribute.Toughness.GetInfoModel();
+        public static CharacterAttributeInfoModel ToughnessAttributeInfo { get; } = CharacterAttribute.Toughness.GetModel();
 
-        public static CharacterAttributeInfoModel MonsterCountAttributeInfo { get; } = CharacterAttribute.MonsterCount.GetInfoModel();
+        public static CharacterAttributeInfoModel MonsterCountAttributeInfo { get; } = CharacterAttribute.MonsterCount.GetModel();
 
-        public static CharacterAttributeInfoModel AttackAttributeInfo { get; } = CharacterAttribute.Attack.GetInfoModel();
+        public static CharacterAttributeInfoModel AttackAttributeInfo { get; } = CharacterAttribute.Attack.GetModel();
 
-        public static CharacterAttributeInfoModel AttackBaseAttributeInfo { get; } = CharacterAttribute.AttackBase.GetInfoModel();
+        public static CharacterAttributeInfoModel AttackBaseAttributeInfo { get; } = CharacterAttribute.AttackBase.GetModel();
 
-        public static CharacterAttributeInfoModel HealthAttributeInfo { get; } = CharacterAttribute.Health.GetInfoModel();
+        public static CharacterAttributeInfoModel HealthAttributeInfo { get; } = CharacterAttribute.Health.GetModel();
 
-        public static CharacterAttributeInfoModel HealthBaseAttributeInfo { get; } = CharacterAttribute.HealthBase.GetInfoModel();
+        public static CharacterAttributeInfoModel HealthBaseAttributeInfo { get; } = CharacterAttribute.HealthBase.GetModel();
 
-        public static CharacterAttributeInfoModel DefenseAttributeInfo { get; } = CharacterAttribute.Defense.GetInfoModel();
+        public static CharacterAttributeInfoModel DefenseAttributeInfo { get; } = CharacterAttribute.Defense.GetModel();
 
-        public static CharacterAttributeInfoModel DefenseBaseAttributeInfo { get; } = CharacterAttribute.DefenseBase.GetInfoModel();
+        public static CharacterAttributeInfoModel DefenseBaseAttributeInfo { get; } = CharacterAttribute.DefenseBase.GetModel();
 
-        public static CharacterAttributeInfoModel SpeedAttributeInfo { get; } = CharacterAttribute.Speed.GetInfoModel();
+        public static CharacterAttributeInfoModel SpeedAttributeInfo { get; } = CharacterAttribute.Speed.GetModel();
 
-        public static CharacterAttributeInfoModel SpeedBaseAttributeInfo { get; } = CharacterAttribute.SpeedBase.GetInfoModel();
+        public static CharacterAttributeInfoModel SpeedBaseAttributeInfo { get; } = CharacterAttribute.SpeedBase.GetModel();
 
-        public static CharacterAttributeInfoModel CriticalHitRateAttributeInfo { get; } = CharacterAttribute.CriticalHitRate.GetInfoModel();
+        public static CharacterAttributeInfoModel CriticalHitRateAttributeInfo { get; } = CharacterAttribute.CriticalHitRate.GetModel();
 
-        public static CharacterAttributeInfoModel CriticalDamageAttributeInfo { get; } = CharacterAttribute.CriticalDamage.GetInfoModel();
+        public static CharacterAttributeInfoModel CriticalDamageAttributeInfo { get; } = CharacterAttribute.CriticalDamage.GetModel();
 
-        public static CharacterAttributeInfoModel DamageIncreaseAttributeInfo { get; } = CharacterAttribute.DamageIncrease.GetInfoModel();
+        public static CharacterAttributeInfoModel DamageIncreaseAttributeInfo { get; } = CharacterAttribute.DamageIncrease.GetModel();
 
-        public static CharacterAttributeInfoModel DefenseFailureAttributeInfo { get; } = CharacterAttribute.DefenseFailure.GetInfoModel();
+        public static CharacterAttributeInfoModel DefenseFailureAttributeInfo { get; } = CharacterAttribute.DefenseFailure.GetModel();
 
-        public static CharacterAttributeInfoModel ResistanceFailureAttributeInfo { get; } = CharacterAttribute.ResistanceFailure.GetInfoModel();
+        public static CharacterAttributeInfoModel ResistanceFailureAttributeInfo { get; } = CharacterAttribute.ResistanceFailure.GetModel();
 
-        public static CharacterAttributeInfoModel SuperBreakDamageAttributeInfo { get; } = CharacterAttribute.SuperBreakDamage.GetInfoModel();
+        public static CharacterAttributeInfoModel SuperBreakDamageAttributeInfo { get; } = CharacterAttribute.SuperBreakDamage.GetModel();
 
-        public static CharacterAttributeInfoModel BreakStrengthAttributeInfo { get; } = CharacterAttribute.BreakStrength.GetInfoModel();
+        public static CharacterAttributeInfoModel BreakStrengthAttributeInfo { get; } = CharacterAttribute.BreakStrength.GetModel();
 
-        public static CharacterAttributeInfoModel BreakDamageIncreaseAttributeInfo { get; } = CharacterAttribute.BreakDamageIncrease.GetInfoModel();
+        public static CharacterAttributeInfoModel BreakDamageIncreaseAttributeInfo { get; } = CharacterAttribute.BreakDamageIncrease.GetModel();
 
-        public static CharacterAttributeInfoModel BreakEfficiencyAttributeInfo { get; } = CharacterAttribute.BreakEfficiency.GetInfoModel();
+        public static CharacterAttributeInfoModel BreakEfficiencyAttributeInfo { get; } = CharacterAttribute.BreakEfficiency.GetModel();
 
-        public static CharacterAttributeInfoModel ToughnessReducedAttributeInfo { get; } = CharacterAttribute.ToughnessReduced.GetInfoModel();
+        public static CharacterAttributeInfoModel ToughnessReducedAttributeInfo { get; } = CharacterAttribute.ToughnessReduced.GetModel();
 
-        public static CharacterAttributeInfoModel EffectHitRateAttributeInfo { get; } = CharacterAttribute.EffectHitRate.GetInfoModel();
+        public static CharacterAttributeInfoModel EffectHitRateAttributeInfo { get; } = CharacterAttribute.EffectHitRate.GetModel();
 
-        public static CharacterAttributeInfoModel EffectResistanceAttributeInfo { get; } = CharacterAttribute.EffectResistance.GetInfoModel();
+        public static CharacterAttributeInfoModel EffectResistanceAttributeInfo { get; } = CharacterAttribute.EffectResistance.GetModel();
 
-        public static CharacterAttributeInfoModel TreatmentImprovementAttributeInfo { get; } = CharacterAttribute.TreatmentImprovement.GetInfoModel();
+        public static CharacterAttributeInfoModel TreatmentImprovementAttributeInfo { get; } = CharacterAttribute.TreatmentImprovement.GetModel();
 
-        public static CharacterAttributeInfoModel SpecialNumericalValuesAttributeInfo { get; } = CharacterAttribute.SpecialNumericalValues.GetInfoModel();
+        public static CharacterAttributeInfoModel SpecialNumericalValuesAttributeInfo { get; } = CharacterAttribute.SpecialNumericalValues.GetModel();
 
-        public static CharacterAttributeInfoModel ChargingEfficiencyAttributeInfo { get; } = CharacterAttribute.ChargingEfficiency.GetInfoModel();
+        public static CharacterAttributeInfoModel ChargingEfficiencyAttributeInfo { get; } = CharacterAttribute.ChargingEfficiency.GetModel();
 
-        public static CharacterAttributeInfoModel ChargingLimitAttributeInfo { get; } = CharacterAttribute.ChargingLimit.GetInfoModel();
+        public static CharacterAttributeInfoModel ChargingLimitAttributeInfo { get; } = CharacterAttribute.ChargingLimit.GetModel();
 
         public static TextBinding BaseDamageSimpleTextBinding { get; } = FixedText.BaseDamageSimple.Binding();
 

@@ -1,11 +1,11 @@
 ﻿using Microsoft.VisualBasic.FileIO;
-using StarRailDamage.Source.Service.IO.FileStream;
+using StarRailDamage.Source.Service.IO.FiledStream;
 using System.Collections;
 using System.IO;
 
 namespace StarRailDamage.Source.Service.IO.CommaSeparated
 {
-    public class CommaSeparatedReader : FileReader, IEnumerable<string[]?>
+    public class CommaSeparatedReader : FiledReader, IEnumerable<string[]?>
     {
         public CommaSeparatedReader(string filePath) : base(filePath) { }
 

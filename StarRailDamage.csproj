@@ -111,8 +111,6 @@
 
   <ItemGroup>
     <Folder Include="Source\UI\Language\zh-cn\" />
-    <Folder Include="Source\Web\Request\" />
-    <Folder Include="Source\Web\Response\" />
   </ItemGroup>
 
 </Project>

@@ -1,7 +1,10 @@
-﻿namespace StarRailDamage.Source.Extension
+﻿using System.Diagnostics;
+
+namespace StarRailDamage.Source.Extension
 {
     public static class BoolExtension
     {
-        public static T Extract<T>(this bool _, T result) => result;
+        [DebuggerStepThrough]
+        public static T Capture<T>(this bool _, T result) => result;
     }
 }

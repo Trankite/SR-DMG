@@ -1,6 +1,6 @@
 ﻿using StarRailDamage.Source.Extension;
-using StarRailDamage.Source.Factory.PrefixedTree;
-using StarRailDamage.Source.Model.Formula;
+using StarRailDamage.Source.Model.DataStruct.Formula;
+using StarRailDamage.Source.Model.DataStruct.PrefixedTree;
 using StarRailDamage.Source.Service.Formula.Symbol;
 using System.Text;
 
@@ -29,7 +29,7 @@ namespace StarRailDamage.Source.Service.Formula
                 {
                     FormulaSymbol = AppendArgument(Arguments, formula, ref i);
                 }
-                if (FormulaSymbol != FormulaSymbol.None.With(Frequency = 0))
+                if (FormulaSymbol != FormulaSymbol.None.Configure(Frequency = 0))
                 {
                     if (!AppendSymbol(FormulaSymbol, Arguments, Symbols, ref Frequency)) return null;
                 }
@@ -45,7 +45,8 @@ namespace StarRailDamage.Source.Service.Formula
         {
             if (arguments.Count >= 2 && symbols.Count >= 1)
             {
-                return true.Invoke(arguments.Push, new FormulaNode(arguments.Pop(), symbols.Pop(), arguments.Pop()));
+                arguments.Push(new FormulaNode(arguments.Pop(), symbols.Pop(), arguments.Pop()));
+                return true;
             }
             return false;
         }
@@ -57,7 +58,7 @@ namespace StarRailDamage.Source.Service.Formula
             {
                 if (symbolNode.TryGetNode(fomula[index + moveIndex], out PrefixedTreeNode<char, FormulaSymbol>? NextNode))
                 {
-                    symbolNode = NextNode.With(index++);
+                    symbolNode = NextNode.Configure(index++);
                 }
                 else
                 {
@@ -78,7 +79,7 @@ namespace StarRailDamage.Source.Service.Formula
             {
                 if (SymbolNode.TryGetNode(formula[index], out PrefixedTreeNode<char, FormulaSymbol>? NextNode))
                 {
-                    FormulaSymbol = NextFormulaSymbol(formula, ref index, 1, NextNode).With(index++); break;
+                    FormulaSymbol = NextFormulaSymbol(formula, ref index, 1, NextNode).Configure(index++); break;
                 }
                 else StringBuilder.Append(formula[index]);
             }

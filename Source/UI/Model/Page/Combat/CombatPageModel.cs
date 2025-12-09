@@ -1,5 +1,5 @@
-﻿using StarRailDamage.Source.Core.Character.Attribute;
-using StarRailDamage.Source.Core.Character.Element;
+﻿using StarRailDamage.Source.Model.Metadata.Character.Attribute;
+using StarRailDamage.Source.Model.Metadata.Character.Element;
 using StarRailDamage.Source.UI.Factory.NotifyPropertyChanged;
 
 namespace StarRailDamage.Source.UI.Model.Page.Combat

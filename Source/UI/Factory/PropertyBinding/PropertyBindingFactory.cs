@@ -34,7 +34,7 @@ namespace StarRailDamage.Source.UI.Factory.PropertyBinding
                 ModelHanlder = ModelToDepend
             };
             ModelHandlers[modelProperty.FullName().FirstSplit('.').Last()] = PropertyBinding;
-            return dependProperty.FullName().Invoke(x => DependHandlers[x] = PropertyBinding);
+            return dependProperty.FullName().Configure(x => DependHandlers[x] = PropertyBinding);
         }
 
         public DependencyProperty DependBinding<TProperty>(Expression<Func<TSender, TProperty?>> modelExpression, Expression<Func<TSender, TProperty?>> dependExpression, PropertyBindingMode bindingMode = PropertyBindingMode.OneWay, TProperty? defaultValue = default, PropertyChangedCallback? propertyChangedCallback = null, CoerceValueCallback? coerceValueCallback = null, ValidateValueCallback? validateValueCallback = null)
@@ -67,7 +67,7 @@ namespace StarRailDamage.Source.UI.Factory.PropertyBinding
 
         public void ClearModelBinding<TProperty>(TProperty? model) where TProperty : INotifyPropertyChanged
         {
-            if (model == null) return;
+            if (model is null) return;
             if (NotifyHandlers.Remove(model, out PropertyChangedEventHandler? PropertyChangedEventHandler))
             {
                 model.PropertyChanged -= PropertyChangedEventHandler;

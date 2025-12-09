@@ -1,4 +1,4 @@
-﻿using StarRailDamage.Source.Model.Formula;
+﻿using StarRailDamage.Source.Model.DataStruct.Formula;
 using StarRailDamage.Source.Service.Formula.Symbol;
 
 namespace StarRailDamage.Source.Service.Formula
@@ -12,7 +12,7 @@ namespace StarRailDamage.Source.Service.Formula
 
         public static List<string> GetStep(FormulaNode? formulaNode, List<string> collection)
         {
-            if (formulaNode == null) return collection;
+            if (formulaNode is null) return collection;
             if (formulaNode.Symbol != FormulaSymbol.None)
             {
                 GetStep(formulaNode.Left, collection);
@@ -32,7 +32,7 @@ namespace StarRailDamage.Source.Service.Formula
 
         public static List<FormulaNode> GetBinding(FormulaNode? formulaNode, List<FormulaNode> collection)
         {
-            if (formulaNode == null) return collection;
+            if (formulaNode is null) return collection;
             GetBinding(formulaNode.Left, collection);
             GetBinding(formulaNode.Right, collection);
             if ((formulaNode.Symbol & FormulaSymbol.Binding) == FormulaSymbol.Binding)

@@ -11,7 +11,7 @@ namespace StarRailDamage.Source.UI.Factory.NotifyPropertyChanged
 
         public bool OnPropertyChanged([CallerMemberName] string? propertyName = null)
         {
-            if (PropertyChanged == null) return false;
+            if (PropertyChanged is null) return false;
             PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
             return true;
         }
@@ -32,7 +32,7 @@ namespace StarRailDamage.Source.UI.Factory.NotifyPropertyChanged
         {
             if (Equals(field, value)) return false;
             ArgumentNullException.ThrowIfNull(propertyName);
-            if (field != null)
+            if (field is not null)
             {
                 field.PropertyChanged -= Handlers.GetValueOrDefault(propertyName);
             }

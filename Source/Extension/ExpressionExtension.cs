@@ -1,9 +1,11 @@
-﻿using System.Linq.Expressions;
+﻿using System.Diagnostics;
+using System.Linq.Expressions;
 
 namespace StarRailDamage.Source.Extension
 {
     public static class ExpressionExtension
     {
+        [DebuggerStepThrough]
         public static MemberExpression? MemberExpression(this Expression expression)
         {
             if (expression is not MemberExpression MemberExpression)
@@ -17,11 +19,13 @@ namespace StarRailDamage.Source.Extension
             return MemberExpression;
         }
 
+        [DebuggerStepThrough]
         public static string FullName<T>(this Expression<Func<T>> expression)
         {
             return GetFullName(expression.Body as MemberExpression);
         }
 
+        [DebuggerStepThrough]
         public static string FullName<T1, T2>(this Expression<Func<T1, T2>> expression)
         {
             return GetFullName(expression.Body as MemberExpression);
@@ -30,7 +34,7 @@ namespace StarRailDamage.Source.Extension
         private static string GetFullName(MemberExpression? memberExpression)
         {
             Stack<string> PathStack = new();
-            while (memberExpression != null)
+            while (memberExpression is not null)
             {
                 PathStack.Push(memberExpression.Member.Name);
                 if (memberExpression.Expression is not MemberExpression ParentExpression) break;

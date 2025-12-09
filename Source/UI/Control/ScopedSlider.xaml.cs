@@ -34,7 +34,7 @@ namespace StarRailDamage.Source.UI.Control
 
         protected override void OnValueChanged(double oldValue, double newValue)
         {
-            if (Model == null) return;
+            if (Model is null) return;
             if (Math.Abs(Model.Value - newValue) >= SmallChange)
             {
                 Model.Value = GetTickValue(newValue);
@@ -62,7 +62,7 @@ namespace StarRailDamage.Source.UI.Control
             set => SetValue(ModelProperty, value);
         }
 
-        public static readonly DependencyProperty ModelProperty = BindingFactory.ModelBinding(x => x.Model).With(BindingFactory.AddBinding(x => x.Model.Minimun, x => x.Minimum)).With(BindingFactory.AddBinding(x => x.Model.Maximum, x => x.Maximum));
+        public static readonly DependencyProperty ModelProperty = BindingFactory.ModelBinding(x => x.Model).Configure(BindingFactory.AddBinding(x => x.Model.Minimun, x => x.Minimum)).Configure(BindingFactory.AddBinding(x => x.Model.Maximum, x => x.Maximum));
 
         public string Title
         {

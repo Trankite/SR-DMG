@@ -1,5 +1,6 @@
 ﻿using StarRailDamage.Source.Extension;
 using StarRailDamage.Source.Model.Text;
+using System.Diagnostics;
 
 namespace StarRailDamage.Source.Core.Language
 {
@@ -7,6 +8,7 @@ namespace StarRailDamage.Source.Core.Language
     {
         public static readonly Dictionary<FixedText, TextBinding> FixedTextMap = [];
 
+        [DebuggerStepThrough]
         public static TextBinding Binding(this FixedText fixedText)
         {
             if (FixedTextMap.TryGetValue(fixedText, out TextBinding? TextBinding))
@@ -20,11 +22,13 @@ namespace StarRailDamage.Source.Core.Language
             }
         }
 
+        [DebuggerStepThrough]
         public static string Text(this FixedText fixedText)
         {
             return fixedText.Binding().Text;
         }
 
+        [DebuggerStepThrough]
         public static string Text(this FixedText fixedText, params string[] args)
         {
             return fixedText.Binding().Text.Format(args);

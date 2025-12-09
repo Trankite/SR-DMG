@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System.Diagnostics;
+using System.IO;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 
@@ -8,6 +9,7 @@ namespace StarRailDamage.Source.Extension
     {
         public static readonly BitmapImage DefaultImage;
 
+        [DebuggerStepThrough]
         public static BitmapImage GetBitmapImage(this Stream stream)
         {
             stream.Position = 0;

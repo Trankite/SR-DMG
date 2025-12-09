@@ -14,7 +14,7 @@ namespace StarRailDamage.Source.Service.Language
             Dictionary<string, FixedText> FixedTextMap = GetFixedTextMap();
             foreach (string[]? Line in Reader)
             {
-                if (Line == null || Line.Length < 2) continue;
+                if (Line is null || Line.Length < 2) continue;
                 if (FixedTextMap.TryGetValue(Line[0], out FixedText FixedText))
                 {
                     if (AppendFixedText(FixedText, Line[1])) LoadedCount++;

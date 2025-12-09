@@ -11,7 +11,7 @@
                 </Trigger>
             </ControlTemplate.Triggers>
 
-            <Border Name="PART_Border" CornerRadius="10" Margin="{Binding Padding,RelativeSource={RelativeSource AncestorType={x:Type local:ScopedTabItem}}}" Background="{TemplateBinding Background}">
+            <Border CornerRadius="10" Margin="{Binding Padding,RelativeSource={RelativeSource AncestorType={x:Type local:ScopedTabItem}}}" Background="{TemplateBinding Background}">
                 <Grid Margin="5,0,5,0">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="*"/>
