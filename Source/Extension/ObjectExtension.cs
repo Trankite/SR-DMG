@@ -1,4 +1,5 @@
 ﻿using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 
 namespace StarRailDamage.Source.Extension
 {
@@ -8,6 +9,16 @@ namespace StarRailDamage.Source.Extension
         public static T ThrowIfNull<T>(this T? value)
         {
             return value ?? throw new NullReferenceException();
+        }
+
+        public static bool IsNull<T>([NotNullWhen(false)] this T? value)
+        {
+            return value is null;
+        }
+
+        public static bool IsNotNull<T>([NotNullWhen(true)] this T? value)
+        {
+            return value is not null;
         }
 
         [DebuggerStepThrough]
@@ -39,5 +50,8 @@ namespace StarRailDamage.Source.Extension
 
         [DebuggerStepThrough]
         public static TSelf Configure<TSelf, TNone>(this TSelf value, TNone? _) => value;
+
+        [DebuggerStepThrough]
+        public static bool OutTemp<TSelf>(this TSelf value, out TSelf self) => true.Configure(self = value);
     }
 }

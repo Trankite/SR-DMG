@@ -180,7 +180,7 @@
             </Grid>
 
             <Border Grid.Column="0" Grid.Row="2" CornerRadius="15" Background="{StaticResource MainBackBrush}">
-                <UI:NumberTextBox Margin="10,5,10,5"/>
+                <UI:NumberTextBox Margin="10,5,10,5" OnEvaluate="NumberTextBoxOnEvaluate"/>
             </Border>
 
             <Border Grid.Column="0" Grid.Row="4" CornerRadius="15" Background="{StaticResource DropBackBrush}">

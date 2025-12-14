@@ -42,7 +42,7 @@
 
                     <Control:ScopedTextBlock Grid.Column="1" MaxWidth="60" Text="{Binding Title,RelativeSource={RelativeSource AncestorType={x:Type local:LabelTextBox}}}" TipText="{Binding Title,RelativeSource={RelativeSource AncestorType={x:Type local:LabelTextBox}}}"/>
 
-                    <Control:ScopedTextBox Grid.Column="3" Width="80" Text="{Binding Text,RelativeSource={RelativeSource AncestorType={x:Type local:LabelTextBox}},Mode=TwoWay,Converter={StaticResource StringToDoubleConverter}}" IsReadOnly="{Binding ReadOnly,RelativeSource={RelativeSource AncestorType={x:Type local:LabelTextBox}}}" TextAlignment="Right" InputMethod.IsInputMethodEnabled="False" GotFocus="TextBoxGotFocus" KeyDown="TextBoxKeyDown"/>
+                    <Control:ScopedTextBox Grid.Column="3" Width="80" Text="{Binding Text,RelativeSource={RelativeSource AncestorType={x:Type local:LabelTextBox}},Mode=TwoWay,Converter={StaticResource StringToDoubleConverter}}" IsEnabled="{Binding ReadOnly,RelativeSource={RelativeSource AncestorType={x:Type local:LabelTextBox}},Converter={StaticResource BooleanInversionConvert}}" TextAlignment="Right" InputMethod.IsInputMethodEnabled="False" GotFocus="TextBoxGotFocus" KeyDown="TextBoxKeyDown"/>
 
                     <Control:ScopedTextBlock Grid.Column="4" Width="25" Text="{Binding Unit,RelativeSource={RelativeSource AncestorType={x:Type local:LabelTextBox}}}" TipText="{Binding Unit,RelativeSource={RelativeSource AncestorType={x:Type local:LabelTextBox}}}" TextAlignment="Center"/>
                 </Grid>

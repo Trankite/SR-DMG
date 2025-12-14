@@ -1,10 +1,9 @@
 ﻿using StarRailDamage.Source.Extension;
-using StarRailDamage.Source.Service.IO.Manifest;
 using System.Collections;
 using System.IO;
 using System.Resources;
 
-namespace StarRailDamage.Source.Service.IO.AppManifest
+namespace StarRailDamage.Source.Service.IO.Manifest
 {
     public static class AppManifestFinder
     {

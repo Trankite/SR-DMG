@@ -1,4 +1,4 @@
-﻿using StarRailDamage.Source.Web.Response;
+﻿using System.Collections.Immutable;
 using System.Text.Json.Serialization;
 
 namespace StarRailDamage.Source.Web.Hoyolab.Takumi.Wiki.Home
@@ -21,7 +21,7 @@ namespace StarRailDamage.Source.Web.Hoyolab.Takumi.Wiki.Home
         public string ChannelExtension { get; set; } = string.Empty;
 
         [JsonPropertyName("children")]
-        public HomeContentData[] Children { get; set; } = [];
+        public ImmutableArray<HomeContentData> Children { get; set; }
 
         [JsonPropertyName("layout")]
         public string Layout { get; set; } = string.Empty;

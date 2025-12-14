@@ -7,7 +7,7 @@ namespace StarRailDamage.Source.UI.Model.Converter
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            return double.TryParse(value.ToString(), out double result) ? result : 0;
+            return double.TryParse(value?.ToString(), out double result) ? result : 0;
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)

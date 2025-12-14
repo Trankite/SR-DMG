@@ -2,7 +2,7 @@
 using StarRailDamage.Source.Extension;
 using StarRailDamage.Source.Model.DataStruct;
 using StarRailDamage.Source.Model.Text;
-using StarRailDamage.Source.Service.IO.AppManifest;
+using StarRailDamage.Source.Service.IO.Manifest;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
@@ -35,16 +35,16 @@ namespace StarRailDamage.Source.Model.Metadata.Character.Attribute
         private static BitmapImage AppendModel(this BitmapImage bitmapImage, FrozenStruct<CharacterAttribute, int> frozenStruct)
         {
             TextBinding? FullNameTextBinding = null, SimpleTextBinding = null;
-            if (Enum.TryParse(frozenStruct.Name.ToString(), out FixedText fixedText))
+            if (Enum.TryParse(frozenStruct.Content.ToString(), out FixedText fixedText))
             {
                 FullNameTextBinding = FixedTextExtension.Binding(fixedText);
-                CharacterAttributeMap[FullNameTextBinding.Text] = frozenStruct.Name;
+                CharacterAttributeMap[FullNameTextBinding.Text] = frozenStruct.Content;
             }
-            if (Enum.TryParse(frozenStruct.Name.ToString() + "Simple", out fixedText))
+            if (Enum.TryParse(frozenStruct.Content.ToString() + "Simple", out fixedText))
             {
                 SimpleTextBinding = FixedTextExtension.Binding(fixedText);
             }
-            CharacterAttributeModelMap[frozenStruct.Name] = new(bitmapImage, FullNameTextBinding, SimpleTextBinding, frozenStruct.Value);
+            CharacterAttributeModelMap[frozenStruct.Content] = new(bitmapImage, FullNameTextBinding, SimpleTextBinding, frozenStruct.Extend);
             return bitmapImage;
         }
 

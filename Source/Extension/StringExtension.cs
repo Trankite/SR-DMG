@@ -57,13 +57,13 @@ namespace StarRailDamage.Source.Extension
         [DebuggerStepThrough]
         public static char? Index(this string value, int index)
         {
-            return index > 0 && index < value.Length ? value[index] : null;
+            return index >= 0 && index < value.Length ? value[index] : null;
         }
 
         [DebuggerStepThrough]
-        public static bool IndexTry(this string value, int index, [NotNullWhen(true)] out char? result)
+        public static bool IndexTry(this string value, int index, [NotNullWhen(true)] out char result)
         {
-            return index > 0 && index < value.Length ? true.Configure(result = value[index]) : false.Configure(result = null);
+            return index >= 0 && index < value.Length ? true.Configure(result = value[index]) : false.Configure(result = default);
         }
 
         [DebuggerStepThrough]

@@ -13,10 +13,10 @@ namespace StarRailDamage.Source.Service.IO.CommaSeparated
 
         public CommaSeparatedReader(StreamReader streamReader) : base(streamReader) { }
 
-        private IEnumerator<string[]?> Enumerator()
+        public IEnumerator<string[]?> GetEnumerator()
         {
-            ArgumentNullException.ThrowIfNull(_Reader);
-            using TextFieldParser TextFieldParser = new(_Reader);
+            ArgumentNullException.ThrowIfNull(Reader);
+            using TextFieldParser TextFieldParser = new(Reader);
             TextFieldParser.TextFieldType = FieldType.Delimited;
             TextFieldParser.SetDelimiters(",");
             while (!TextFieldParser.EndOfData)
@@ -24,8 +24,6 @@ namespace StarRailDamage.Source.Service.IO.CommaSeparated
                 yield return TextFieldParser.ReadFields();
             }
         }
-
-        public IEnumerator<string[]?> GetEnumerator() => Enumerator();
 
         IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
     }

@@ -1,7 +1,7 @@
 ﻿using StarRailDamage.Source.Core.Language;
 using StarRailDamage.Source.Extension;
 using StarRailDamage.Source.Model.Text;
-using StarRailDamage.Source.Service.IO.AppManifest;
+using StarRailDamage.Source.Service.IO.Manifest;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;

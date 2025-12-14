@@ -2,8 +2,8 @@
 
 namespace StarRailDamage.Source.Factory.PropertyExpression
 {
-    public interface IPropertyExpressionFactory<TSource, TProperty>
+    public interface IPropertyExpressionFactory<TSender, TProperty>
     {
-        PropertyExpression<TSource, TProperty> GetPropertyExpression(Expression<Func<TSource, TProperty>> expression);
+        IPropertyExpression<TSender, TProperty> GetPropertyExpression(Expression<Func<TSender, TProperty>> expression);
     }
 }

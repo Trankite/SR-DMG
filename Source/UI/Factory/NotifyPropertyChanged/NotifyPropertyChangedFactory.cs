@@ -1,4 +1,5 @@
-﻿using System.ComponentModel;
+﻿using StarRailDamage.Source.Extension;
+using System.ComponentModel;
 using System.Runtime.CompilerServices;
 
 namespace StarRailDamage.Source.UI.Factory.NotifyPropertyChanged
@@ -11,7 +12,7 @@ namespace StarRailDamage.Source.UI.Factory.NotifyPropertyChanged
 
         public bool OnPropertyChanged([CallerMemberName] string? propertyName = null)
         {
-            if (PropertyChanged is null) return false;
+            if (PropertyChanged.IsNull()) return false;
             PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
             return true;
         }
@@ -32,7 +33,7 @@ namespace StarRailDamage.Source.UI.Factory.NotifyPropertyChanged
         {
             if (Equals(field, value)) return false;
             ArgumentNullException.ThrowIfNull(propertyName);
-            if (field is not null)
+            if (field.IsNotNull())
             {
                 field.PropertyChanged -= Handlers.GetValueOrDefault(propertyName);
             }

@@ -1,14 +1,15 @@
-﻿using System.Diagnostics.CodeAnalysis;
+﻿using StarRailDamage.Source.Extension;
+using System.Diagnostics.CodeAnalysis;
 
 namespace StarRailDamage.Source.Model.DataStruct.PrefixedTree
 {
     public class PrefixedTree<TKey, TValue> where TKey : notnull
     {
-        public PrefixedTreeNode<TKey, TValue> RootNode { get; } = new();
+        private PrefixedTreeNode<TKey, TValue> Node { get; } = new();
 
         public void Add(IEnumerable<TKey> keys, TValue value)
         {
-            PrefixedTreeNode<TKey, TValue> currentNode = RootNode;
+            PrefixedTreeNode<TKey, TValue> currentNode = Node;
             foreach (TKey key in keys)
             {
                 currentNode = currentNode.GetOrAddNode(key);
@@ -16,19 +17,20 @@ namespace StarRailDamage.Source.Model.DataStruct.PrefixedTree
             currentNode.Value = value;
         }
 
+        public PrefixedTreeNode<TKey, TValue> GetNode() => Node;
+
         public bool TryGetValue(IEnumerable<TKey> keys, [NotNullWhen(true)] out TValue? value)
         {
-            PrefixedTreeNode<TKey, TValue> currentNode = RootNode;
+            PrefixedTreeNode<TKey, TValue> CurrentNode = Node;
             foreach (TKey key in keys)
             {
-                if (currentNode is null || !currentNode.TryGetNode(key, out PrefixedTreeNode<TKey, TValue>? childNode))
+                if (CurrentNode.IsNull() || !CurrentNode.TryGetNode(key, out PrefixedTreeNode<TKey, TValue>? ChildNode))
                 {
-                    value = default;
-                    return false;
+                    return false.Configure(value = default);
                 }
-                currentNode = childNode;
+                CurrentNode = ChildNode;
             }
-            return currentNode.TryGetValue(out value);
+            return CurrentNode.TryGetValue(out value);
         }
     }
 }

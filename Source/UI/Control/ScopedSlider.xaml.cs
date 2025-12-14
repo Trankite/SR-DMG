@@ -34,7 +34,7 @@ namespace StarRailDamage.Source.UI.Control
 
         protected override void OnValueChanged(double oldValue, double newValue)
         {
-            if (Model is null) return;
+            if (Model.IsNull()) return;
             if (Math.Abs(Model.Value - newValue) >= SmallChange)
             {
                 Model.Value = GetTickValue(newValue);

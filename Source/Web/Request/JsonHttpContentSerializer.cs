@@ -1,4 +1,5 @@
-﻿using StarRailDamage.Source.Web.Request.Builder.Abstraction;
+﻿using StarRailDamage.Source.Extension;
+using StarRailDamage.Source.Web.Request.Builder.Abstraction;
 using System.Net.Http;
 using System.Net.Mime;
 using System.Text;
@@ -17,7 +18,7 @@ namespace StarRailDamage.Source.Web.Request
             JsonSerializerOptions = jsonSerializerOptions;
         }
 
-        public HttpContent? Serialize<TContent>(TContent? content, Encoding? encoding)
+        public HttpContent? Serialize<TContent>(TContent? content, Encoding? encoding = null)
         {
             return new StringContent(JsonSerializer.Serialize(content, JsonSerializerOptions), encoding, MediaTypeNames.Application.Json);
         }
@@ -25,7 +26,7 @@ namespace StarRailDamage.Source.Web.Request
         public async ValueTask<TResult?> DeserializeAsync<TResult>(HttpContent? httpContent, CancellationToken cancellationToken = default)
         {
             string Json;
-            if (httpContent is null || string.IsNullOrEmpty(Json = await httpContent.ReadAsStringAsync(cancellationToken).ConfigureAwait(false)))
+            if (httpContent.IsNull() || string.IsNullOrEmpty(Json = await httpContent.ReadAsStringAsync(cancellationToken).ConfigureAwait(false)))
             {
                 return default;
             }

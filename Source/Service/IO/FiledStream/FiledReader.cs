@@ -1,31 +1,36 @@
-﻿using System.IO;
+﻿using StarRailDamage.Source.Extension;
+using StarRailDamage.Source.Service.IO.FiledStream.Abstraction;
+using System.IO;
+using System.Runtime.ExceptionServices;
 
 namespace StarRailDamage.Source.Service.IO.FiledStream
 {
-    public class FiledReader : IDisposable
+    public class FiledReader : IFiledStreamStatus, IDisposable
     {
-        protected readonly StreamReader? _Reader;
+        public readonly StreamReader? Reader;
 
         public bool Success { get; }
 
-        public FiledReader(string filePath)
+        public ExceptionDispatchInfo? Exception { get; set; }
+
+        public FiledReader(string path)
         {
-            Success = FiledStream.TryGetReaderStream(filePath, out _Reader);
+            Success = StreamExtension.TryGetStreamReader(path, out Reader, this);
         }
 
         public FiledReader(Stream stream)
         {
-            Success = FiledStream.TryGetReaderStream(stream, out _Reader);
+            Success = StreamExtension.TryGetStreamReader(stream, out Reader, this);
         }
 
         public FiledReader(StreamReader reader)
         {
-            Success = (_Reader = reader) is not null;
+            Success = ObjectExtension.IsNotNull(Reader = reader);
         }
 
         public void Dispose()
         {
-            _Reader?.Dispose();
+            Reader?.Dispose();
             GC.SuppressFinalize(this);
         }
     }

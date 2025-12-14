@@ -1,4 +1,5 @@
 ﻿using StarRailDamage.Source.Core.Language;
+using StarRailDamage.Source.Extension;
 using StarRailDamage.Source.Model.Text;
 using StarRailDamage.Source.Service.IO.CommaSeparated;
 
@@ -14,7 +15,7 @@ namespace StarRailDamage.Source.Service.Language
             Dictionary<string, FixedText> FixedTextMap = GetFixedTextMap();
             foreach (string[]? Line in Reader)
             {
-                if (Line is null || Line.Length < 2) continue;
+                if (Line.IsNull() || Line.Length < 2) continue;
                 if (FixedTextMap.TryGetValue(Line[0], out FixedText FixedText))
                 {
                     if (AppendFixedText(FixedText, Line[1])) LoadedCount++;
@@ -26,7 +27,7 @@ namespace StarRailDamage.Source.Service.Language
         private static Dictionary<string, FixedText> GetFixedTextMap()
         {
             Dictionary<string, FixedText> FixedTextMap = [];
-            foreach (FixedText FixedText in Enum.GetValues(typeof(FixedText)))
+            foreach (FixedText FixedText in Enum.GetValues<FixedText>())
             {
                 FixedTextMap[FixedText.ToString()] = FixedText;
             }

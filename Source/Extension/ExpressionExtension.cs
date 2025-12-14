@@ -34,7 +34,7 @@ namespace StarRailDamage.Source.Extension
         private static string GetFullName(MemberExpression? memberExpression)
         {
             Stack<string> PathStack = new();
-            while (memberExpression is not null)
+            while (memberExpression.IsNotNull())
             {
                 PathStack.Push(memberExpression.Member.Name);
                 if (memberExpression.Expression is not MemberExpression ParentExpression) break;

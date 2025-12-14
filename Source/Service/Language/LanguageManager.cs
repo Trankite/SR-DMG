@@ -20,12 +20,12 @@ namespace StarRailDamage.Source.Service.Language
         /// </returns>
         public static int Load(string language = DefaultLanguage)
         {
-            int UnLoadedCount = LanguageReader.Load(language);
-            if (UnLoadedCount >= 0)
+            int UnLoaded = LanguageReader.Load(language);
+            if (UnLoaded >= 0)
             {
                 Language = language;
             }
-            return UnLoadedCount;
+            return UnLoaded;
         }
 
         public static Dictionary<string, string> GetLanguages()

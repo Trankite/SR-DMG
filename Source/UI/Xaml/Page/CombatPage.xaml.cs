@@ -1,4 +1,7 @@
 using StarRailDamage.Source.Core.Language;
+using StarRailDamage.Source.Model.DataStruct.Formula;
+using StarRailDamage.Source.Model.DataStruct.Formula.Evaluator;
+using StarRailDamage.Source.Model.DataStruct.Formula.Factory;
 using StarRailDamage.Source.Model.Metadata.Character.Attribute;
 using StarRailDamage.Source.Model.Metadata.Character.Damage;
 using StarRailDamage.Source.Model.Metadata.Character.Element;
@@ -6,6 +9,7 @@ using StarRailDamage.Source.Model.Text;
 using StarRailDamage.Source.UI.Control.Panel;
 using StarRailDamage.Source.UI.Factory.PropertyBinding;
 using StarRailDamage.Source.UI.Model.Page.Combat;
+using StarRailDamage.Source.UI.Xaml.View;
 using System.Windows;
 
 namespace StarRailDamage.Source.UI.Xaml.Page
@@ -17,6 +21,13 @@ namespace StarRailDamage.Source.UI.Xaml.Page
         public CombatPage()
         {
             InitializeComponent();
+        }
+
+        private void NumberTextBoxOnEvaluate(object sender, RoutedEventArgs e)
+        {
+            //NumberTextBox NumberTextBox = (NumberTextBox)sender;
+            //MathFormula? MathFormula = new MathFormulaFactory().FormulaParse(NumberTextBox.Text);
+            //NumberTextBox.Value = MathFormulaEvaluator.GetValue(MathFormula);
         }
 
         public CombatPageModel Model

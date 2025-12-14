@@ -3,7 +3,7 @@ using System.Runtime.ExceptionServices;
 
 namespace StarRailDamage.Source.Web.Response
 {
-    public class FinalizeResponse<TResult>
+    public class FinalizedResponse<TResult>
     {
         public TResult? Body { get; }
 
@@ -11,19 +11,19 @@ namespace StarRailDamage.Source.Web.Response
 
         public ExceptionDispatchInfo? Exception { get; }
 
-        public FinalizeResponse() { }
+        public FinalizedResponse() { }
 
-        public FinalizeResponse(HttpResponseHeaders? headers)
+        public FinalizedResponse(HttpResponseHeaders? headers)
         {
             Headers = headers;
         }
 
-        public FinalizeResponse(HttpResponseHeaders? headers, TResult? body) : this(headers)
+        public FinalizedResponse(HttpResponseHeaders? headers, TResult? body) : this(headers)
         {
             Body = body;
         }
 
-        public FinalizeResponse(HttpResponseHeaders? headers, ExceptionDispatchInfo? exception) : this(headers)
+        public FinalizedResponse(HttpResponseHeaders? headers, ExceptionDispatchInfo? exception) : this(headers)
         {
             Exception = exception;
         }

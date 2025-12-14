@@ -5,6 +5,7 @@
     xmlns:Converter="clr-namespace:StarRailDamage.Source.UI.Model.Converter">
     <Converter:FormatStringConverter x:Key="FormatStringConverter"/>
     <Converter:StringToDoubleConverter x:Key="StringToDoubleConverter"/>
+    <Converter:BooleanInversionConvert x:Key="BooleanInversionConvert"/>
 
     <system:Double x:Key="DropFontSize">12</system:Double>
     <system:Double x:Key="MainFontSize">15</system:Double>

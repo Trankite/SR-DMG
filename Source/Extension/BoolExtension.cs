@@ -5,6 +5,6 @@ namespace StarRailDamage.Source.Extension
     public static class BoolExtension
     {
         [DebuggerStepThrough]
-        public static T Capture<T>(this bool _, T result) => result;
+        public static TResult Captured<TResult, TNone>(this TNone _, TResult result) => result;
     }
 }

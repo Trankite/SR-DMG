@@ -17,14 +17,14 @@ namespace StarRailDamage.Source.Service.IO.CommaSeparated
 
         public void Write(string value)
         {
-            _Writer?.Write(Escaped(value));
+            Writer?.Write(Escaped(value));
             _Separated = false;
         }
 
         public void WriteLine(params string[] values)
         {
             values.Foreach(Write);
-            _Writer?.WriteLine();
+            Writer?.WriteLine();
             _Separated = true;
         }
 

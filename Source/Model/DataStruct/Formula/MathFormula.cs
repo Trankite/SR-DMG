@@ -1,19 +1,27 @@
-﻿using StarRailDamage.Source.Factory.PropertyExpression;
+﻿using StarRailDamage.Source.Extension;
+using StarRailDamage.Source.Model.DataStruct.Formula.Abstraction;
 
 namespace StarRailDamage.Source.Model.DataStruct.Formula
 {
-    public class MathFormula : TernaryFormula<object>
+    public class MathFormula : Formula
     {
-        public override object? Sender { set => base.Sender = null; }
+        public MathFormula() { }
 
-        public override IEnumerable<Dictionary<string, IPropertyExpression<object, double>>>? Source { set => base.Source = null; }
+        public MathFormula(string value)
+        {
+            Value = value;
+        }
 
-        public override bool ReadOnly { set => base.ReadOnly = true; }
+        public MathFormula(Formula? leftFormula, IFormulaSymbol formulaSymbol, Formula? rightFormula)
+        {
+            Left = leftFormula;
+            Symbol = formulaSymbol;
+            Right = rightFormula;
+        }
 
-        public MathFormula() => base.ReadOnly = true;
-
-        public MathFormula(string formula) : this() => SetFormula(formula);
-
-        public MathFormula(FormulaNode? formulaNode) : this() => SetFormula(formulaNode);
+        public override string ToString()
+        {
+            return $"{(Left.IsNotNull() ? (Left.Symbol.Rank < Symbol.Rank ? $"( {Left} )" : Left) : Value)}{(Right.IsNotNull() ? $" {Symbol.Text} {(Symbol.Rank > Right.Symbol.Rank || Symbol.Text is "-" && Right.Symbol.Text is "+" or "-" ? $"({Right})" : Right)}" : string.Empty)}";
+        }
     }
 }

@@ -1,9 +1,9 @@
 ﻿namespace StarRailDamage.Source.Model.DataStruct
 {
-    public class FrozenStruct<TName, TValue>(TName name, TValue value)
+    public class FrozenStruct<TContent, TExtend>(TContent name, TExtend value)
     {
-        public TName Name { get; } = name;
+        public TContent Content { get; } = name;
 
-        public TValue Value { get; } = value;
+        public TExtend Extend { get; } = value;
     }
 }

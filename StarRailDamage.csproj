@@ -109,8 +109,4 @@
     <Resource Include="Source\UI\Assets\Wall\Monster.png" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Source\UI\Language\zh-cn\" />
-  </ItemGroup>
-
 </Project>

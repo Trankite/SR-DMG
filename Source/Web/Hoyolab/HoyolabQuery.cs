@@ -6,6 +6,8 @@
 
         public const string ApplicationSerialNumber = "app_sn";
 
+        public const string ContentId = "content_id";
+
         public const string StarRailWikiApplicationSerialNumber = "sr_wiki";
     }
 }

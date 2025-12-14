@@ -3,18 +3,28 @@ using System.Linq.Expressions;
 
 namespace StarRailDamage.Source.Factory.PropertyExpression
 {
-    public class PropertyExpressionFactory<TSource, TProperty> : IPropertyExpressionFactory<TSource, TProperty>
+    public class PropertyExpressionFactory<TSender, TProperty> : IPropertyExpressionFactory<TSender, TProperty>
     {
-        public PropertyExpression<TSource, TProperty> GetPropertyExpression(Expression<Func<TSource, TProperty>> expression)
+        public IPropertyExpression<TSender, TProperty> GetPropertyExpression(Expression<Func<TSender, TProperty>> expression)
         {
-            return new(expression.Compile(), GetPropertySetter(expression), GetNullCheck(expression));
+            return new PropertyExpression<TSender, TProperty>(expression.Compile(), GetPropertySetter(expression).Compile(), GetNullCheck(expression).Compile());
         }
 
-        public static Func<TSource, bool> GetNullCheck(Expression<Func<TSource, TProperty>> expression)
+        public static Expression<Func<TSender, bool>> GetNullCheck(Expression<Func<TSender, TProperty>> expression)
         {
             ParameterExpression Parameter = expression.Parameters.First();
             Expression NullCheckExpression = BuildNullCheck(expression.Body.MemberExpression().ThrowIfNull());
-            return Expression.Lambda<Func<TSource, bool>>(NullCheckExpression, Parameter).Compile();
+            return Expression.Lambda<Func<TSender, bool>>(NullCheckExpression, Parameter);
+        }
+
+        public static Expression<Action<TSender, TProperty?>> GetPropertySetter(Expression<Func<TSender, TProperty>> expression)
+        {
+            ParameterExpression SenderParameter = Expression.Parameter(typeof(TSender));
+            ParameterExpression PropertyParameter = Expression.Parameter(typeof(TProperty));
+            MemberExpression MemberExpression = expression.Body.MemberExpression().ThrowIfNull();
+            MemberExpression PropertyAccess = BuildPropertyAccess(SenderParameter, MemberExpression);
+            BinaryExpression AssignExpression = Expression.Assign(PropertyAccess, PropertyParameter);
+            return Expression.Lambda<Action<TSender, TProperty?>>(AssignExpression, SenderParameter, PropertyParameter);
         }
 
         private static Expression BuildNullCheck(MemberExpression memberExpression)
@@ -30,21 +40,11 @@ namespace StarRailDamage.Source.Factory.PropertyExpression
             return Expression.Constant(false);
         }
 
-        public static Action<TSource, TProperty?> GetPropertySetter(Expression<Func<TSource, TProperty>> expression)
-        {
-            ParameterExpression SourceParameter = Expression.Parameter(typeof(TSource));
-            ParameterExpression PropertyParameter = Expression.Parameter(typeof(TProperty));
-            MemberExpression MemberExpression = expression.Body.MemberExpression().ThrowIfNull();
-            MemberExpression PropertyAccess = BuildPropertyAccess(SourceParameter, MemberExpression);
-            BinaryExpression AssignExpression = Expression.Assign(PropertyAccess, PropertyParameter);
-            return Expression.Lambda<Action<TSource, TProperty?>>(AssignExpression, SourceParameter, PropertyParameter).Compile();
-        }
-
         private static MemberExpression BuildPropertyAccess(ParameterExpression parameterExpression, MemberExpression memberExpression)
         {
-            if (memberExpression.Expression is MemberExpression parentMember)
+            if (memberExpression.Expression is MemberExpression ParentMember)
             {
-                return Expression.MakeMemberAccess(BuildPropertyAccess(parameterExpression, parentMember), memberExpression.Member);
+                return Expression.MakeMemberAccess(BuildPropertyAccess(parameterExpression, ParentMember), memberExpression.Member);
             }
             return Expression.MakeMemberAccess(parameterExpression, memberExpression.Member);
         }

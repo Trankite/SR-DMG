@@ -1,7 +1,7 @@
 ﻿using System.IO;
 using System.Windows;
 
-namespace StarRailDamage.Source.Service.IO.AppManifest
+namespace StarRailDamage.Source.Service.IO.Manifest
 {
     public class AppManifestStream
     {

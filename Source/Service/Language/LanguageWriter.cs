@@ -10,7 +10,7 @@ namespace StarRailDamage.Source.Service.Language
         {
             string FilePath = LanguageManager.GetPath(language);
             using CommaSeparatedWriter Writer = new(FilePath.BuildFile());
-            foreach (string EnumName in Enum.GetNames(typeof(FixedText)))
+            foreach (string EnumName in Enum.GetNames<FixedText>())
             {
                 Writer.WriteLine(EnumName);
             }

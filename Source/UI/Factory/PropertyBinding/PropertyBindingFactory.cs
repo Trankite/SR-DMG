@@ -17,8 +17,8 @@ namespace StarRailDamage.Source.UI.Factory.PropertyBinding
         public string AddBinding<TProperty>(Expression<Func<TSender, TProperty>> modelProperty, Expression<Func<TSender, TProperty>> dependProperty, PropertyBindingMode bindingMode = PropertyBindingMode.OneWay)
         {
             PropertyExpressionFactory<TSender, TProperty> Factory = new();
-            PropertyExpression<TSender, TProperty> ModelExpression = Factory.GetPropertyExpression(modelProperty);
-            PropertyExpression<TSender, TProperty> DependExpression = Factory.GetPropertyExpression(dependProperty);
+            IPropertyExpression<TSender, TProperty> ModelExpression = Factory.GetPropertyExpression(modelProperty);
+            IPropertyExpression<TSender, TProperty> DependExpression = Factory.GetPropertyExpression(dependProperty);
             void DependToModel(TSender sender)
             {
                 if (DependExpression.TryGetValue(sender, out TProperty? value)) ModelExpression.TrySetValue(sender, value);
@@ -67,7 +67,7 @@ namespace StarRailDamage.Source.UI.Factory.PropertyBinding
 
         public void ClearModelBinding<TProperty>(TProperty? model) where TProperty : INotifyPropertyChanged
         {
-            if (model is null) return;
+            if (model.IsNull()) return;
             if (NotifyHandlers.Remove(model, out PropertyChangedEventHandler? PropertyChangedEventHandler))
             {
                 model.PropertyChanged -= PropertyChangedEventHandler;

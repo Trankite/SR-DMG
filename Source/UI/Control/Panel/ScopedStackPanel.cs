@@ -1,4 +1,5 @@
-﻿using System.Windows;
+﻿using StarRailDamage.Source.Extension;
+using System.Windows;
 using System.Windows.Controls;
 
 namespace StarRailDamage.Source.UI.Control.Panel
@@ -38,7 +39,7 @@ namespace StarRailDamage.Source.UI.Control.Panel
             for (int i = 0; i < Children.Count; i++)
             {
                 UIElement Child = Children[i];
-                if (Child is null) continue;
+                if (Child.IsNull()) continue;
                 Size ChildSize = Child.DesiredSize;
                 Rect FinalRect;
                 if (Orientation == Orientation.Horizontal)
