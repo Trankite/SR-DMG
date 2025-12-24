@@ -1,10 +1,12 @@
 ﻿using StarRailDamage.Source.Extension;
+using StarRailDamage.Source.Model.Text;
 using StarRailDamage.Source.UI.Factory.PropertyBinding;
 using StarRailDamage.Source.UI.Model.View;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
+using System.Windows.Media.Imaging;
 
 namespace StarRailDamage.Source.UI.Xaml.View
 {
@@ -39,17 +41,17 @@ namespace StarRailDamage.Source.UI.Xaml.View
 
         public static readonly DependencyProperty ModelProperty = BindingFactory.ModelBinding(x => x.Model);
 
-        public ImageSource Icon
+        public BitmapImage Icon
         {
-            get => (ImageSource)GetValue(IconProperty);
+            get => (BitmapImage)GetValue(IconProperty);
             set => SetValue(IconProperty, value);
         }
 
         public static readonly DependencyProperty IconProperty = BindingFactory.DependBinding(x => x.Model.Icon, x => x.Icon);
 
-        public string Title
+        public TextBinding Title
         {
-            get => (string)GetValue(TitleProperty);
+            get => (TextBinding)GetValue(TitleProperty);
             set => SetValue(TitleProperty, value);
         }
 
@@ -68,9 +70,9 @@ namespace StarRailDamage.Source.UI.Xaml.View
             return (double.TryParse((string)baseValue, out double result) ? Math.Round(result, ((LabelTextBox)d).Digits) : 0).ToString();
         }
 
-        public string Unit
+        public TextBinding Unit
         {
-            get => (string)GetValue(UnitProperty);
+            get => (TextBinding)GetValue(UnitProperty);
             set => SetValue(UnitProperty, value);
         }
 

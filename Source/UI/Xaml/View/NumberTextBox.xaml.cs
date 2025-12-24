@@ -1,5 +1,4 @@
-﻿using StarRailDamage.Source.Core.Language;
-using StarRailDamage.Source.Extension;
+﻿using StarRailDamage.Source.Extension;
 using StarRailDamage.Source.Model.Text;
 using StarRailDamage.Source.UI.Control;
 using StarRailDamage.Source.UI.Factory.PropertyBinding;
@@ -16,9 +15,7 @@ namespace StarRailDamage.Source.UI.Xaml.View
     {
         private static readonly PropertyBindingFactory<NumberTextBox> BindingFactory = new();
 
-        public static TextBinding TitleTextBinding { get; } = FixedText.NumberTextBoxTitle.Binding();
-
-        private ScopedTextBox InnerTextBox { get => field.IsNotNull() ? field : field = (ScopedTextBox)Template.FindName("PART_TextBox", this); }
+        private ScopedTextBox InnerTextBox => field.IsNotNull() ? field : field = (ScopedTextBox)Template.FindName("PART_TextBox", this);
 
         public NumberTextBox()
         {
@@ -44,7 +41,7 @@ namespace StarRailDamage.Source.UI.Xaml.View
 
         private void TextBoxLostFocus(object sender, RoutedEventArgs e)
         {
-            RaiseEvent(new RoutedEventArgs(EvaluateEvent, this).Configure(Dropdown = false));
+
         }
 
         private void PromptItemClick(object sender, RoutedEventArgs e)
@@ -56,14 +53,6 @@ namespace StarRailDamage.Source.UI.Xaml.View
             InnerTextBox.CaretIndex = CaretIndex + Prompt.Length;
             InnerTextBox.Focus();
             Dropdown = false;
-        }
-
-        public static readonly RoutedEvent EvaluateEvent = EventManager.RegisterRoutedEvent(nameof(EvaluateEvent), RoutingStrategy.Bubble, typeof(RoutedEventHandler), typeof(NumberTextBox));
-
-        public event RoutedEventHandler OnEvaluate
-        {
-            add => AddHandler(EvaluateEvent, value);
-            remove => RemoveHandler(EvaluateEvent, value);
         }
 
         public NumberTextBoxModel Model

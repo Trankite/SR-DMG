@@ -1,4 +1,5 @@
 ﻿using StarRailDamage.Source.Core.Setting;
+using StarRailDamage.Source.Model.Text;
 using System.Globalization;
 using System.Windows;
 using System.Windows.Controls;
@@ -17,13 +18,29 @@ namespace StarRailDamage.Source.UI.Control
             };
         }
 
+        public TextBinding TextBinding
+        {
+            get => (TextBinding)GetValue(TextBindingProperty);
+            set => SetValue(TextBindingProperty, value);
+        }
+
+        private static readonly DependencyProperty TextBindingProperty = DependencyProperty.Register(nameof(TextBinding), typeof(TextBinding), typeof(ScopedTextBlock), new PropertyMetadata(default, TextBindingChangedCallback));
+
+        private static void TextBindingChangedCallback(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            if (d is ScopedTextBlock ScopedTextBlock)
+            {
+                ScopedTextBlock.Text = ScopedTextBlock.TextBinding.Text;
+            }
+        }
+
         public string TipText
         {
             get => (string)GetValue(TipTextProperty);
             set => SetValue(TipTextProperty, value);
         }
 
-        private static readonly DependencyProperty TipTextProperty = DependencyProperty.Register(nameof(TipText), typeof(string), typeof(ScopedTextBlock), new PropertyMetadata(null, TipTextChangedCallBack));
+        private static readonly DependencyProperty TipTextProperty = DependencyProperty.Register(nameof(TipText), typeof(string), typeof(ScopedTextBlock), new PropertyMetadata(default, TipTextChangedCallBack));
 
         private static void TipTextChangedCallBack(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {

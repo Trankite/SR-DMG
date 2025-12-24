@@ -11,14 +11,9 @@ namespace StarRailDamage.Source.Model.DataStruct.Formula.Method
         {
             public string Symbol => string.Empty;
 
-            double ITernaryFormulaMethod.Method(IList<Formula> parameters, Dictionary<string, IPropertyExpression<double>>? source, bool readOnly)
+            public double Method(IList<Formula> parameters, Dictionary<string, IPropertyExpression<double>>? source, bool readOnly)
             {
                 return double.NaN;
-            }
-
-            public static double Method(IList<Formula> parameters, Dictionary<string, IPropertyExpression<double>>? source, bool readOnly)
-            {
-                return TernaryFormulaSymbol.DefaultMethod.Method(parameters, source, readOnly);
             }
         }
 
@@ -26,9 +21,9 @@ namespace StarRailDamage.Source.Model.DataStruct.Formula.Method
         {
             public string Symbol => "(";
 
-            double ITernaryFormulaMethod.Method(IList<Formula> parameters, Dictionary<string, IPropertyExpression<double>>? source, bool readOnly)
+            public double Method(IList<Formula> parameters, Dictionary<string, IPropertyExpression<double>>? source, bool readOnly)
             {
-                return DefaultMethod.Method(parameters, source, readOnly);
+                return TernaryFormulaSymbol.DefaultMethod.Method(parameters, source, readOnly);
             }
         }
 
@@ -36,9 +31,9 @@ namespace StarRailDamage.Source.Model.DataStruct.Formula.Method
         {
             public string Symbol => ")";
 
-            double ITernaryFormulaMethod.Method(IList<Formula> parameters, Dictionary<string, IPropertyExpression<double>>? source, bool readOnly)
+            public double Method(IList<Formula> parameters, Dictionary<string, IPropertyExpression<double>>? source, bool readOnly)
             {
-                return DefaultMethod.Method(parameters, source, readOnly);
+                return TernaryFormulaSymbol.DefaultMethod.Method(parameters, source, readOnly);
             }
         }
 
@@ -46,9 +41,9 @@ namespace StarRailDamage.Source.Model.DataStruct.Formula.Method
         {
             public string Symbol => ",";
 
-            double ITernaryFormulaMethod.Method(IList<Formula> parameters, Dictionary<string, IPropertyExpression<double>>? source, bool readOnly)
+            public double Method(IList<Formula> parameters, Dictionary<string, IPropertyExpression<double>>? source, bool readOnly)
             {
-                return DefaultMethod.Method(parameters, source, readOnly);
+                return TernaryFormulaSymbol.DefaultMethod.Method(parameters, source, readOnly);
             }
         }
 
@@ -56,9 +51,9 @@ namespace StarRailDamage.Source.Model.DataStruct.Formula.Method
         {
             public string Symbol => "=";
 
-            double ITernaryFormulaMethod.Method(IList<Formula> parameters, Dictionary<string, IPropertyExpression<double>>? source, bool readOnly)
+            public double Method(IList<Formula> parameters, Dictionary<string, IPropertyExpression<double>>? source, bool readOnly)
             {
-                return parameters.TryGetFirst(out Formula? Formula) && GetValue(Formula, source, readOnly).OutTemp(out double TempValue) && TrySetValue(Formula.Left, TempValue, source, readOnly) ? TempValue : DefaultMethod.Method(parameters, source, readOnly);
+                return parameters.TryGetFirst(out Formula? Formula) && GetValue(Formula, source, readOnly).OutTemp(out double TempValue) && TrySetValue(Formula.Left, TempValue, source, readOnly) ? TempValue : TernaryFormulaSymbol.DefaultMethod.Method(parameters, source, readOnly);
             }
         }
 
@@ -66,9 +61,9 @@ namespace StarRailDamage.Source.Model.DataStruct.Formula.Method
         {
             public string Symbol => "+=";
 
-            double ITernaryFormulaMethod.Method(IList<Formula> parameters, Dictionary<string, IPropertyExpression<double>>? source, bool readOnly)
+            public double Method(IList<Formula> parameters, Dictionary<string, IPropertyExpression<double>>? source, bool readOnly)
             {
-                return parameters.TryGetFirst(out Formula? Formula) && AddMethod.Method(parameters, source, readOnly).OutTemp(out double TempValue) && TrySetValue(Formula.Left, TempValue, source, readOnly) ? TempValue : DefaultMethod.Method(parameters, source, readOnly);
+                return parameters.TryGetFirst(out Formula? Formula) && AddMethod.Method(parameters, source, readOnly).OutTemp(out double TempValue) && TrySetValue(Formula.Left, TempValue, source, readOnly) ? TempValue : TernaryFormulaSymbol.DefaultMethod.Method(parameters, source, readOnly);
             }
         }
 
@@ -76,9 +71,9 @@ namespace StarRailDamage.Source.Model.DataStruct.Formula.Method
         {
             public string Symbol => "-=";
 
-            double ITernaryFormulaMethod.Method(IList<Formula> parameters, Dictionary<string, IPropertyExpression<double>>? source, bool readOnly)
+            public double Method(IList<Formula> parameters, Dictionary<string, IPropertyExpression<double>>? source, bool readOnly)
             {
-                return parameters.TryGetFirst(out Formula? Formula) && SubtractMethod.Method(parameters, source, readOnly).OutTemp(out double TempValue) && TrySetValue(Formula.Left, TempValue, source, readOnly) ? TempValue : DefaultMethod.Method(parameters, source, readOnly);
+                return parameters.TryGetFirst(out Formula? Formula) && SubtractMethod.Method(parameters, source, readOnly).OutTemp(out double TempValue) && TrySetValue(Formula.Left, TempValue, source, readOnly) ? TempValue : TernaryFormulaSymbol.DefaultMethod.Method(parameters, source, readOnly);
             }
         }
 
@@ -86,9 +81,9 @@ namespace StarRailDamage.Source.Model.DataStruct.Formula.Method
         {
             public string Symbol => "*=";
 
-            double ITernaryFormulaMethod.Method(IList<Formula> parameters, Dictionary<string, IPropertyExpression<double>>? source, bool readOnly)
+            public double Method(IList<Formula> parameters, Dictionary<string, IPropertyExpression<double>>? source, bool readOnly)
             {
-                return parameters.TryGetFirst(out Formula? Formula) && MultiplyMethod.Method(parameters, source, readOnly).OutTemp(out double TempValue) && TrySetValue(Formula.Left, TempValue, source, readOnly) ? TempValue : DefaultMethod.Method(parameters, source, readOnly);
+                return parameters.TryGetFirst(out Formula? Formula) && MultiplyMethod.Method(parameters, source, readOnly).OutTemp(out double TempValue) && TrySetValue(Formula.Left, TempValue, source, readOnly) ? TempValue : TernaryFormulaSymbol.DefaultMethod.Method(parameters, source, readOnly);
             }
         }
 
@@ -96,9 +91,9 @@ namespace StarRailDamage.Source.Model.DataStruct.Formula.Method
         {
             public string Symbol => "/=";
 
-            double ITernaryFormulaMethod.Method(IList<Formula> parameters, Dictionary<string, IPropertyExpression<double>>? source, bool readOnly)
+            public double Method(IList<Formula> parameters, Dictionary<string, IPropertyExpression<double>>? source, bool readOnly)
             {
-                return parameters.TryGetFirst(out Formula? Formula) && DivideMethod.Method(parameters, source, readOnly).OutTemp(out double TempValue) && TrySetValue(Formula.Left, TempValue, source, readOnly) ? TempValue : DefaultMethod.Method(parameters, source, readOnly);
+                return parameters.TryGetFirst(out Formula? Formula) && DivideMethod.Method(parameters, source, readOnly).OutTemp(out double TempValue) && TrySetValue(Formula.Left, TempValue, source, readOnly) ? TempValue : TernaryFormulaSymbol.DefaultMethod.Method(parameters, source, readOnly);
             }
         }
 
@@ -106,7 +101,7 @@ namespace StarRailDamage.Source.Model.DataStruct.Formula.Method
         {
             public string Symbol => "?";
 
-            double ITernaryFormulaMethod.Method(IList<Formula> parameters, Dictionary<string, IPropertyExpression<double>>? source, bool readOnly)
+            public double Method(IList<Formula> parameters, Dictionary<string, IPropertyExpression<double>>? source, bool readOnly)
             {
                 return parameters.TryGetFirst(out Formula? Formula) && Convert.ToBoolean(GetValue(Formula.Left, source, readOnly)) ? GetValue(Formula.Right, source, readOnly) : Convert.ToDouble(false);
             }
@@ -116,7 +111,7 @@ namespace StarRailDamage.Source.Model.DataStruct.Formula.Method
         {
             public string Symbol => ":";
 
-            double ITernaryFormulaMethod.Method(IList<Formula> parameters, Dictionary<string, IPropertyExpression<double>>? source, bool readOnly)
+            public double Method(IList<Formula> parameters, Dictionary<string, IPropertyExpression<double>>? source, bool readOnly)
             {
                 return parameters.TryGetFirst(out Formula? Formula) && !Convert.ToBoolean(GetValue(Formula.Left, source, readOnly)) ? GetValue(Formula.Right, source, readOnly) : Convert.ToDouble(true);
             }
@@ -126,7 +121,7 @@ namespace StarRailDamage.Source.Model.DataStruct.Formula.Method
         {
             public string Symbol => "|";
 
-            double ITernaryFormulaMethod.Method(IList<Formula> parameters, Dictionary<string, IPropertyExpression<double>>? source, bool readOnly)
+            public double Method(IList<Formula> parameters, Dictionary<string, IPropertyExpression<double>>? source, bool readOnly)
             {
                 return Convert.ToDouble(parameters.TryGetFirst(out Formula? Formula) && (Convert.ToBoolean(GetValue(Formula.Left, source, readOnly)) || Convert.ToBoolean(GetValue(Formula.Right, source, readOnly))));
             }
@@ -136,7 +131,7 @@ namespace StarRailDamage.Source.Model.DataStruct.Formula.Method
         {
             public string Symbol => "|!";
 
-            double ITernaryFormulaMethod.Method(IList<Formula> parameters, Dictionary<string, IPropertyExpression<double>>? source, bool readOnly)
+            public double Method(IList<Formula> parameters, Dictionary<string, IPropertyExpression<double>>? source, bool readOnly)
             {
                 return Convert.ToDouble(parameters.TryGetFirst(out Formula? Formula) && (Convert.ToBoolean(GetValue(Formula.Left, source, readOnly)) || !Convert.ToBoolean(GetValue(Formula.Right, source, readOnly))));
             }
@@ -146,7 +141,7 @@ namespace StarRailDamage.Source.Model.DataStruct.Formula.Method
         {
             public string Symbol => "&";
 
-            double ITernaryFormulaMethod.Method(IList<Formula> parameters, Dictionary<string, IPropertyExpression<double>>? source, bool readOnly)
+            public double Method(IList<Formula> parameters, Dictionary<string, IPropertyExpression<double>>? source, bool readOnly)
             {
                 return Convert.ToDouble(parameters.TryGetFirst(out Formula? Formula) && Convert.ToBoolean(GetValue(Formula.Left, source, readOnly)) && Convert.ToBoolean(GetValue(Formula.Right, source, readOnly)));
             }
@@ -156,7 +151,7 @@ namespace StarRailDamage.Source.Model.DataStruct.Formula.Method
         {
             public string Symbol => "&!";
 
-            double ITernaryFormulaMethod.Method(IList<Formula> parameters, Dictionary<string, IPropertyExpression<double>>? source, bool readOnly)
+            public double Method(IList<Formula> parameters, Dictionary<string, IPropertyExpression<double>>? source, bool readOnly)
             {
                 return Convert.ToDouble(parameters.TryGetFirst(out Formula? Formula) && Convert.ToBoolean(GetValue(Formula.Left, source, readOnly)) && !Convert.ToBoolean(GetValue(Formula.Right, source, readOnly)));
             }
@@ -166,7 +161,7 @@ namespace StarRailDamage.Source.Model.DataStruct.Formula.Method
         {
             public string Symbol => ">";
 
-            double ITernaryFormulaMethod.Method(IList<Formula> parameters, Dictionary<string, IPropertyExpression<double>>? source, bool readOnly)
+            public double Method(IList<Formula> parameters, Dictionary<string, IPropertyExpression<double>>? source, bool readOnly)
             {
                 return Convert.ToDouble(parameters.TryGetFirst(out Formula? Formula) && GetValue(Formula.Left, source, readOnly) > GetValue(Formula.Right, source, readOnly));
             }
@@ -176,7 +171,7 @@ namespace StarRailDamage.Source.Model.DataStruct.Formula.Method
         {
             public string Symbol => ">=";
 
-            double ITernaryFormulaMethod.Method(IList<Formula> parameters, Dictionary<string, IPropertyExpression<double>>? source, bool readOnly)
+            public double Method(IList<Formula> parameters, Dictionary<string, IPropertyExpression<double>>? source, bool readOnly)
             {
                 return Convert.ToDouble(parameters.TryGetFirst(out Formula? Formula) && GetValue(Formula.Left, source, readOnly) >= GetValue(Formula.Right, source, readOnly));
             }
@@ -186,7 +181,7 @@ namespace StarRailDamage.Source.Model.DataStruct.Formula.Method
         {
             public string Symbol => "==";
 
-            double ITernaryFormulaMethod.Method(IList<Formula> parameters, Dictionary<string, IPropertyExpression<double>>? source, bool readOnly)
+            public double Method(IList<Formula> parameters, Dictionary<string, IPropertyExpression<double>>? source, bool readOnly)
             {
                 return Convert.ToDouble(parameters.TryGetFirst(out Formula? Formula) && GetValue(Formula.Left, source, readOnly) == GetValue(Formula.Right, source, readOnly));
             }
@@ -196,7 +191,7 @@ namespace StarRailDamage.Source.Model.DataStruct.Formula.Method
         {
             public string Symbol => "!=";
 
-            double ITernaryFormulaMethod.Method(IList<Formula> parameters, Dictionary<string, IPropertyExpression<double>>? source, bool readOnly)
+            public double Method(IList<Formula> parameters, Dictionary<string, IPropertyExpression<double>>? source, bool readOnly)
             {
                 return Convert.ToDouble(parameters.TryGetFirst(out Formula? Formula) && GetValue(Formula.Left, source, readOnly) != GetValue(Formula.Right, source, readOnly));
             }
@@ -206,7 +201,7 @@ namespace StarRailDamage.Source.Model.DataStruct.Formula.Method
         {
             public string Symbol => "<";
 
-            double ITernaryFormulaMethod.Method(IList<Formula> parameters, Dictionary<string, IPropertyExpression<double>>? source, bool readOnly)
+            public double Method(IList<Formula> parameters, Dictionary<string, IPropertyExpression<double>>? source, bool readOnly)
             {
                 return Convert.ToDouble(parameters.TryGetFirst(out Formula? Formula) && GetValue(Formula.Left, source, readOnly) < GetValue(Formula.Right, source, readOnly));
             }
@@ -216,7 +211,7 @@ namespace StarRailDamage.Source.Model.DataStruct.Formula.Method
         {
             public string Symbol => "<=";
 
-            double ITernaryFormulaMethod.Method(IList<Formula> parameters, Dictionary<string, IPropertyExpression<double>>? source, bool readOnly)
+            public double Method(IList<Formula> parameters, Dictionary<string, IPropertyExpression<double>>? source, bool readOnly)
             {
                 return Convert.ToDouble(parameters.TryGetFirst(out Formula? Formula) && GetValue(Formula.Left, source, readOnly) <= GetValue(Formula.Right, source, readOnly));
             }
@@ -233,7 +228,7 @@ namespace StarRailDamage.Source.Model.DataStruct.Formula.Method
 
             public static double Method(IList<Formula> parameters, Dictionary<string, IPropertyExpression<double>>? source, bool readOnly)
             {
-                return parameters.TryGetFirst(out Formula? Formula) ? GetValue(Formula.Left, source, readOnly) + GetValue(Formula.Right, source, readOnly) : DefaultMethod.Method(parameters, source, readOnly);
+                return parameters.TryGetFirst(out Formula? Formula) ? GetValue(Formula.Left, source, readOnly) + GetValue(Formula.Right, source, readOnly) : TernaryFormulaSymbol.DefaultMethod.Method(parameters, source, readOnly);
             }
         }
 
@@ -248,7 +243,7 @@ namespace StarRailDamage.Source.Model.DataStruct.Formula.Method
 
             public static double Method(IList<Formula> parameters, Dictionary<string, IPropertyExpression<double>>? source, bool readOnly)
             {
-                return parameters.TryGetFirst(out Formula? Formula) ? GetValue(Formula.Left, source, readOnly) - GetValue(Formula.Right, source, readOnly) : DefaultMethod.Method(parameters, source, readOnly);
+                return parameters.TryGetFirst(out Formula? Formula) ? GetValue(Formula.Left, source, readOnly) - GetValue(Formula.Right, source, readOnly) : TernaryFormulaSymbol.DefaultMethod.Method(parameters, source, readOnly);
             }
         }
 
@@ -263,7 +258,7 @@ namespace StarRailDamage.Source.Model.DataStruct.Formula.Method
 
             public static double Method(IList<Formula> parameters, Dictionary<string, IPropertyExpression<double>>? source, bool readOnly)
             {
-                return parameters.TryGetFirst(out Formula? Formula) ? GetValue(Formula.Left, source, readOnly) * GetValue(Formula.Right, source, readOnly) : DefaultMethod.Method(parameters, source, readOnly);
+                return parameters.TryGetFirst(out Formula? Formula) ? GetValue(Formula.Left, source, readOnly) * GetValue(Formula.Right, source, readOnly) : TernaryFormulaSymbol.DefaultMethod.Method(parameters, source, readOnly);
             }
         }
 
@@ -278,7 +273,7 @@ namespace StarRailDamage.Source.Model.DataStruct.Formula.Method
 
             public static double Method(IList<Formula> parameters, Dictionary<string, IPropertyExpression<double>>? source, bool readOnly)
             {
-                return parameters.TryGetFirst(out Formula? Formula) ? GetValue(Formula.Left, source, readOnly) / GetValue(Formula.Right, source, readOnly) : DefaultMethod.Method(parameters, source, readOnly);
+                return parameters.TryGetFirst(out Formula? Formula) ? GetValue(Formula.Left, source, readOnly) / GetValue(Formula.Right, source, readOnly) : TernaryFormulaSymbol.DefaultMethod.Method(parameters, source, readOnly);
             }
         }
 
@@ -286,9 +281,9 @@ namespace StarRailDamage.Source.Model.DataStruct.Formula.Method
         {
             public string Symbol => "^";
 
-            double ITernaryFormulaMethod.Method(IList<Formula> parameters, Dictionary<string, IPropertyExpression<double>>? source, bool readOnly)
+            public double Method(IList<Formula> parameters, Dictionary<string, IPropertyExpression<double>>? source, bool readOnly)
             {
-                return parameters.TryGetFirst(out Formula? Formula) ? Math.Pow(GetValue(Formula.Left, source, readOnly), GetValue(Formula.Right, source, readOnly)) : DefaultMethod.Method(parameters, source, readOnly);
+                return parameters.TryGetFirst(out Formula? Formula) ? Math.Pow(GetValue(Formula.Left, source, readOnly), GetValue(Formula.Right, source, readOnly)) : TernaryFormulaSymbol.DefaultMethod.Method(parameters, source, readOnly);
             }
         }
 
@@ -296,7 +291,7 @@ namespace StarRailDamage.Source.Model.DataStruct.Formula.Method
         {
             public string Symbol => "!(";
 
-            double ITernaryFormulaMethod.Method(IList<Formula> parameters, Dictionary<string, IPropertyExpression<double>>? source, bool readOnly)
+            public double Method(IList<Formula> parameters, Dictionary<string, IPropertyExpression<double>>? source, bool readOnly)
             {
                 return Convert.ToDouble(parameters.TryGetFirst(out Formula? Formula) && !Convert.ToBoolean(GetValue(Formula, source, readOnly)));
             }
@@ -306,9 +301,9 @@ namespace StarRailDamage.Source.Model.DataStruct.Formula.Method
         {
             public string Symbol => "Mod(";
 
-            double ITernaryFormulaMethod.Method(IList<Formula> parameters, Dictionary<string, IPropertyExpression<double>>? source, bool readOnly)
+            public double Method(IList<Formula> parameters, Dictionary<string, IPropertyExpression<double>>? source, bool readOnly)
             {
-                return parameters.Count == 2 ? GetValue(parameters[0], source, readOnly) % GetValue(parameters[1], source, readOnly) : DefaultMethod.Method(parameters, source, readOnly);
+                return parameters.Count == 2 ? GetValue(parameters[0], source, readOnly) % GetValue(parameters[1], source, readOnly) : TernaryFormulaSymbol.DefaultMethod.Method(parameters, source, readOnly);
             }
         }
 
@@ -316,7 +311,7 @@ namespace StarRailDamage.Source.Model.DataStruct.Formula.Method
         {
             public string Symbol => "Max(";
 
-            double ITernaryFormulaMethod.Method(IList<Formula> parameters, Dictionary<string, IPropertyExpression<double>>? source, bool readOnly)
+            public double Method(IList<Formula> parameters, Dictionary<string, IPropertyExpression<double>>? source, bool readOnly)
             {
                 return parameters.Max(x => GetValue(x, source, readOnly));
             }
@@ -326,7 +321,7 @@ namespace StarRailDamage.Source.Model.DataStruct.Formula.Method
         {
             public string Symbol => "Min(";
 
-            double ITernaryFormulaMethod.Method(IList<Formula> parameters, Dictionary<string, IPropertyExpression<double>>? source, bool readOnly)
+            public double Method(IList<Formula> parameters, Dictionary<string, IPropertyExpression<double>>? source, bool readOnly)
             {
                 return parameters.Min(x => GetValue(x, source, readOnly));
             }
@@ -336,9 +331,9 @@ namespace StarRailDamage.Source.Model.DataStruct.Formula.Method
         {
             public string Symbol => "The(";
 
-            double ITernaryFormulaMethod.Method(IList<Formula> parameters, Dictionary<string, IPropertyExpression<double>>? source, bool readOnly)
+            public double Method(IList<Formula> parameters, Dictionary<string, IPropertyExpression<double>>? source, bool readOnly)
             {
-                return parameters.TryGetFirst(out Formula? Formula) && parameters.IndexTry((int)GetValue(Formula, source, readOnly), out Formula) ? GetValue(Formula, source, readOnly) : DefaultMethod.Method(parameters, source, readOnly);
+                return parameters.TryGetFirst(out Formula? Formula) && parameters.IndexTry((int)GetValue(Formula, source, readOnly), out Formula) ? GetValue(Formula, source, readOnly) : TernaryFormulaSymbol.DefaultMethod.Method(parameters, source, readOnly);
             }
         }
     }

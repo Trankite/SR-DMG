@@ -31,6 +31,7 @@
         ImaginaryElement,//虚数
         ImaginaryDelayedDamage,//禁锢
         LevelUnit,//级
+        PercentUnit,//%
         CharacterLevel,//角色等级
         CharacterLevelSimple,//角色等级
         MonsterLevel,//怪物等级
@@ -94,9 +95,9 @@
         ChargingLimit,//能量上限
         ChargingLimitSimple,//能量上限
         NumberTextBoxTitle,//算式
-        ExportData,//导出
-        ChangeData,//切换
-        SaveData,//保存
+        Export,//导出
+        Change,//切换
+        Save,//保存
         Setting,//设置
     }
 }

@@ -1,51 +1,26 @@
 ﻿using StarRailDamage.Source.Model.Text;
-using StarRailDamage.Source.UI.Factory.NotifyPropertyChanged;
+using StarRailDamage.Source.UI.Model.View;
 using System.Windows.Media.Imaging;
 
 namespace StarRailDamage.Source.Model.Metadata.Character.Attribute
 {
-    public class CharacterAttributeInfoModel : NotifyPropertyChangedFactory
+    public class CharacterAttributeInfoModel : LabelTextBoxModel
     {
-        private BitmapImage? _Icon;
+        public TextBinding _FullName = TextBinding.Default;
 
-        private TextBinding? _FullName;
-
-        private TextBinding? _SimpleName;
-
-        private int _Digits;
-
-        public CharacterAttributeInfoModel() { }
-
-        public CharacterAttributeInfoModel(BitmapImage? icon, TextBinding? fullName, TextBinding? simpleName, int digits)
+        public CharacterAttributeInfoModel(BitmapImage bitmapImage, TextBinding fullNameTextBinding, TextBinding simpleTextBinding, int digits, TextBinding unitTextBinding)
         {
-            _Icon = icon;
-            _FullName = fullName;
-            _SimpleName = simpleName;
-            _Digits = digits;
+            Icon = bitmapImage;
+            FullName = fullNameTextBinding;
+            Title = simpleTextBinding;
+            Digits = digits;
+            Unit = unitTextBinding;
         }
 
-        public BitmapImage? Icon
-        {
-            get => _Icon;
-            set => SetField(ref _Icon, value);
-        }
-
-        public TextBinding? FullName
+        public TextBinding FullName
         {
             get => _FullName;
             set => SetField(ref _FullName, value);
-        }
-
-        public TextBinding? SimpleName
-        {
-            get => _SimpleName;
-            set => SetField(ref _SimpleName, value);
-        }
-
-        public int Digits
-        {
-            get => _Digits;
-            set => SetField(ref _Digits, value);
         }
     }
 }

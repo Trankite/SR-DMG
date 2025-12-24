@@ -12,11 +12,6 @@ namespace StarRailDamage.Source.Model.DataStruct.Formula.Method
             {
                 return double.NaN;
             }
-
-            public static double Method(double left, double right)
-            {
-                return MathFormulaSymbol.DefaultMethod.Method(left, right);
-            }
         }
 
         public class BeginMethod : IMathFormulaMethod
@@ -25,7 +20,7 @@ namespace StarRailDamage.Source.Model.DataStruct.Formula.Method
 
             public double Method(double left, double right)
             {
-                return DefaultMethod.Method(left, right);
+                return MathFormulaSymbol.DefaultMethod.Method(left, right);
             }
         }
 
@@ -35,7 +30,7 @@ namespace StarRailDamage.Source.Model.DataStruct.Formula.Method
 
             public double Method(double left, double right)
             {
-                return DefaultMethod.Method(left, right);
+                return MathFormulaSymbol.DefaultMethod.Method(left, right);
             }
         }
 

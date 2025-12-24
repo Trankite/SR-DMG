@@ -13,7 +13,7 @@ namespace StarRailDamage.Source.Model.DataStruct.Formula.Symbol
 
         private static void AppendSymbol(int rank, ITernaryFormulaMethod method)
         {
-            SymbolTree.Add(method.Symbol.ToCharArray(), new TernaryFormulaSymbol(rank, method.Symbol, method.Method));
+            SymbolTree.Add(method.Symbol.ToCharArray(), new TernaryFormulaSymbol(rank, method));
         }
 
         static TernaryFormulaSymbolManager()

@@ -1,4 +1,5 @@
 ﻿using StarRailDamage.Source.Extension;
+using StarRailDamage.Source.Model.Text;
 using StarRailDamage.Source.UI.Factory.PropertyBinding;
 using StarRailDamage.Source.UI.Model.Control;
 using System.Windows;
@@ -64,9 +65,9 @@ namespace StarRailDamage.Source.UI.Control
 
         public static readonly DependencyProperty ModelProperty = BindingFactory.ModelBinding(x => x.Model).Configure(BindingFactory.AddBinding(x => x.Model.Minimun, x => x.Minimum)).Configure(BindingFactory.AddBinding(x => x.Model.Maximum, x => x.Maximum));
 
-        public string Title
+        public TextBinding Title
         {
-            get => (string)GetValue(TitleProperty);
+            get => (TextBinding)GetValue(TitleProperty);
             set => SetValue(TitleProperty, value);
         }
 

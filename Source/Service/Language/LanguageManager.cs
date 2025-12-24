@@ -1,7 +1,6 @@
 ﻿using StarRailDamage.Source.Core.Language;
 using StarRailDamage.Source.Core.Setting;
 using StarRailDamage.Source.Extension;
-using StarRailDamage.Source.Model.Text;
 using StarRailDamage.Source.Service.IO.CommaSeparated;
 using System.IO;
 
@@ -9,23 +8,16 @@ namespace StarRailDamage.Source.Service.Language
 {
     public static class LanguageManager
     {
-        public const string DefaultLanguage = "zh-cn";
+        public const string Default = "zh-cn";
 
-        public static readonly TextBinding LanguageText = FixedText.Language.Binding();
-
-        public static string Language { get; set; } = DefaultLanguage;
+        public static string Current { get; set; } = Default;
 
         /// <returns>
         /// -1：读取文件时发生错误，否则为缺失的数量。
         /// </returns>
-        public static int Load(string language = DefaultLanguage)
+        public static int Load(string language = Default)
         {
-            int UnLoaded = LanguageReader.Load(language);
-            if (UnLoaded >= 0)
-            {
-                Language = language;
-            }
-            return UnLoaded;
+            return LanguageReader.Load(language).OutTemp(out int TempValue) && TempValue >= 0 ? TempValue.Configure(Current = language) : TempValue;
         }
 
         public static Dictionary<string, string> GetLanguages()

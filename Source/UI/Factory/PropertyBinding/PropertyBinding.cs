@@ -24,9 +24,9 @@ namespace StarRailDamage.Source.UI.Factory.PropertyBinding
             return PropertyBinding<TSender>.PropertyChange(sender, IsModelToDepend, ModelHanlder);
         }
 
-        private static bool PropertyChange(TSender sender, bool isBinding, Action<TSender> handler)
+        private static bool PropertyChange(TSender sender, bool hasFlag, Action<TSender> handler)
         {
-            return isBinding && true.Configure(handler, sender);
+            return hasFlag && true.Configure(handler, sender);
         }
     }
 }

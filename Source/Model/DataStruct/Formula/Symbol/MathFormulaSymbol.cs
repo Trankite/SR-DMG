@@ -6,16 +6,16 @@ namespace StarRailDamage.Source.Model.DataStruct.Formula.Symbol
     {
         public static readonly IMathFormulaMethod DefaultMethod = new MathFormulaMethod.DefaultMethod();
 
-        public Func<double, double, double> Method { get; init; }
+        public IMathFormulaMethod SymbolMethod { get; }
 
-        public MathFormulaSymbol(int symbolRank, string symbol) : base(symbolRank, symbol)
-        {
-            Method = DefaultMethod.Method;
-        }
+        public override string Text => SymbolMethod.Symbol;
 
-        public MathFormulaSymbol(int symbolRank, string symbol, Func<double, double, double> method) : base(symbolRank, symbol)
+        public MathFormulaSymbol(int symbolRank) : this(symbolRank, DefaultMethod) { }
+
+        public MathFormulaSymbol(int symbolRank, IMathFormulaMethod symbolMethod) : base(symbolRank)
         {
-            Method = method;
+            Rank = symbolRank;
+            SymbolMethod = symbolMethod;
         }
     }
 }

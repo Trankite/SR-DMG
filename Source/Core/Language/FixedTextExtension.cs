@@ -6,19 +6,21 @@ namespace StarRailDamage.Source.Core.Language
 {
     public static class FixedTextExtension
     {
-        public static readonly Dictionary<FixedText, TextBinding> FixedTextMap = [];
+        public static readonly Dictionary<string, TextBinding> FixedTextMap = [];
 
         [DebuggerStepThrough]
-        public static TextBinding Binding(this FixedText fixedText)
+        public static TextBinding Binding(this FixedText fixedText) => Binding(fixedText.ToString());
+
+        [DebuggerStepThrough]
+        public static TextBinding Binding(string target)
         {
-            if (FixedTextMap.TryGetValue(fixedText, out TextBinding? TextBinding))
+            if (FixedTextMap.TryGetValue(target, out TextBinding? TextBinding))
             {
                 return TextBinding;
             }
             else
             {
-                TextBinding = new() { Text = $"Unknown FixedText:{fixedText}" };
-                return FixedTextMap[fixedText] = TextBinding;
+                return FixedTextMap[target] = new($"Unknown FixedText:{target}");
             }
         }
 

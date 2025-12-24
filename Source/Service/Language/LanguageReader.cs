@@ -18,7 +18,7 @@ namespace StarRailDamage.Source.Service.Language
                 if (Line.IsNull() || Line.Length < 2) continue;
                 if (FixedTextMap.TryGetValue(Line[0], out FixedText FixedText))
                 {
-                    if (AppendFixedText(FixedText, Line[1])) LoadedCount++;
+                    if (AppendFixedText(Line[0], Line[1])) LoadedCount++;
                 }
             }
             return FixedTextMap.Count - LoadedCount;
@@ -34,16 +34,16 @@ namespace StarRailDamage.Source.Service.Language
             return FixedTextMap;
         }
 
-        private static bool AppendFixedText(FixedText fixedText, string? text)
+        private static bool AppendFixedText(string target, string? text)
         {
             if (string.IsNullOrEmpty(text)) return false;
-            if (FixedTextExtension.FixedTextMap.TryGetValue(fixedText, out TextBinding? TextBinding))
+            if (FixedTextExtension.FixedTextMap.TryGetValue(target, out TextBinding? TextBinding))
             {
                 TextBinding.Text = text;
             }
             else
             {
-                FixedTextExtension.FixedTextMap[fixedText] = new TextBinding(text);
+                FixedTextExtension.FixedTextMap[target] = new TextBinding(text);
             }
             return true;
         }

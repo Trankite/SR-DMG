@@ -10,11 +10,11 @@ namespace StarRailDamage.Source.Factory.PropertyExpression
             return new PropertyExpression<TSender, TProperty>(expression.Compile(), GetPropertySetter(expression).Compile(), GetNullCheck(expression).Compile());
         }
 
-        public static Expression<Func<TSender, bool>> GetNullCheck(Expression<Func<TSender, TProperty>> expression)
+        public static Expression<Func<TSender?, bool>> GetNullCheck(Expression<Func<TSender, TProperty>> expression)
         {
             ParameterExpression Parameter = expression.Parameters.First();
             Expression NullCheckExpression = BuildNullCheck(expression.Body.MemberExpression().ThrowIfNull());
-            return Expression.Lambda<Func<TSender, bool>>(NullCheckExpression, Parameter);
+            return Expression.Lambda<Func<TSender?, bool>>(NullCheckExpression, Parameter);
         }
 
         public static Expression<Action<TSender, TProperty?>> GetPropertySetter(Expression<Func<TSender, TProperty>> expression)

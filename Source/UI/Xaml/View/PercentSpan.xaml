@@ -24,7 +24,7 @@
                         <RowDefinition Height="Auto"/>
                     </Grid.RowDefinitions>
 
-                    <Control:ScopedTextBlock Grid.Row="0" Text="{Binding Title,RelativeSource={RelativeSource AncestorType={x:Type local:PercentSpan}}}" TipText="{Binding Title,RelativeSource={RelativeSource AncestorType={x:Type local:PercentSpan}}}" TipOnlyTrim="True" TextTrimming="CharacterEllipsis" FontWeight="Bold"/>
+                    <Control:ScopedTextBlock Grid.Row="0" Text="{Binding Title.Text,RelativeSource={RelativeSource AncestorType={x:Type local:PercentSpan}}}" TipText="{Binding Title,RelativeSource={RelativeSource AncestorType={x:Type local:PercentSpan}}}" TipOnlyTrim="True" TextTrimming="CharacterEllipsis" FontWeight="Bold"/>
                     <Control:ScopedTextBlock Grid.Row="2" Text="{Binding Value,RelativeSource={RelativeSource AncestorType={x:Type local:PercentSpan}},StringFormat={}{0:F0}}"/>
                     <Control:ScopedTextBlock Grid.Row="4" Text="{Binding Percent,RelativeSource={RelativeSource AncestorType={x:Type local:PercentSpan}},StringFormat={}{0:+0.#%;-0.#%;0;}}" Foreground="{Binding TempBrush,RelativeSource={RelativeSource AncestorType={x:Type local:PercentSpan}}}" FontSize="{Binding DropFontSize,RelativeSource={RelativeSource AncestorType={x:Type local:PercentSpan}}}">
                         <Control:ScopedTextBlock.Style>

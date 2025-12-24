@@ -4,17 +4,17 @@ using System.Windows.Media.Imaging;
 
 namespace StarRailDamage.Source.Model.Metadata.Character.Element
 {
-    public class CharacterElementModel(TextBinding fullName, TextBinding breakName, BitmapImage elementIcon, BitmapImage damageIcon, BitmapImage resistIcon) : NotifyPropertyChangedFactory
+    public class CharacterElementModel(TextBinding fullName, TextBinding @break, BitmapImage element, BitmapImage damage, BitmapImage resist) : NotifyPropertyChangedFactory
     {
         private TextBinding _FullName = fullName;
 
-        private TextBinding _BreakName = breakName;
+        private TextBinding _Break = @break;
 
-        private BitmapImage _ElementIcon = elementIcon;
+        private BitmapImage _Element = element;
 
-        private BitmapImage _DamageIcon = damageIcon;
+        private BitmapImage _Damage = damage;
 
-        private BitmapImage _ResistIcon = resistIcon;
+        private BitmapImage _Resist = resist;
 
         public TextBinding FullName
         {
@@ -22,28 +22,28 @@ namespace StarRailDamage.Source.Model.Metadata.Character.Element
             set => SetField(ref _FullName, value);
         }
 
-        public TextBinding BreakName
+        public TextBinding Break
         {
-            get => _BreakName;
-            set => SetField(ref _BreakName, value);
+            get => _Break;
+            set => SetField(ref _Break, value);
         }
 
-        public BitmapImage ElementIcon
+        public BitmapImage Element
         {
-            get => _ElementIcon;
-            set => SetField(ref _ElementIcon, value);
+            get => _Element;
+            set => SetField(ref _Element, value);
         }
 
-        public BitmapImage DamageIcon
+        public BitmapImage Damage
         {
-            get => _DamageIcon;
-            set => SetField(ref _DamageIcon, value);
+            get => _Damage;
+            set => SetField(ref _Damage, value);
         }
 
-        public BitmapImage ResistIcon
+        public BitmapImage Resist
         {
-            get => _ResistIcon;
-            set => SetField(ref _ResistIcon, value);
+            get => _Resist;
+            set => SetField(ref _Resist, value);
         }
     }
 }

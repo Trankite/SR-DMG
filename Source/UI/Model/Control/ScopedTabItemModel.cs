@@ -9,16 +9,14 @@ namespace StarRailDamage.Source.UI.Model.Control
 
         private ScopedPage? _Content;
 
-        public ScopedTabItemModel() { }
-
         public ScopedTabItemModel(string header)
         {
-            _Header = header;
+            Header = header;
         }
 
         public ScopedTabItemModel(string header, ScopedPage? content) : this(header)
         {
-            _Content = content;
+            Content = content;
         }
 
         public string Header

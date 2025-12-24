@@ -4,6 +4,6 @@
     {
         int Rank { get; init; }
 
-        string Text { get; init; }
+        string Text { get; }
     }
 }

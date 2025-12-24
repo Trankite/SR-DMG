@@ -34,11 +34,11 @@ namespace StarRailDamage.Source.Model.DataStruct.Formula.Evaluator
             TernaryFormulaSymbol TernaryFormulaSymbol = (TernaryFormulaSymbol)formula.Symbol;
             if (formula.Symbol.Text.EndsWith('('))
             {
-                return TernaryFormulaSymbol.Method(GetParameters(formula.Right, GetParameters(formula.Left, [])), source, readOnly);
+                return TernaryFormulaSymbol.SymbolMethod.Method(GetParameters(formula.Right, GetParameters(formula.Left, [])), source, readOnly);
             }
             else
             {
-                return TernaryFormulaSymbol.Method([formula], source, readOnly);
+                return TernaryFormulaSymbol.SymbolMethod.Method([formula], source, readOnly);
             }
         }
 

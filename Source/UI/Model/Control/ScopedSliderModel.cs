@@ -1,10 +1,11 @@
-﻿using StarRailDamage.Source.UI.Factory.NotifyPropertyChanged;
+﻿using StarRailDamage.Source.Model.Text;
+using StarRailDamage.Source.UI.Factory.NotifyPropertyChanged;
 
 namespace StarRailDamage.Source.UI.Model.Control
 {
     public class ScopedSliderModel : NotifyPropertyChangedFactory
     {
-        private string _Title = string.Empty;
+        private TextBinding _Title = TextBinding.Default;
 
         private double _Value;
 
@@ -12,7 +13,7 @@ namespace StarRailDamage.Source.UI.Model.Control
 
         private double _Minimum;
 
-        public string Title
+        public TextBinding Title
         {
             get => _Title;
             set => SetField(ref _Title, value);

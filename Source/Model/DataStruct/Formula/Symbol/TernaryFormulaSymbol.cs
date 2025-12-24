@@ -1,5 +1,4 @@
-﻿using StarRailDamage.Source.Factory.PropertyExpression;
-using StarRailDamage.Source.Model.DataStruct.Formula.Method;
+﻿using StarRailDamage.Source.Model.DataStruct.Formula.Method;
 
 namespace StarRailDamage.Source.Model.DataStruct.Formula.Symbol
 {
@@ -7,16 +6,16 @@ namespace StarRailDamage.Source.Model.DataStruct.Formula.Symbol
     {
         public static readonly ITernaryFormulaMethod DefaultMethod = new TernaryFormulaMethod.DefaultMethod();
 
-        public Func<IList<Formula>, Dictionary<string, IPropertyExpression<double>>?, bool, double> Method { get; init; }
+        public ITernaryFormulaMethod SymbolMethod { get; }
 
-        public TernaryFormulaSymbol(int symbolRank, string symbol) : base(symbolRank, symbol)
-        {
-            Method = DefaultMethod.Method;
-        }
+        public override string Text => SymbolMethod.Symbol;
 
-        public TernaryFormulaSymbol(int symbolRank, string symbol, Func<IList<Formula>, Dictionary<string, IPropertyExpression<double>>?, bool, double> method) : base(symbolRank, symbol)
+        public TernaryFormulaSymbol(int symbolRank) : this(symbolRank, DefaultMethod) { }
+
+        public TernaryFormulaSymbol(int symbolRank, ITernaryFormulaMethod symbolMethod) : base(symbolRank)
         {
-            Method = method;
+            Rank = symbolRank;
+            SymbolMethod = symbolMethod;
         }
     }
 }

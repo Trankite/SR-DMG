@@ -1,10 +1,13 @@
 ﻿using StarRailDamage.Source.Service.Language;
+using System.ComponentModel;
 using System.Windows;
 
 namespace StarRailDamage
 {
     public partial class App : Application
     {
+        public static bool IsInDesignMode { get; } = DesignerProperties.GetIsInDesignMode(new());
+
         protected override void OnStartup(StartupEventArgs e)
         {
             DebugTest();

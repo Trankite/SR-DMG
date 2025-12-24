@@ -16,7 +16,7 @@ namespace StarRailDamage.Source.Model.DataStruct.Formula.Evaluator
                 return GetDefaultValue(formula);
             }
             MathFormulaSymbol FormulaSymbol = (MathFormulaSymbol)formula.Symbol;
-            return FormulaSymbol.Method(GetValue(formula.Left), GetValue(formula.Right));
+            return FormulaSymbol.SymbolMethod.Method(GetValue(formula.Left), GetValue(formula.Right));
         }
 
         private static double GetDefaultValue(Formula formula)

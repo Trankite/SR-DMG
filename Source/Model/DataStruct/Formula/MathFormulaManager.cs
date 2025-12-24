@@ -11,7 +11,9 @@ namespace StarRailDamage.Source.Model.DataStruct.Formula
 
         public Formula? Parse(string? formula) => FormulaParse(formula);
 
-        public double GetValue(Formula? formula) => MathFormulaEvaluator.GetValue(formula);
+        double IFormulaEvaluator.GetValue(Formula? formula) => GetValue(formula);
+
+        public static double GetValue(Formula? formula) => MathFormulaEvaluator.GetValue(formula);
 
         public static Formula? FormulaParse(string? formula) => FormulaFactory.Parse(formula);
 

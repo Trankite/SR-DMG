@@ -1,4 +1,5 @@
-﻿using StarRailDamage.Source.UI.Factory.PropertyBinding;
+﻿using StarRailDamage.Source.Model.Text;
+using StarRailDamage.Source.UI.Factory.PropertyBinding;
 using StarRailDamage.Source.UI.Model.View;
 using System.Windows;
 using System.Windows.Controls;
@@ -43,9 +44,9 @@ namespace StarRailDamage.Source.UI.Xaml.View
 
         public static readonly DependencyProperty ModelProperty = BindingFactory.ModelBinding(x => x.Model);
 
-        public string Title
+        public TextBinding Title
         {
-            get => (string)GetValue(TitleProperty);
+            get => (TextBinding)GetValue(TitleProperty);
             set => SetValue(TitleProperty, value);
         }
 

@@ -3,7 +3,6 @@ using StarRailDamage.Source.Extension;
 using StarRailDamage.Source.Model.Text;
 using StarRailDamage.Source.Service.IO.Manifest;
 using System.Diagnostics;
-using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Windows.Media.Imaging;
 
@@ -11,36 +10,31 @@ namespace StarRailDamage.Source.Model.Metadata.Character.Element
 {
     public static class CharacterElementExtension
     {
-        private static readonly Dictionary<string, CharacterElement> CharacterElementMap = [];
-
-        private static readonly Dictionary<CharacterElement, CharacterElementModel> CharacterElementModelMap = [];
-
-        public static bool TryGetElement(string key, [NotNullWhen(true)] out CharacterElement characterElement)
-        {
-            return CharacterElementMap.TryGetValue(key, out characterElement);
-        }
+        private static readonly Dictionary<string, CharacterElementModel> ElementMap = [];
 
         [DebuggerStepThrough]
         public static CharacterElementModel GetModel(this CharacterElement characterElement)
         {
-            if (!CharacterElementModelMap.TryGetValue(characterElement, out CharacterElementModel? Model))
-            {
-                return CharacterElementModelMap.GetValueOrDefault(CharacterElement.Physical).ThrowIfNull();
-            }
-            return Model;
+            return GetModel(characterElement.ToString());
         }
 
-        private static FixedText GetFullNameFixedText(CharacterElement characterElement)
+        [DebuggerStepThrough]
+        public static CharacterElementModel GetModel(string target)
         {
-            return Enum.TryParse(characterElement.ToString() + "Element", out FixedText fixedText) ? fixedText : FixedText.PhysicalElement;
+            return ElementMap.GetValueOrDefault(target).ThrowIfNull();
         }
 
-        private static FixedText GetBreakNameFixedText(CharacterElement characterElement)
+        private static FixedText GetFullNameFixedText(string characterElement)
         {
-            return Enum.TryParse(characterElement.ToString() + "DelayedDamage", out FixedText fixedText) ? fixedText : FixedText.PhysicalDelayedDamage;
+            return Enum.TryParse(characterElement + "Element", out FixedText fixedText) ? fixedText : FixedText.PhysicalElement;
         }
 
-        private static BitmapImage GetBitmapImage(CharacterElement characterAttribute, string prefix)
+        private static FixedText GetBreakNameFixedText(string characterElement)
+        {
+            return Enum.TryParse(characterElement + "DelayedDamage", out FixedText fixedText) ? fixedText : FixedText.PhysicalDelayedDamage;
+        }
+
+        private static BitmapImage GetBitmapImage(string characterAttribute, string prefix)
         {
             using Stream Stream = AppManifestStream.FindAndGetStream($"Element_{prefix}_{characterAttribute}");
             return BitmapImageExtension.GetBitmapImage(Stream);
@@ -48,11 +42,10 @@ namespace StarRailDamage.Source.Model.Metadata.Character.Element
 
         static CharacterElementExtension()
         {
-            foreach (CharacterElement CharacterElement in Enum.GetValues<CharacterElement>())
+            foreach (string CharacterElement in Enum.GetNames<CharacterElement>())
             {
                 TextBinding FullName = GetFullNameFixedText(CharacterElement).Binding();
-                CharacterElementMap[FullName.Text] = CharacterElement;
-                CharacterElementModelMap[CharacterElement] = new CharacterElementModel(FullName, GetBreakNameFixedText(CharacterElement).Binding(), GetBitmapImage(CharacterElement, "Icon"), GetBitmapImage(CharacterElement, "Damage"), GetBitmapImage(CharacterElement, "Resistance"));
+                ElementMap[CharacterElement] = new CharacterElementModel(FullName, GetBreakNameFixedText(CharacterElement).Binding(), GetBitmapImage(CharacterElement, "Icon"), GetBitmapImage(CharacterElement, "Damage"), GetBitmapImage(CharacterElement, "Resistance"));
             }
         }
     }

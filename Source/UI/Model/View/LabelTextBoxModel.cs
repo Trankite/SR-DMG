@@ -1,27 +1,28 @@
-﻿using StarRailDamage.Source.UI.Factory.NotifyPropertyChanged;
-using System.Windows.Media;
+﻿using StarRailDamage.Source.Model.Text;
+using StarRailDamage.Source.UI.Factory.NotifyPropertyChanged;
+using System.Windows.Media.Imaging;
 
 namespace StarRailDamage.Source.UI.Model.View
 {
     public class LabelTextBoxModel : NotifyPropertyChangedFactory
     {
-        private ImageSource? _Icon;
+        private BitmapImage? _Icon;
 
-        private string _Title = string.Empty;
+        private TextBinding _Title = TextBinding.Default;
 
         private string _Text = string.Empty;
 
-        private string _Unit = string.Empty;
+        private TextBinding _Unit = TextBinding.Default;
 
         private int _Digits;
 
-        public ImageSource? Icon
+        public BitmapImage? Icon
         {
             get => _Icon;
             set => SetField(ref _Icon, value);
         }
 
-        public string Title
+        public TextBinding Title
         {
             get => _Title;
             set => SetField(ref _Title, value);
@@ -33,7 +34,7 @@ namespace StarRailDamage.Source.UI.Model.View
             set => SetField(ref _Text, value);
         }
 
-        public string Unit
+        public TextBinding Unit
         {
             get => _Unit;
             set => SetField(ref _Unit, value);

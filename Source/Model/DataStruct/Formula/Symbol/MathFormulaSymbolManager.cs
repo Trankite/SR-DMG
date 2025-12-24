@@ -1,6 +1,7 @@
 ﻿using StarRailDamage.Source.Model.DataStruct.Formula.Abstraction;
 using StarRailDamage.Source.Model.DataStruct.Formula.Method;
 using StarRailDamage.Source.Model.DataStruct.PrefixedTree;
+using static StarRailDamage.Source.Model.DataStruct.Formula.Method.MathFormulaMethod;
 
 namespace StarRailDamage.Source.Model.DataStruct.Formula.Symbol
 {
@@ -12,19 +13,19 @@ namespace StarRailDamage.Source.Model.DataStruct.Formula.Symbol
 
         private static void AppendSymbol(int rank, IMathFormulaMethod method)
         {
-            SymbolTree.Add(method.Symbol.ToCharArray(), new MathFormulaSymbol(rank, method.Symbol, method.Method));
+            SymbolTree.Add(method.Symbol.ToCharArray(), new MathFormulaSymbol(rank, method));
         }
 
         static MathFormulaSymbolManager()
         {
-            AppendSymbol(0, new MathFormulaMethod.BeginMethod());
-            AppendSymbol(0, new MathFormulaMethod.EndedMethod());
-            AppendSymbol(1, new MathFormulaMethod.AddMethod());
-            AppendSymbol(1, new MathFormulaMethod.SubtractMethod());
-            AppendSymbol(2, new MathFormulaMethod.MultiplyMethod());
-            AppendSymbol(2, new MathFormulaMethod.DivideMethod());
-            AppendSymbol(2, new MathFormulaMethod.ModuloMethod());
-            AppendSymbol(3, new MathFormulaMethod.PowerMethod());
+            AppendSymbol(0, new BeginMethod());
+            AppendSymbol(0, new EndedMethod());
+            AppendSymbol(1, new AddMethod());
+            AppendSymbol(1, new SubtractMethod());
+            AppendSymbol(2, new MultiplyMethod());
+            AppendSymbol(2, new DivideMethod());
+            AppendSymbol(2, new ModuloMethod());
+            AppendSymbol(3, new PowerMethod());
         }
     }
 }

@@ -1,5 +1,4 @@
-﻿using System.ComponentModel;
-using System.Windows;
+﻿using System.Windows;
 using System.Windows.Media;
 
 namespace StarRailDamage.Source.Core.Setting
@@ -12,7 +11,7 @@ namespace StarRailDamage.Source.Core.Setting
 
         static AppSetting()
         {
-            PixelsPerDip = !DesignerProperties.GetIsInDesignMode(new DependencyObject()) ? VisualTreeHelper.GetDpi(Application.Current.MainWindow).PixelsPerDip : 1;
+            PixelsPerDip = !App.IsInDesignMode ? VisualTreeHelper.GetDpi(Application.Current.MainWindow).PixelsPerDip : 1;
         }
     }
 }

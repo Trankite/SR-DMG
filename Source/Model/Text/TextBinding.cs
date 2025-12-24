@@ -4,6 +4,8 @@ namespace StarRailDamage.Source.Model.Text
 {
     public class TextBinding : NotifyPropertyChangedFactory
     {
+        public static readonly TextBinding Default = new();
+
         private string _Text = string.Empty;
 
         public TextBinding() { }

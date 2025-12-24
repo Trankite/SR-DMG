@@ -26,7 +26,7 @@ namespace StarRailDamage.Source.UI.Factory.NotifyPropertyChanged
 
         public bool SetField<T>(ref T field, T value, Predicate<T> predicate, [CallerMemberName] string? propertyName = null)
         {
-            return predicate.Invoke(value) && SetField(ref field, value, propertyName);
+            return predicate(value) && SetField(ref field, value, propertyName);
         }
 
         public bool SetNotifyField<T>(ref T field, T value, [CallerMemberName] string? propertyName = null) where T : INotifyPropertyChanged
@@ -37,7 +37,7 @@ namespace StarRailDamage.Source.UI.Factory.NotifyPropertyChanged
             {
                 field.PropertyChanged -= Handlers.GetValueOrDefault(propertyName);
             }
-            if (!Equals(null, field = value))
+            if (ObjectExtension.IsNotNull(field = value))
             {
                 void PropertyChanged(object? sender, PropertyChangedEventArgs e)
                 {
@@ -51,7 +51,7 @@ namespace StarRailDamage.Source.UI.Factory.NotifyPropertyChanged
 
         public bool SetNotifyField<T>(ref T field, T value, Predicate<T> predicate, [CallerMemberName] string? propertyName = null) where T : INotifyPropertyChanged
         {
-            return predicate.Invoke(value) && SetNotifyField(ref field, value, propertyName);
+            return predicate(value) && SetNotifyField(ref field, value, propertyName);
         }
     }
 }
