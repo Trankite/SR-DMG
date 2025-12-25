@@ -1,5 +1,4 @@
-﻿using StarRailDamage.Source.Service.Language;
-using System.ComponentModel;
+﻿using System.ComponentModel;
 using System.Windows;
 
 namespace StarRailDamage
@@ -12,7 +11,6 @@ namespace StarRailDamage
         {
             DebugTest();
             base.OnStartup(e);
-            LanguageManager.Load();
             if (e.Args.Length > 0)
             {
 

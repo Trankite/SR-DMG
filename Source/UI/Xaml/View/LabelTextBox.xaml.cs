@@ -101,5 +101,7 @@ namespace StarRailDamage.Source.UI.Xaml.View
         }
 
         public static readonly DependencyProperty FocusBrushProperty = BindingFactory.DependProperty(x => x.FocusBrush);
+
+        public override string ToString() => Text;
     }
 }

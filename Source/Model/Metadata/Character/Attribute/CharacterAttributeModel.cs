@@ -6,15 +6,15 @@ namespace StarRailDamage.Source.Model.Metadata.Character.Attribute
     {
         private double _CharacterLevel;
 
-        private double _MonsterLevel;
+        private double _EnemyLevel;
 
-        private double _MonsterCount;
+        private double _EnemyAmount;
 
         private double _ElementResistance;
 
-        private double _DamageImmunity;
+        private double _DamageDecrease;
 
-        private double _DamageMoreProne;
+        private double _DamageIncrease;
 
         private double _Toughness;
 
@@ -38,17 +38,17 @@ namespace StarRailDamage.Source.Model.Metadata.Character.Attribute
 
         private double _CriticalDamage;
 
-        private double _DamageIncrease;
+        private double _DamageBoost;
 
-        private double _DefenseFailure;
+        private double _DefenseDecrease;
 
-        private double _ResistanceFailure;
+        private double _ResistanceDecrease;
 
-        private double _SuperBreakDamage;
+        private double _SuperBreakEqual;
 
-        private double _BreakStrength;
+        private double _BreakEffect;
 
-        private double _BreakDamageIncrease;
+        private double _BreakDamageBoost;
 
         private double _BreakEfficiency;
 
@@ -58,13 +58,13 @@ namespace StarRailDamage.Source.Model.Metadata.Character.Attribute
 
         private double _EffectResistance;
 
-        private double _TreatmentImprovement;
+        private double _OutgoingHealingBoost;
 
-        private double _SpecialNumericalValues;
+        private double _HealingAmount;
 
-        private double _ChargingEfficiency;
+        private double _EnergyRegenerationRate;
 
-        private double _ChargingLimit;
+        private double _MaxEnergy;
 
         public double CharacterLevel
         {
@@ -72,16 +72,16 @@ namespace StarRailDamage.Source.Model.Metadata.Character.Attribute
             set => SetField(ref _CharacterLevel, value);
         }
 
-        public double MonsterLevel
+        public double EnemyLevel
         {
-            get => _MonsterLevel;
-            set => SetField(ref _MonsterLevel, value);
+            get => _EnemyLevel;
+            set => SetField(ref _EnemyLevel, value);
         }
 
-        public double MonsterCount
+        public double EnemyAmount
         {
-            get => _MonsterCount;
-            set => SetField(ref _MonsterCount, value);
+            get => _EnemyAmount;
+            set => SetField(ref _EnemyAmount, value);
         }
 
         public double ElementResistance
@@ -90,16 +90,16 @@ namespace StarRailDamage.Source.Model.Metadata.Character.Attribute
             set => SetField(ref _ElementResistance, value);
         }
 
-        public double DamageImmunity
+        public double DamageDecrease
         {
-            get => _DamageImmunity;
-            set => SetField(ref _DamageImmunity, value);
+            get => _DamageDecrease;
+            set => SetField(ref _DamageDecrease, value);
         }
 
-        public double DamageMoreProne
+        public double DamageIncrease
         {
-            get => _DamageMoreProne;
-            set => SetField(ref _DamageMoreProne, value);
+            get => _DamageIncrease;
+            set => SetField(ref _DamageIncrease, value);
         }
 
         public double Toughness
@@ -168,40 +168,40 @@ namespace StarRailDamage.Source.Model.Metadata.Character.Attribute
             set => SetField(ref _CriticalDamage, value);
         }
 
-        public double DamageIncrease
+        public double DamageBoost
         {
-            get => _DamageIncrease;
-            set => SetField(ref _DamageIncrease, value);
+            get => _DamageBoost;
+            set => SetField(ref _DamageBoost, value);
         }
 
-        public double DefenseFailure
+        public double DefenseDecrease
         {
-            get => _DefenseFailure;
-            set => SetField(ref _DefenseFailure, value);
+            get => _DefenseDecrease;
+            set => SetField(ref _DefenseDecrease, value);
         }
 
-        public double ResistanceFailure
+        public double ResistanceDecrease
         {
-            get => _ResistanceFailure;
-            set => SetField(ref _ResistanceFailure, value);
+            get => _ResistanceDecrease;
+            set => SetField(ref _ResistanceDecrease, value);
         }
 
-        public double SuperBreakDamage
+        public double SuperBreakEqual
         {
-            get => _SuperBreakDamage;
-            set => SetField(ref _SuperBreakDamage, value);
+            get => _SuperBreakEqual;
+            set => SetField(ref _SuperBreakEqual, value);
         }
 
-        public double BreakStrength
+        public double BreakEffect
         {
-            get => _BreakStrength;
-            set => SetField(ref _BreakStrength, value);
+            get => _BreakEffect;
+            set => SetField(ref _BreakEffect, value);
         }
 
-        public double BreakDamageIncrease
+        public double BreakDamageBoost
         {
-            get => _BreakDamageIncrease;
-            set => SetField(ref _BreakDamageIncrease, value);
+            get => _BreakDamageBoost;
+            set => SetField(ref _BreakDamageBoost, value);
         }
 
         public double BreakEfficiency
@@ -228,28 +228,28 @@ namespace StarRailDamage.Source.Model.Metadata.Character.Attribute
             set => SetField(ref _EffectResistance, value);
         }
 
-        public double TreatmentImprovement
+        public double OutgoingHealingBoost
         {
-            get => _TreatmentImprovement;
-            set => SetField(ref _TreatmentImprovement, value);
+            get => _OutgoingHealingBoost;
+            set => SetField(ref _OutgoingHealingBoost, value);
         }
 
-        public double SpecialNumericalValues
+        public double HealingAmount
         {
-            get => _SpecialNumericalValues;
-            set => SetField(ref _SpecialNumericalValues, value);
+            get => _HealingAmount;
+            set => SetField(ref _HealingAmount, value);
         }
 
-        public double ChargingEfficiency
+        public double EnergyRegenerationRate
         {
-            get => _ChargingEfficiency;
-            set => SetField(ref _ChargingEfficiency, value);
+            get => _EnergyRegenerationRate;
+            set => SetField(ref _EnergyRegenerationRate, value);
         }
 
-        public double ChargingLimit
+        public double MaxEnergy
         {
-            get => _ChargingLimit;
-            set => SetField(ref _ChargingLimit, value);
+            get => _MaxEnergy;
+            set => SetField(ref _MaxEnergy, value);
         }
     }
 }

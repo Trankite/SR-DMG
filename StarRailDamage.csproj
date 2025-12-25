@@ -109,4 +109,23 @@
     <Resource Include="Source\UI\Assets\Wall\Monster.png" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Compile Update="Source\UI\Assets\Lang\FixedText.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>FixedText.resx</DependentUpon>
+    </Compile>
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Update="Source\UI\Assets\Lang\FixedText.EN-US.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>FixedText.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Source\UI\Assets\Lang\FixedText.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>FixedText.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+  </ItemGroup>
+
 </Project>

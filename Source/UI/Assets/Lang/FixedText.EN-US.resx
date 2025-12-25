@@ -1,0 +1,411 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="Attack" xml:space="preserve">
+    <value>ATK</value>
+  </data>
+  <data name="AttackBase" xml:space="preserve">
+    <value>Base ATK</value>
+  </data>
+  <data name="AttackBaseSimple" xml:space="preserve">
+    <value>Base ATK</value>
+  </data>
+  <data name="AttackSimple" xml:space="preserve">
+    <value>ATK</value>
+  </data>
+  <data name="NormalDamage" xml:space="preserve">
+    <value>Normal DMG</value>
+  </data>
+  <data name="NormalDamageSimple" xml:space="preserve">
+    <value>Normal</value>
+  </data>
+  <data name="BreakDamageBoost" xml:space="preserve">
+    <value>Break DMG Boost</value>
+  </data>
+  <data name="BreakDamageBoostSimple" xml:space="preserve">
+    <value>Break Boost</value>
+  </data>
+  <data name="BreakEfficiency" xml:space="preserve">
+    <value>Break Efficiency</value>
+  </data>
+  <data name="BreakEfficiencySimple" xml:space="preserve">
+    <value>Break Efficie</value>
+  </data>
+  <data name="BreakEffect" xml:space="preserve">
+    <value>Break Effect</value>
+  </data>
+  <data name="BreakEffectSimple" xml:space="preserve">
+    <value>Break Effect</value>
+  </data>
+  <data name="BreakDamage" xml:space="preserve">
+    <value>Break DMG</value>
+  </data>
+  <data name="BreakDamageSimple" xml:space="preserve">
+    <value>Break</value>
+  </data>
+  <data name="Change" xml:space="preserve">
+    <value>Change</value>
+  </data>
+  <data name="CharacterElement" xml:space="preserve">
+    <value>Element</value>
+  </data>
+  <data name="CharacterLevel" xml:space="preserve">
+    <value>Avater Level</value>
+  </data>
+  <data name="CharacterLevelSimple" xml:space="preserve">
+    <value>Avater Level</value>
+  </data>
+  <data name="CharacterOccupation" xml:space="preserve">
+    <value>Destiny</value>
+  </data>
+  <data name="MaxEnergy" xml:space="preserve">
+    <value>Max Energy</value>
+  </data>
+  <data name="MaxEnergySimple" xml:space="preserve">
+    <value>Max Energy</value>
+  </data>
+  <data name="CriticalDamage" xml:space="preserve">
+    <value>CRIT DMG</value>
+  </data>
+  <data name="CriticalDamageSimple" xml:space="preserve">
+    <value>CRIT DMG</value>
+  </data>
+  <data name="CriticalHitRate" xml:space="preserve">
+    <value>CRIT Rate</value>
+  </data>
+  <data name="CriticalHitRateSimple" xml:space="preserve">
+    <value>CRIT Rate</value>
+  </data>
+  <data name="CriticalHitDamage" xml:space="preserve">
+    <value>CRIT Hit DMG</value>
+  </data>
+  <data name="CriticalHitDamageSimple" xml:space="preserve">
+    <value>Crit Hit</value>
+  </data>
+  <data name="DamageBoost" xml:space="preserve">
+    <value>DMG Boost</value>
+  </data>
+  <data name="DamageBoostSimple" xml:space="preserve">
+    <value>DMG Boost</value>
+  </data>
+  <data name="DamageIncrease" xml:space="preserve">
+    <value>DMG Increase</value>
+  </data>
+  <data name="DamageIncreaseSimple" xml:space="preserve">
+    <value>DMG Incre</value>
+  </data>
+  <data name="Defense" xml:space="preserve">
+    <value>DEF</value>
+  </data>
+  <data name="DefenseBase" xml:space="preserve">
+    <value>Base DEF</value>
+  </data>
+  <data name="DefenseBaseSimple" xml:space="preserve">
+    <value>Base DEF</value>
+  </data>
+  <data name="DefenseDecrease" xml:space="preserve">
+    <value>DEF Decrease</value>
+  </data>
+  <data name="DefenseDecreaseSimple" xml:space="preserve">
+    <value>DEF Decre</value>
+  </data>
+  <data name="DefenseSimple" xml:space="preserve">
+    <value>DEF</value>
+  </data>
+  <data name="DelayedDamage" xml:space="preserve">
+    <value>Delayed DMG</value>
+  </data>
+  <data name="EffectHitRate" xml:space="preserve">
+    <value>Effect Hit Rate</value>
+  </data>
+  <data name="EffectHitRateSimple" xml:space="preserve">
+    <value>Effect Rate</value>
+  </data>
+  <data name="EffectResistance" xml:space="preserve">
+    <value>Effect RES</value>
+  </data>
+  <data name="EffectResistanceSimple" xml:space="preserve">
+    <value>Effect RES</value>
+  </data>
+  <data name="ElementResistance" xml:space="preserve">
+    <value>DMG RES</value>
+  </data>
+  <data name="ElementResistanceSimple" xml:space="preserve">
+    <value>DMG RES</value>
+  </data>
+  <data name="ExpectedDamage" xml:space="preserve">
+    <value>Expected DMG</value>
+  </data>
+  <data name="ExpectedDamageSimple" xml:space="preserve">
+    <value>Expect</value>
+  </data>
+  <data name="Export" xml:space="preserve">
+    <value>Export</value>
+  </data>
+  <data name="FireDelayedDamage" xml:space="preserve">
+    <value>Burn</value>
+  </data>
+  <data name="FireElement" xml:space="preserve">
+    <value>Fire</value>
+  </data>
+  <data name="Health" xml:space="preserve">
+    <value>HP</value>
+  </data>
+  <data name="HealthBase" xml:space="preserve">
+    <value>Base HP</value>
+  </data>
+  <data name="HealthBaseSimple" xml:space="preserve">
+    <value>Base HP</value>
+  </data>
+  <data name="HealthSimple" xml:space="preserve">
+    <value>HP</value>
+  </data>
+  <data name="IceDelayedDamage" xml:space="preserve">
+    <value>Freeze</value>
+  </data>
+  <data name="IceElement" xml:space="preserve">
+    <value>Ice</value>
+  </data>
+  <data name="ImaginaryDelayedDamage" xml:space="preserve">
+    <value>Imprisonment</value>
+  </data>
+  <data name="ImaginaryElement" xml:space="preserve">
+    <value>Imaginary</value>
+  </data>
+  <data name="Language" xml:space="preserve">
+    <value>English</value>
+  </data>
+  <data name="LevelUnit" xml:space="preserve">
+    <value>-</value>
+  </data>
+  <data name="LightningDelayedDamage" xml:space="preserve">
+    <value>Shock</value>
+  </data>
+  <data name="LightningElement" xml:space="preserve">
+    <value>Lightning</value>
+  </data>
+  <data name="EnemyAmount" xml:space="preserve">
+    <value>Enemy Amount</value>
+  </data>
+  <data name="EnemyAmountSimple" xml:space="preserve">
+    <value>Enemy</value>
+  </data>
+  <data name="EnemyLevel" xml:space="preserve">
+    <value>Enemy Level</value>
+  </data>
+  <data name="EnemyLevelSimple" xml:space="preserve">
+    <value>Enemy Level</value>
+  </data>
+  <data name="NumberTextBoxTitle" xml:space="preserve">
+    <value>Formula</value>
+  </data>
+  <data name="PercentUnit" xml:space="preserve">
+    <value>%</value>
+  </data>
+  <data name="PhysicalDelayedDamage" xml:space="preserve">
+    <value>Bleed</value>
+  </data>
+  <data name="PhysicalElement" xml:space="preserve">
+    <value>Physical</value>
+  </data>
+  <data name="QuantumDelayedDamage" xml:space="preserve">
+    <value>Entanglement</value>
+  </data>
+  <data name="QuantumElement" xml:space="preserve">
+    <value>Quantum</value>
+  </data>
+  <data name="ResistanceDecrease" xml:space="preserve">
+    <value>RES Decrease</value>
+  </data>
+  <data name="ResistanceDecreaseSimple" xml:space="preserve">
+    <value>RES Decre</value>
+  </data>
+  <data name="Save" xml:space="preserve">
+    <value>Save</value>
+  </data>
+  <data name="Setting" xml:space="preserve">
+    <value>Setting</value>
+  </data>
+  <data name="HealingAmount" xml:space="preserve">
+    <value>Healing Amount</value>
+  </data>
+  <data name="HealingAmountSimple" xml:space="preserve">
+    <value>Tally Heal</value>
+  </data>
+  <data name="Speed" xml:space="preserve">
+    <value>SPD</value>
+  </data>
+  <data name="SpeedBase" xml:space="preserve">
+    <value>Base SPD</value>
+  </data>
+  <data name="SpeedBaseSimple" xml:space="preserve">
+    <value>Base SPD</value>
+  </data>
+  <data name="SpeedSimple" xml:space="preserve">
+    <value>SPD</value>
+  </data>
+  <data name="SuperBreakEqual" xml:space="preserve">
+    <value>Super Break Equal</value>
+  </data>
+  <data name="SuperBreakEqualSimple" xml:space="preserve">
+    <value>Super Break</value>
+  </data>
+  <data name="SuperBreakDamage" xml:space="preserve">
+    <value>Super Break DMG</value>
+  </data>
+  <data name="SuperBreakDamageSimple" xml:space="preserve">
+    <value>Super Break</value>
+  </data>
+  <data name="Toughness" xml:space="preserve">
+    <value>Toughness</value>
+  </data>
+  <data name="ToughnessReduced" xml:space="preserve">
+    <value>Toughness Reduced</value>
+  </data>
+  <data name="ToughnessReducedSimple" xml:space="preserve">
+    <value>Tough Decre</value>
+  </data>
+  <data name="ToughnessSimple" xml:space="preserve">
+    <value>Toughness</value>
+  </data>
+  <data name="OutgoingHealingBoost" xml:space="preserve">
+    <value>Outgoing Healing Boost</value>
+  </data>
+  <data name="OutgoingHealingBoostSimple" xml:space="preserve">
+    <value>Heal Boost</value>
+  </data>
+  <data name="WindDelayedDamage" xml:space="preserve">
+    <value>Shear</value>
+  </data>
+  <data name="WindElement" xml:space="preserve">
+    <value>Wind</value>
+  </data>
+  <data name="DamageDecreaseSimple" xml:space="preserve">
+    <value>DMG Decre</value>
+  </data>
+  <data name="DamageDecrease" xml:space="preserve">
+    <value>DMG Decrease</value>
+  </data>
+  <data name="EnergyRegenerationRateSimple" xml:space="preserve">
+    <value>Energy Rate</value>
+  </data>
+  <data name="EnergyRegenerationRate" xml:space="preserve">
+    <value>Energy Regeneration Rate</value>
+  </data>
+</root>

@@ -2,6 +2,7 @@
 using StarRailDamage.Source.Extension;
 using StarRailDamage.Source.Model.Text;
 using StarRailDamage.Source.Service.IO.Manifest;
+using StarRailDamage.Source.UI.Assets.Lang;
 using System.Diagnostics;
 using System.IO;
 using System.Windows.Media.Imaging;
@@ -13,40 +14,26 @@ namespace StarRailDamage.Source.Model.Metadata.Character.Attribute
         private static readonly Dictionary<string, CharacterAttributeInfoModel> AttributeMap = [];
 
         [DebuggerStepThrough]
-        public static CharacterAttributeInfoModel GetModel(this CharacterAttribute characterAttribute)
-        {
-            return GetModel(characterAttribute.ToString());
-        }
-
-        [DebuggerStepThrough]
         public static CharacterAttributeInfoModel GetModel(string target)
         {
             return AttributeMap.GetValueOrDefault(target).ThrowIfNull();
         }
 
-        private static void AppendModel(CharacterAttribute characterAttribute, int digits)
+        private static void AppendModel(string characterAttribute, int digits)
         {
             AppendModel(BitmapImageExtension.DefaultImage, characterAttribute, digits);
         }
 
-        private static BitmapImage AppendModel(this BitmapImage bitmapImage, CharacterAttribute characterAttribute, int digits)
+        private static BitmapImage AppendModel(this BitmapImage bitmapImage, string characterAttribute, int digits)
         {
-            return AppendModel(bitmapImage, characterAttribute, digits, digits > 0 ? FixedText.PercentUnit.Binding() : TextBinding.Default);
+            return AppendModel(bitmapImage, characterAttribute, digits, digits > 0 ? FixedTextExtension.Binding(nameof(FixedText.PercentUnit)) : TextBinding.Default);
         }
 
-        private static BitmapImage AppendModel(this BitmapImage bitmapImage, CharacterAttribute characterAttribute, int digits, TextBinding unitTextBinding)
+        private static BitmapImage AppendModel(this BitmapImage bitmapImage, string characterAttribute, int digits, TextBinding unitTextBinding)
         {
-            TextBinding SimpleTextBinding = TextBinding.Default;
-            TextBinding FullNameTextBinding = TextBinding.Default;
             string CharacterAttributeText = characterAttribute.ToString();
-            if (Enum.TryParse(CharacterAttributeText, out FixedText fixedText))
-            {
-                FullNameTextBinding = FixedTextExtension.Binding(fixedText);
-            }
-            if (Enum.TryParse(CharacterAttributeText + "Simple", out fixedText))
-            {
-                SimpleTextBinding = FixedTextExtension.Binding(fixedText);
-            }
+            TextBinding FullNameTextBinding = FixedTextExtension.Binding(CharacterAttributeText);
+            TextBinding SimpleTextBinding = FixedTextExtension.Binding(CharacterAttributeText + "Simple");
             AttributeMap[CharacterAttributeText] = new(bitmapImage, FullNameTextBinding, SimpleTextBinding, digits, unitTextBinding);
             return bitmapImage;
         }
@@ -59,25 +46,24 @@ namespace StarRailDamage.Source.Model.Metadata.Character.Attribute
 
         static CharacterAttributeExtension()
         {
-            GetImage("Unknown").AppendModel(CharacterAttribute.Unknown, 0);
-            GetImage("Attack").AppendModel(CharacterAttribute.Attack, 0).AppendModel(CharacterAttribute.AttackBase, 0);
-            GetImage("Health").AppendModel(CharacterAttribute.Health, 0).AppendModel(CharacterAttribute.HealthBase, 0).AppendModel(CharacterAttribute.CharacterLevel, 0, FixedText.LevelUnit.Binding()).AppendModel(CharacterAttribute.MonsterLevel, 0, FixedText.LevelUnit.Binding());
-            GetImage("Defense").AppendModel(CharacterAttribute.Defense, 0).AppendModel(CharacterAttribute.DefenseBase, 0).AppendModel(CharacterAttribute.DefenseFailure, 0).AppendModel(CharacterAttribute.DamageImmunity, 1);
-            GetImage("Speed").AppendModel(CharacterAttribute.Speed, 0).AppendModel(CharacterAttribute.SpeedBase, 0);
-            GetImage("Limit").AppendModel(CharacterAttribute.Toughness, 0).AppendModel(CharacterAttribute.ToughnessReduced, 0).AppendModel(CharacterAttribute.SpecialNumericalValues, 0).AppendModel(CharacterAttribute.ChargingLimit, 0);
-            GetImage("Critical").AppendModel(CharacterAttribute.CriticalHitRate, 1);
-            GetImage("Damage").AppendModel(CharacterAttribute.CriticalDamage, 1);
-            GetImage("Break").AppendModel(CharacterAttribute.SuperBreakDamage, 1).AppendModel(CharacterAttribute.BreakStrength, 1).AppendModel(CharacterAttribute.BreakEfficiency, 1);
-            GetImage("Effect").AppendModel(CharacterAttribute.EffectHitRate, 1);
-            GetImage("Resist").AppendModel(CharacterAttribute.EffectResistance, 1);
-            GetImage("Treatment").AppendModel(CharacterAttribute.TreatmentImprovement, 1);
-            GetImage("Charging").AppendModel(CharacterAttribute.ChargingEfficiency, 1);
-            AppendModel(CharacterAttribute.ElementResistance, 1);
-            AppendModel(CharacterAttribute.DamageMoreProne, 1);
-            AppendModel(CharacterAttribute.BreakDamageIncrease, 1);
-            AppendModel(CharacterAttribute.MonsterCount, 0);
-            AppendModel(CharacterAttribute.ResistanceFailure, 1);
-            AppendModel(CharacterAttribute.DamageIncrease, 1);
+            GetImage("Attack").AppendModel(nameof(FixedText.Attack), 0).AppendModel(nameof(FixedText.AttackBase), 0);
+            GetImage("Health").AppendModel(nameof(FixedText.Health), 0).AppendModel(nameof(FixedText.HealthBase), 0).AppendModel(nameof(FixedText.CharacterLevel), 0, FixedTextExtension.Binding(nameof(FixedText.LevelUnit))).AppendModel(nameof(FixedText.EnemyLevel), 0, FixedTextExtension.Binding(nameof(FixedText.LevelUnit)));
+            GetImage("Defense").AppendModel(nameof(FixedText.Defense), 0).AppendModel(nameof(FixedText.DefenseBase), 0).AppendModel(nameof(FixedText.DefenseDecrease), 0).AppendModel(nameof(FixedText.DamageDecrease), 1);
+            GetImage("Speed").AppendModel(nameof(FixedText.Speed), 0).AppendModel(nameof(FixedText.SpeedBase), 0);
+            GetImage("Limit").AppendModel(nameof(FixedText.Toughness), 0).AppendModel(nameof(FixedText.ToughnessReduced), 0).AppendModel(nameof(FixedText.HealingAmount), 0).AppendModel(nameof(FixedText.MaxEnergy), 0);
+            GetImage("Critical").AppendModel(nameof(FixedText.CriticalHitRate), 1);
+            GetImage("Damage").AppendModel(nameof(FixedText.CriticalDamage), 1);
+            GetImage("Break").AppendModel(nameof(FixedText.SuperBreakEqual), 1).AppendModel(nameof(FixedText.BreakEffect), 1).AppendModel(nameof(FixedText.BreakEfficiency), 1);
+            GetImage("Effect").AppendModel(nameof(FixedText.EffectHitRate), 1);
+            GetImage("Resist").AppendModel(nameof(FixedText.EffectResistance), 1);
+            GetImage("Treatment").AppendModel(nameof(FixedText.OutgoingHealingBoost), 1);
+            GetImage("Charging").AppendModel(nameof(FixedText.EnergyRegenerationRate), 1);
+            AppendModel(nameof(FixedText.ElementResistance), 1);
+            AppendModel(nameof(FixedText.BreakDamageBoost), 1);
+            AppendModel(nameof(FixedText.DamageBoost), 1);
+            AppendModel(nameof(FixedText.EnemyAmount), 0);
+            AppendModel(nameof(FixedText.ResistanceDecrease), 1);
+            AppendModel(nameof(FixedText.DamageIncrease), 1);
         }
     }
 }

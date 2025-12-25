@@ -4,28 +4,28 @@ namespace StarRailDamage.Source.Model.Metadata.Character.Damage
 {
     public class CharacterDamageModel : NotifyPropertyChangedFactory
     {
-        private double _BaseDamage;
+        private double _NormalDamage;
 
-        private double _CriticalStrikeDamage;
+        private double _CriticalHitDamage;
 
         private double _ExpectedDamage;
 
-        private double _BrokenDamage;
+        private double _BreakDamage;
 
-        private double _SuperBrokenDamage;
+        private double _SuperBreakDamage;
 
         private double _DelayedDamage;
 
-        public double BaseDamage
+        public double NormalDamage
         {
-            get => _BaseDamage;
-            set => SetField(ref _BaseDamage, value);
+            get => _NormalDamage;
+            set => SetField(ref _NormalDamage, value);
         }
 
-        public double CriticalStrikeDamage
+        public double CriticalHitDamage
         {
-            get => _CriticalStrikeDamage;
-            set => SetField(ref _CriticalStrikeDamage, value);
+            get => _CriticalHitDamage;
+            set => SetField(ref _CriticalHitDamage, value);
         }
 
         public double ExpectedDamage
@@ -34,16 +34,16 @@ namespace StarRailDamage.Source.Model.Metadata.Character.Damage
             set => SetField(ref _ExpectedDamage, value);
         }
 
-        public double BrokenDamage
+        public double BreakDamage
         {
-            get => _BrokenDamage;
-            set => SetField(ref _BrokenDamage, value);
+            get => _BreakDamage;
+            set => SetField(ref _BreakDamage, value);
         }
 
-        public double SuperBrokenDamage
+        public double SuperBreakDamage
         {
-            get => _SuperBrokenDamage;
-            set => SetField(ref _SuperBrokenDamage, value);
+            get => _SuperBreakDamage;
+            set => SetField(ref _SuperBreakDamage, value);
         }
 
         public double DelayedDamage

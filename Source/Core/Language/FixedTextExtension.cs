@@ -1,18 +1,13 @@
-﻿using StarRailDamage.Source.Extension;
-using StarRailDamage.Source.Model.Text;
+﻿using StarRailDamage.Source.Model.Text;
 using System.Diagnostics;
+using static StarRailDamage.Source.Core.Language.FixedTextManager;
 
 namespace StarRailDamage.Source.Core.Language
 {
     public static class FixedTextExtension
     {
-        public static readonly Dictionary<string, TextBinding> FixedTextMap = [];
-
         [DebuggerStepThrough]
-        public static TextBinding Binding(this FixedText fixedText) => Binding(fixedText.ToString());
-
-        [DebuggerStepThrough]
-        public static TextBinding Binding(string target)
+        public static TextBinding Binding(this string target)
         {
             if (FixedTextMap.TryGetValue(target, out TextBinding? TextBinding))
             {
@@ -20,20 +15,8 @@ namespace StarRailDamage.Source.Core.Language
             }
             else
             {
-                return FixedTextMap[target] = new($"Unknown FixedText:{target}");
+                return FixedTextMap[target] = new TextBinding(GetString(target));
             }
-        }
-
-        [DebuggerStepThrough]
-        public static string Text(this FixedText fixedText)
-        {
-            return fixedText.Binding().Text;
-        }
-
-        [DebuggerStepThrough]
-        public static string Text(this FixedText fixedText, params string[] args)
-        {
-            return fixedText.Binding().Text.Format(args);
         }
     }
 }

@@ -12,10 +12,7 @@ namespace StarRailDamage.Source.UI.Control
         public ScopedTextBlock()
         {
             InitializeComponent();
-            SizeChanged += (sender, e) =>
-            {
-                EnabledToolTip();
-            };
+            SizeChanged += OnSizeChanged;
         }
 
         public TextBinding TextBinding
@@ -86,17 +83,19 @@ namespace StarRailDamage.Source.UI.Control
             }
         }
 
-        private void EnabledToolTip()
+        public Size GetTextSize()
         {
-            ToolTipService.SetIsEnabled(this, !TipOnlyTrim || IsTextTrimmed());
-        }
-
-        public bool IsTextTrimmed()
-        {
-            if (TextTrimming == TextTrimming.None) return false;
             Typeface Typeface = new(FontFamily, FontStyle, FontWeight, FontStretch);
             FormattedText FormattedText = new(Text, CultureInfo.CurrentCulture, FlowDirection, Typeface, FontSize, Foreground, AppSetting.PixelsPerDip);
-            return FormattedText.Width - 0.1 > ActualWidth;
+            return new Size(FormattedText.Width, FormattedText.Height);
         }
+
+        private void OnSizeChanged(object sender, SizeChangedEventArgs e) => EnabledToolTip();
+
+        private void EnabledToolTip() => ToolTipService.SetIsEnabled(this, !TipOnlyTrim || IsTextTrimmed());
+
+        public bool IsTextTrimmed() => TextTrimming == TextTrimming.CharacterEllipsis && GetTextSize().Width - 0.1 > ActualWidth;
+
+        public override string ToString() => Text;
     }
 }

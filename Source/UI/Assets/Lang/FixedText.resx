@@ -1,0 +1,411 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="Attack" xml:space="preserve">
+    <value>攻击力</value>
+  </data>
+  <data name="AttackBase" xml:space="preserve">
+    <value>基础攻击</value>
+  </data>
+  <data name="AttackBaseSimple" xml:space="preserve">
+    <value>基础攻击</value>
+  </data>
+  <data name="AttackSimple" xml:space="preserve">
+    <value>攻击力</value>
+  </data>
+  <data name="NormalDamage" xml:space="preserve">
+    <value>基础伤害</value>
+  </data>
+  <data name="NormalDamageSimple" xml:space="preserve">
+    <value>基础值</value>
+  </data>
+  <data name="BreakDamageBoost" xml:space="preserve">
+    <value>击破增伤</value>
+  </data>
+  <data name="BreakDamageBoostSimple" xml:space="preserve">
+    <value>击破增伤</value>
+  </data>
+  <data name="BreakEfficiency" xml:space="preserve">
+    <value>击破效率</value>
+  </data>
+  <data name="BreakEfficiencySimple" xml:space="preserve">
+    <value>击破效率</value>
+  </data>
+  <data name="BreakEffect" xml:space="preserve">
+    <value>击破特攻</value>
+  </data>
+  <data name="BreakEffectSimple" xml:space="preserve">
+    <value>击破特攻</value>
+  </data>
+  <data name="BreakDamage" xml:space="preserve">
+    <value>击破伤害</value>
+  </data>
+  <data name="BreakDamageSimple" xml:space="preserve">
+    <value>击破</value>
+  </data>
+  <data name="Change" xml:space="preserve">
+    <value>切换</value>
+  </data>
+  <data name="CharacterElement" xml:space="preserve">
+    <value>角色属性</value>
+  </data>
+  <data name="CharacterLevel" xml:space="preserve">
+    <value>角色等级</value>
+  </data>
+  <data name="CharacterLevelSimple" xml:space="preserve">
+    <value>角色等级</value>
+  </data>
+  <data name="CharacterOccupation" xml:space="preserve">
+    <value>角色命途</value>
+  </data>
+  <data name="MaxEnergy" xml:space="preserve">
+    <value>能量上限</value>
+  </data>
+  <data name="MaxEnergySimple" xml:space="preserve">
+    <value>能量上限</value>
+  </data>
+  <data name="CriticalDamage" xml:space="preserve">
+    <value>暴击伤害</value>
+  </data>
+  <data name="CriticalDamageSimple" xml:space="preserve">
+    <value>暴击伤害</value>
+  </data>
+  <data name="CriticalHitRate" xml:space="preserve">
+    <value>暴击率</value>
+  </data>
+  <data name="CriticalHitRateSimple" xml:space="preserve">
+    <value>暴击率</value>
+  </data>
+  <data name="CriticalHitDamage" xml:space="preserve">
+    <value>全暴击伤害</value>
+  </data>
+  <data name="CriticalHitDamageSimple" xml:space="preserve">
+    <value>暴击</value>
+  </data>
+  <data name="DamageBoost" xml:space="preserve">
+    <value>伤害提高</value>
+  </data>
+  <data name="DamageBoostSimple" xml:space="preserve">
+    <value>伤害提高</value>
+  </data>
+  <data name="DamageIncrease" xml:space="preserve">
+    <value>易伤</value>
+  </data>
+  <data name="DamageIncreaseSimple" xml:space="preserve">
+    <value>易伤</value>
+  </data>
+  <data name="Defense" xml:space="preserve">
+    <value>防御力</value>
+  </data>
+  <data name="DefenseBase" xml:space="preserve">
+    <value>基础防御</value>
+  </data>
+  <data name="DefenseBaseSimple" xml:space="preserve">
+    <value>基础防御</value>
+  </data>
+  <data name="DefenseDecrease" xml:space="preserve">
+    <value>无视防御</value>
+  </data>
+  <data name="DefenseDecreaseSimple" xml:space="preserve">
+    <value>无视防御</value>
+  </data>
+  <data name="DefenseSimple" xml:space="preserve">
+    <value>防御力</value>
+  </data>
+  <data name="DelayedDamage" xml:space="preserve">
+    <value>持续伤害</value>
+  </data>
+  <data name="EffectHitRate" xml:space="preserve">
+    <value>效果命中</value>
+  </data>
+  <data name="EffectHitRateSimple" xml:space="preserve">
+    <value>效果命中</value>
+  </data>
+  <data name="EffectResistance" xml:space="preserve">
+    <value>效果抵抗</value>
+  </data>
+  <data name="EffectResistanceSimple" xml:space="preserve">
+    <value>效果抵抗</value>
+  </data>
+  <data name="ElementResistance" xml:space="preserve">
+    <value>抗性</value>
+  </data>
+  <data name="ElementResistanceSimple" xml:space="preserve">
+    <value>抗性</value>
+  </data>
+  <data name="ExpectedDamage" xml:space="preserve">
+    <value>期望伤害</value>
+  </data>
+  <data name="ExpectedDamageSimple" xml:space="preserve">
+    <value>期望值</value>
+  </data>
+  <data name="Export" xml:space="preserve">
+    <value>导出</value>
+  </data>
+  <data name="FireDelayedDamage" xml:space="preserve">
+    <value>灼烧</value>
+  </data>
+  <data name="FireElement" xml:space="preserve">
+    <value>火</value>
+  </data>
+  <data name="Health" xml:space="preserve">
+    <value>生命值</value>
+  </data>
+  <data name="HealthBase" xml:space="preserve">
+    <value>基础生命</value>
+  </data>
+  <data name="HealthBaseSimple" xml:space="preserve">
+    <value>基础生命</value>
+  </data>
+  <data name="HealthSimple" xml:space="preserve">
+    <value>生命值</value>
+  </data>
+  <data name="IceDelayedDamage" xml:space="preserve">
+    <value>冻结</value>
+  </data>
+  <data name="IceElement" xml:space="preserve">
+    <value>冰</value>
+  </data>
+  <data name="ImaginaryDelayedDamage" xml:space="preserve">
+    <value>禁锢</value>
+  </data>
+  <data name="ImaginaryElement" xml:space="preserve">
+    <value>虚数</value>
+  </data>
+  <data name="Language" xml:space="preserve">
+    <value>简体中文</value>
+  </data>
+  <data name="LevelUnit" xml:space="preserve">
+    <value>级</value>
+  </data>
+  <data name="LightningDelayedDamage" xml:space="preserve">
+    <value>触电</value>
+  </data>
+  <data name="LightningElement" xml:space="preserve">
+    <value>雷</value>
+  </data>
+  <data name="EnemyAmount" xml:space="preserve">
+    <value>怪物数量</value>
+  </data>
+  <data name="EnemyAmountSimple" xml:space="preserve">
+    <value>怪物</value>
+  </data>
+  <data name="EnemyLevel" xml:space="preserve">
+    <value>怪物等级</value>
+  </data>
+  <data name="EnemyLevelSimple" xml:space="preserve">
+    <value>怪物等级</value>
+  </data>
+  <data name="NumberTextBoxTitle" xml:space="preserve">
+    <value>算式</value>
+  </data>
+  <data name="PercentUnit" xml:space="preserve">
+    <value>%</value>
+  </data>
+  <data name="PhysicalDelayedDamage" xml:space="preserve">
+    <value>裂伤</value>
+  </data>
+  <data name="PhysicalElement" xml:space="preserve">
+    <value>物理</value>
+  </data>
+  <data name="QuantumDelayedDamage" xml:space="preserve">
+    <value>纠缠</value>
+  </data>
+  <data name="QuantumElement" xml:space="preserve">
+    <value>量子</value>
+  </data>
+  <data name="ResistanceDecrease" xml:space="preserve">
+    <value>抗性穿透</value>
+  </data>
+  <data name="ResistanceDecreaseSimple" xml:space="preserve">
+    <value>抗性穿透</value>
+  </data>
+  <data name="Save" xml:space="preserve">
+    <value>保存</value>
+  </data>
+  <data name="Setting" xml:space="preserve">
+    <value>设置</value>
+  </data>
+  <data name="HealingAmount" xml:space="preserve">
+    <value>特殊数值</value>
+  </data>
+  <data name="HealingAmountSimple" xml:space="preserve">
+    <value>特殊数值</value>
+  </data>
+  <data name="Speed" xml:space="preserve">
+    <value>速度</value>
+  </data>
+  <data name="SpeedBase" xml:space="preserve">
+    <value>基础速度</value>
+  </data>
+  <data name="SpeedBaseSimple" xml:space="preserve">
+    <value>基础速度</value>
+  </data>
+  <data name="SpeedSimple" xml:space="preserve">
+    <value>速度</value>
+  </data>
+  <data name="SuperBreakEqual" xml:space="preserve">
+    <value>超击破</value>
+  </data>
+  <data name="SuperBreakEqualSimple" xml:space="preserve">
+    <value>超击破</value>
+  </data>
+  <data name="SuperBreakDamage" xml:space="preserve">
+    <value>超击破伤害</value>
+  </data>
+  <data name="SuperBreakDamageSimple" xml:space="preserve">
+    <value>超击破</value>
+  </data>
+  <data name="Toughness" xml:space="preserve">
+    <value>韧性值</value>
+  </data>
+  <data name="ToughnessReduced" xml:space="preserve">
+    <value>削韧值</value>
+  </data>
+  <data name="ToughnessReducedSimple" xml:space="preserve">
+    <value>削韧值</value>
+  </data>
+  <data name="ToughnessSimple" xml:space="preserve">
+    <value>韧性值</value>
+  </data>
+  <data name="OutgoingHealingBoost" xml:space="preserve">
+    <value>治疗提高</value>
+  </data>
+  <data name="OutgoingHealingBoostSimple" xml:space="preserve">
+    <value>治疗提高</value>
+  </data>
+  <data name="WindDelayedDamage" xml:space="preserve">
+    <value>风化</value>
+  </data>
+  <data name="WindElement" xml:space="preserve">
+    <value>风</value>
+  </data>
+  <data name="DamageDecreaseSimple" xml:space="preserve">
+    <value>免伤</value>
+  </data>
+  <data name="DamageDecrease" xml:space="preserve">
+    <value>免伤</value>
+  </data>
+  <data name="EnergyRegenerationRateSimple" xml:space="preserve">
+    <value>充能效率</value>
+  </data>
+  <data name="EnergyRegenerationRate" xml:space="preserve">
+    <value>充能效率</value>
+  </data>
+</root>
