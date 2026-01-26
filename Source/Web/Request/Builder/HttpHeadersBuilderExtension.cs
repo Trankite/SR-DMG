@@ -14,13 +14,37 @@ namespace StarRailDamage.Source.Web.Request.Builder
         }
 
         [DebuggerStepThrough]
+        public static T AddHeader<T>(this T builder, HttpCookiesBuilder httpCookiesBuilder) where T : IHttpHeadersBuilder<HttpHeaders>
+        {
+            return builder.Configure(builder => builder.Headers.Add("Cookie", httpCookiesBuilder.ToString()));
+        }
+
+        [DebuggerStepThrough]
         public static T SetHeader<T>(this T builder, string name, string? value = null) where T : IHttpHeadersBuilder<HttpHeaders>
         {
             return builder.RemoveHeader(name).AddHeader(name, value);
         }
 
         [DebuggerStepThrough]
-        public static T RemoveHeader<T>(this T builder, params string?[] names) where T : IHttpHeadersBuilder<HttpHeaders>
+        public static T SetHeader<T>(this T builder, HttpCookiesBuilder httpCookiesBuilder) where T : IHttpHeadersBuilder<HttpHeaders>
+        {
+            return builder.RemoveCookieHeader().AddHeader(httpCookiesBuilder);
+        }
+
+        [DebuggerStepThrough]
+        public static T RemoveHeader<T>(this T builder, string? name) where T : IHttpHeadersBuilder<HttpHeaders>
+        {
+            return builder.Configure(name.IsNotNull() && builder.Headers.Remove(name));
+        }
+
+        [DebuggerStepThrough]
+        public static T RemoveCookieHeader<T>(this T builder) where T : IHttpHeadersBuilder<HttpHeaders>
+        {
+            return builder.Configure(builder.Headers.Remove("Cookie"));
+        }
+
+        [DebuggerStepThrough]
+        public static T RemoveHeaders<T>(this T builder, params string?[] names) where T : IHttpHeadersBuilder<HttpHeaders>
         {
             return builder.Configure(builder => names.Foreach(name => builder.RemoveHeader(name)));
         }

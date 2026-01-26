@@ -1,11 +1,11 @@
-﻿using StarRailDamage.Source.Extension;
-using StarRailDamage.Source.Service.IO.FiledStream.Abstraction;
+﻿using StarRailDamage.Source.Core.Abstraction;
+using StarRailDamage.Source.Extension;
 using System.IO;
 using System.Runtime.ExceptionServices;
 
 namespace StarRailDamage.Source.Service.IO.FiledStream
 {
-    public class FiledReader : IFiledStreamStatus, IDisposable
+    public class FiledReader : IExceptionCapture, IDisposable
     {
         public readonly StreamReader? Reader;
 

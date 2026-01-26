@@ -1,0 +1,34 @@
+﻿using StarRailDamage.Source.Extension;
+
+namespace StarRailDamage.Source.Web.Hoyolab
+{
+    public class HoyolabToken
+    {
+        public string Name { get; set; } = string.Empty;
+
+        public string Aid { get; set; } = string.Empty;
+
+        public string Uid { get; set; } = string.Empty;
+
+        public string Mid { get; set; } = string.Empty;
+
+        public string Server { get; set; } = string.Empty;
+
+        public string Game { get; set; } = string.Empty;
+
+        public string Device { get; set; } = string.Empty;
+
+        public string Guid { get; set; } = string.Empty;
+
+        public string Cookie { get; set; } = string.Empty;
+
+        public string Stoken { get; set; } = string.Empty;
+
+        public string Ltoken { get; set; } = string.Empty;
+
+        public static HoyolabToken Create()
+        {
+            return new HoyolabToken().Configure(x => x.Guid = System.Guid.NewGuid().ToString());
+        }
+    }
+}

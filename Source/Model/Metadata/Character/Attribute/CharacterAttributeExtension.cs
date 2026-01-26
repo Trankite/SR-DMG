@@ -38,7 +38,7 @@ namespace StarRailDamage.Source.Model.Metadata.Character.Attribute
             return bitmapImage;
         }
 
-        private static BitmapImage GetImage(string name)
+        private static BitmapImage GetAttributeImage(string name)
         {
             using Stream Stream = AppManifestStream.FindAndGetStream($"Attribute_Icon_{name}");
             return BitmapImageExtension.GetBitmapImage(Stream);
@@ -46,18 +46,18 @@ namespace StarRailDamage.Source.Model.Metadata.Character.Attribute
 
         static CharacterAttributeExtension()
         {
-            GetImage("Attack").AppendModel(nameof(FixedText.Attack), 0).AppendModel(nameof(FixedText.AttackBase), 0);
-            GetImage("Health").AppendModel(nameof(FixedText.Health), 0).AppendModel(nameof(FixedText.HealthBase), 0).AppendModel(nameof(FixedText.CharacterLevel), 0, FixedTextExtension.Binding(nameof(FixedText.LevelUnit))).AppendModel(nameof(FixedText.EnemyLevel), 0, FixedTextExtension.Binding(nameof(FixedText.LevelUnit)));
-            GetImage("Defense").AppendModel(nameof(FixedText.Defense), 0).AppendModel(nameof(FixedText.DefenseBase), 0).AppendModel(nameof(FixedText.DefenseDecrease), 0).AppendModel(nameof(FixedText.DamageDecrease), 1);
-            GetImage("Speed").AppendModel(nameof(FixedText.Speed), 0).AppendModel(nameof(FixedText.SpeedBase), 0);
-            GetImage("Limit").AppendModel(nameof(FixedText.Toughness), 0).AppendModel(nameof(FixedText.ToughnessReduced), 0).AppendModel(nameof(FixedText.HealingAmount), 0).AppendModel(nameof(FixedText.MaxEnergy), 0);
-            GetImage("Critical").AppendModel(nameof(FixedText.CriticalHitRate), 1);
-            GetImage("Damage").AppendModel(nameof(FixedText.CriticalDamage), 1);
-            GetImage("Break").AppendModel(nameof(FixedText.SuperBreakEqual), 1).AppendModel(nameof(FixedText.BreakEffect), 1).AppendModel(nameof(FixedText.BreakEfficiency), 1);
-            GetImage("Effect").AppendModel(nameof(FixedText.EffectHitRate), 1);
-            GetImage("Resist").AppendModel(nameof(FixedText.EffectResistance), 1);
-            GetImage("Treatment").AppendModel(nameof(FixedText.OutgoingHealingBoost), 1);
-            GetImage("Charging").AppendModel(nameof(FixedText.EnergyRegenerationRate), 1);
+            GetAttributeImage("Attack").AppendModel(nameof(FixedText.Attack), 0).AppendModel(nameof(FixedText.AttackBase), 0);
+            GetAttributeImage("Health").AppendModel(nameof(FixedText.Health), 0).AppendModel(nameof(FixedText.HealthBase), 0).AppendModel(nameof(FixedText.CharacterLevel), 0, FixedTextExtension.Binding(nameof(FixedText.LevelUnit))).AppendModel(nameof(FixedText.EnemyLevel), 0, FixedTextExtension.Binding(nameof(FixedText.LevelUnit)));
+            GetAttributeImage("Defense").AppendModel(nameof(FixedText.Defense), 0).AppendModel(nameof(FixedText.DefenseBase), 0).AppendModel(nameof(FixedText.DefenseDecrease), 0).AppendModel(nameof(FixedText.DamageDecrease), 1);
+            GetAttributeImage("Speed").AppendModel(nameof(FixedText.Speed), 0).AppendModel(nameof(FixedText.SpeedBase), 0);
+            GetAttributeImage("Limit").AppendModel(nameof(FixedText.Toughness), 0).AppendModel(nameof(FixedText.ToughnessReduced), 0).AppendModel(nameof(FixedText.HealingAmount), 0).AppendModel(nameof(FixedText.MaxEnergy), 0);
+            GetAttributeImage("Critical").AppendModel(nameof(FixedText.CriticalHitRate), 1);
+            GetAttributeImage("Damage").AppendModel(nameof(FixedText.CriticalDamage), 1);
+            GetAttributeImage("Break").AppendModel(nameof(FixedText.SuperBreakEqual), 1).AppendModel(nameof(FixedText.BreakEffect), 1).AppendModel(nameof(FixedText.BreakEfficiency), 1);
+            GetAttributeImage("Effect").AppendModel(nameof(FixedText.EffectHitRate), 1);
+            GetAttributeImage("Resist").AppendModel(nameof(FixedText.EffectResistance), 1);
+            GetAttributeImage("Treatment").AppendModel(nameof(FixedText.OutgoingHealingBoost), 1);
+            GetAttributeImage("Charging").AppendModel(nameof(FixedText.EnergyRegenerationRate), 1);
             AppendModel(nameof(FixedText.ElementResistance), 1);
             AppendModel(nameof(FixedText.BreakDamageBoost), 1);
             AppendModel(nameof(FixedText.DamageBoost), 1);

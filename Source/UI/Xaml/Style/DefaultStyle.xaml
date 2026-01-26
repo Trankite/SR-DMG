@@ -77,6 +77,8 @@
     <Style TargetType="{x:Type UI:HeadSculpture}">
         <Setter Property="Foreground" Value="{DynamicResource MainForeBrush}"/>
         <Setter Property="Background" Value="{DynamicResource MainBackBrush}"/>
+        <Setter Property="FontSize" Value="{DynamicResource DropFontSize}"/>
+        <Setter Property="FontWeight" Value="Bold"/>
     </Style>
 
     <Style TargetType="{x:Type UI:HorizontalMarker}">

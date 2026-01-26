@@ -21,7 +21,7 @@
                         <RowDefinition Height="Auto"/>
                         <RowDefinition Height="*"/>
                         <RowDefinition Height="Auto"/>
-                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="5"/>
                     </Grid.RowDefinitions>
 
                     <Image Grid.Row="0" Width="100" Height="100" Source="{Binding HeadImage,RelativeSource={RelativeSource AncestorType={x:Type local:HeadSculpture}}}">

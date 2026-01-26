@@ -1,6 +1,5 @@
 ﻿using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
-using System.IO;
 
 namespace StarRailDamage.Source.Extension
 {
@@ -81,27 +80,6 @@ namespace StarRailDamage.Source.Extension
             {
                 return value;
             }
-        }
-
-        [DebuggerStepThrough]
-        public static string BuildFolder(this string value)
-        {
-            if (!string.IsNullOrEmpty(value))
-            {
-                Directory.CreateDirectory(value);
-            }
-            return value;
-        }
-
-        [DebuggerStepThrough]
-        public static string BuildFile(this string value)
-        {
-            string? FolderPath = Path.GetDirectoryName(value);
-            if (!string.IsNullOrEmpty(FolderPath))
-            {
-                Directory.CreateDirectory(FolderPath);
-            }
-            return value;
         }
     }
 }

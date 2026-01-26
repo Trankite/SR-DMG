@@ -2,13 +2,14 @@
 
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
-    <TargetFramework>net8.0-windows7.0</TargetFramework>
+    <TargetFramework>net10.0-windows7.0</TargetFramework>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
     <UseWPF>true</UseWPF>
     <ApplicationIcon>Source\UI\Assets\Logo\Logo.ico</ApplicationIcon>
     <NoWin32Manifest>true</NoWin32Manifest>
     <LangVersion>preview</LangVersion>
+    <StartupObject>StarRailDamage.Program</StartupObject>
   </PropertyGroup>
 
   <ItemGroup>

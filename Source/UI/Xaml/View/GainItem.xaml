@@ -16,8 +16,8 @@
                     </Grid.ColumnDefinitions>
 
                     <Grid.RowDefinitions>
-                        <RowDefinition Height="Auto"/>
-                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="25"/>
+                        <RowDefinition Height="25"/>
                         <RowDefinition Height="Auto"/>
                         <RowDefinition Height="Auto"/>
                         <RowDefinition Height="Auto"/>
@@ -70,7 +70,7 @@
                         </TextBlock.Style>
                     </TextBlock>
 
-                    <ItemsControl Grid.Column="0" Grid.Row="4" Grid.ColumnSpan="3" ItemsSource="{Binding SliderItems,RelativeSource={RelativeSource AncestorType={x:Type local:GainItem}}}">
+                    <ItemsControl Grid.Column="0" Grid.Row="4" Grid.ColumnSpan="3" Margin="5,0,5,0" ItemsSource="{Binding SliderItems,RelativeSource={RelativeSource AncestorType={x:Type local:GainItem}}}">
                         <ItemsControl.ItemsPanel>
                             <ItemsPanelTemplate>
                                 <Panel:ScopedStackPanel Orientation="Vertical" Spacing="5"/>

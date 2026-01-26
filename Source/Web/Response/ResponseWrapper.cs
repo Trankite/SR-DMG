@@ -10,10 +10,7 @@ namespace StarRailDamage.Source.Web.Response
         [JsonPropertyName("message")]
         public string Message { get; set; } = string.Empty;
 
-        public virtual bool TryValidate()
-        {
-            return ReturnCode == 0;
-        }
+        public virtual bool IsSuccess() => ReturnCode == 0;
     }
 
     public class ResponseWrapper<TData> : ResponseWrapper

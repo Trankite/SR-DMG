@@ -33,7 +33,7 @@ namespace StarRailDamage.Source.UI.Control.Panel
             double FinalScale = Math.Max(MinScale, Math.Min(MaxScale, Math.Min(ScaleWidth, ScaleHeight)));
             double FinalWidth = Math.Min(ChildSize.Width * FinalScale, constraint.Width);
             double FinalHeight = Math.Min(ChildSize.Height * FinalScale, constraint.Height);
-            Child.Measure(new Size((FinalWidth / FinalScale).Ceiling(2), (FinalHeight / FinalScale).Ceiling(2)));
+            Child.Measure(new Size((FinalWidth / FinalScale).Ceiling(1), (FinalHeight / FinalScale).Ceiling(1)));
             return new Size(FinalWidth, FinalHeight);
         }
     }

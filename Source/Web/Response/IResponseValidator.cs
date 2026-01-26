@@ -2,6 +2,6 @@
 {
     public interface IResponseValidator
     {
-        bool TryValidate();
+        bool IsSuccess();
     }
 }

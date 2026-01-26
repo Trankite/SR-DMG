@@ -11,11 +11,13 @@ namespace StarRailDamage.Source.Extension
             return value ?? throw new NullReferenceException();
         }
 
+        [DebuggerStepThrough]
         public static bool IsNull<T>([NotNullWhen(false)] this T? value)
         {
             return value is null;
         }
 
+        [DebuggerStepThrough]
         public static bool IsNotNull<T>([NotNullWhen(true)] this T? value)
         {
             return value is not null;

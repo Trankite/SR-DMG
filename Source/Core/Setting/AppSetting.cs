@@ -11,7 +11,7 @@ namespace StarRailDamage.Source.Core.Setting
 
         static AppSetting()
         {
-            PixelsPerDip = !App.IsInDesignMode ? VisualTreeHelper.GetDpi(Application.Current.MainWindow).PixelsPerDip : 1;
+            PixelsPerDip = !Program.IsDesignMode ? VisualTreeHelper.GetDpi(Application.Current.MainWindow).PixelsPerDip : 1;
         }
     }
 }

@@ -6,7 +6,8 @@
 
         public static double Ceiling(this double value, int digits)
         {
-            return Math.Ceiling(value * Math.Pow(10, digits)) / digits;
+            double Factor = Math.Pow(10, digits);
+            return Math.Ceiling(value * Factor) / Factor;
         }
     }
 }

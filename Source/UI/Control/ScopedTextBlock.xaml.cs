@@ -94,7 +94,7 @@ namespace StarRailDamage.Source.UI.Control
 
         private void EnabledToolTip() => ToolTipService.SetIsEnabled(this, !TipOnlyTrim || IsTextTrimmed());
 
-        public bool IsTextTrimmed() => TextTrimming == TextTrimming.CharacterEllipsis && GetTextSize().Width - 0.1 > ActualWidth;
+        public bool IsTextTrimmed() => GetTextSize().Width - 0.1 > ActualWidth;
 
         public override string ToString() => Text;
     }
