@@ -6,24 +6,20 @@ namespace StarRailDamage.Source.Service.IO
     public static class FileManage
     {
         [DebuggerStepThrough]
-        public static string BuildFolder(string value)
+        public static string BuildPath(string? path)
         {
-            if (!string.IsNullOrEmpty(value))
+            if (!string.IsNullOrEmpty(path))
             {
-                Directory.CreateDirectory(value);
+                Directory.CreateDirectory(path);
             }
-            return value;
+            return path ?? string.Empty;
         }
 
         [DebuggerStepThrough]
-        public static string BuildFile(string value)
+        public static string BuildFilePath(string? path)
         {
-            string? FolderPath = Path.GetDirectoryName(value);
-            if (!string.IsNullOrEmpty(FolderPath))
-            {
-                Directory.CreateDirectory(FolderPath);
-            }
-            return value;
+            BuildPath(Path.GetDirectoryName(path));
+            return path ?? string.Empty;
         }
     }
 }

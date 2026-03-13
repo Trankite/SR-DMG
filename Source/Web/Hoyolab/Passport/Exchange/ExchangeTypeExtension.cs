@@ -4,7 +4,12 @@
     {
         public static string GetToken(this ExchangeType exchangeType, HoyolabToken hoyolabToken)
         {
-            return exchangeType switch { ExchangeType.SToken => hoyolabToken.Stoken, ExchangeType.LToken => hoyolabToken.Ltoken, ExchangeType.Cookie => hoyolabToken.Cookie, _ => string.Empty };
+            return hoyolabToken.Tokens.GetValueOrDefault(exchangeType.GetTokenType()) ?? string.Empty;
+        }
+
+        public static HoyolabTokenType GetTokenType(this ExchangeType exchangeType)
+        {
+            return exchangeType switch { ExchangeType.SToken => HoyolabTokenType.SToken, ExchangeType.LToken => HoyolabTokenType.LToken, ExchangeType.Cookie => HoyolabTokenType.Cookie, _ => HoyolabTokenType.None };
         }
     }
 }

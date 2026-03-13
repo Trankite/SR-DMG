@@ -6,5 +6,8 @@ namespace StarRailDamage.Source.Extension
     {
         [DebuggerStepThrough]
         public static TResult Captured<TResult, TNone>(this TNone _, TResult result) => result;
+
+        [DebuggerStepThrough]
+        public static string ToIntString(this bool value) => Convert.ToInt32(value).ToString();
     }
 }

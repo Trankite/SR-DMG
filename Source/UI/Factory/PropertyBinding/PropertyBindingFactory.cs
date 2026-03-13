@@ -33,7 +33,7 @@ namespace StarRailDamage.Source.UI.Factory.PropertyBinding
                 DependHanlder = DependToModel,
                 ModelHanlder = ModelToDepend
             };
-            ModelHandlers[modelProperty.FullName().FirstSplit('.').Last()] = PropertyBinding;
+            ModelHandlers[modelProperty.FullName().FirstSplit('.').Extend.ToString()] = PropertyBinding;
             return dependProperty.FullName().Configure(x => DependHandlers[x] = PropertyBinding);
         }
 

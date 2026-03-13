@@ -8,12 +8,12 @@ namespace StarRailDamage.Source.UI.Model.Converter
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            return StringExtension.Format(parameter as string, value);
+            return StringExtension.Format((string)parameter, value);
         }
 
         public object Convert(object[] values, Type targetType, object parameter, CultureInfo culture)
         {
-            return StringExtension.Format(parameter as string, values);
+            return StringExtension.Format((string)parameter, values);
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)

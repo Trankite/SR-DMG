@@ -13,9 +13,9 @@ namespace StarRailDamage.Source.Web.Response
         public virtual bool IsSuccess() => ReturnCode == 0;
     }
 
-    public class ResponseWrapper<TData> : ResponseWrapper
+    public class ResponseWrapper<TData> : ResponseWrapper where TData : new()
     {
         [JsonPropertyName("data")]
-        public TData? Data { get; set; }
+        public TData Data { get; set; } = new();
     }
 }

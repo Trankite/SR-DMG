@@ -7,7 +7,7 @@ namespace StarRailDamage.Source.Web.Request
 {
     public static class HttpRequestMessageBuilderExtension
     {
-        public static async ValueTask<FinalizedResponse<TResult>> SendAsync<TResult>(this HttpRequestMessageBuilder builder, HttpClient httpClient, CancellationToken cancellationToken)
+        public static async ValueTask<FinalizedResponse<TResult>> SendAsync<TResult>(this HttpRequestMessageBuilder builder, HttpClient httpClient, CancellationToken cancellationToken = default)
         {
             return await builder.SendAsync<TResult>(httpClient, HttpCompletionOption.ResponseContentRead, cancellationToken);
         }

@@ -8,23 +8,15 @@ namespace StarRailDamage.Source.Web.Hoyolab
 
         public string Aid { get; set; } = string.Empty;
 
-        public string Uid { get; set; } = string.Empty;
-
         public string Mid { get; set; } = string.Empty;
-
-        public string Server { get; set; } = string.Empty;
-
-        public string Game { get; set; } = string.Empty;
 
         public string Device { get; set; } = string.Empty;
 
         public string Guid { get; set; } = string.Empty;
 
-        public string Cookie { get; set; } = string.Empty;
+        public Dictionary<HoyolabTokenType, string> Tokens { get; set; } = [];
 
-        public string Stoken { get; set; } = string.Empty;
-
-        public string Ltoken { get; set; } = string.Empty;
+        public List<HoyolabUserRole> UserRoles { get; set; } = [];
 
         public static HoyolabToken Create()
         {

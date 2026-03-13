@@ -13,6 +13,12 @@ namespace StarRailDamage.Source.Web.Request.Builder
         }
 
         [DebuggerStepThrough]
+        public static T SetRequestUri<T>(this T builder, HttpUriBuilder uriBuilder) where T : IHttpRequestUriBuilder
+        {
+            return builder.SetRequestUri(uriBuilder.Uri);
+        }
+
+        [DebuggerStepThrough]
         public static T SetRequestUri<T>(this T builder, Uri? requestUri) where T : IHttpRequestUriBuilder
         {
             return builder.Configure(builder.RequestUri = requestUri);

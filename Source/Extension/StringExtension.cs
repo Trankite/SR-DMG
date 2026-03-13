@@ -1,77 +1,69 @@
-﻿using System.Diagnostics;
+﻿using StarRailDamage.Source.Model.DataStruct;
+using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
+using System.Runtime.InteropServices;
 
 namespace StarRailDamage.Source.Extension
 {
     public static class StringExtension
     {
         [DebuggerStepThrough]
-        public static string[] FirstSplit(this string value, char separator)
+        public static FrozenSpan<char, char> FirstSplit(this ReadOnlySpan<char> value, char separator)
         {
-            return value.FirstSplit(separator.ToString());
+            return value.FirstSplit(MemoryMarshal.CreateSpan(ref separator, 1));
         }
 
         [DebuggerStepThrough]
-        public static string[] FirstSplit(this string value, string separator)
+        public static FrozenSpan<char, char> FirstSplit(this ReadOnlySpan<char> value, ReadOnlySpan<char> separator)
         {
-            return value.IndexOfTry(separator, out int index) ? value.SplitAtWithOutSelf(index) : [];
+            return value.IndexOfTry(separator, out int index) ? value.SplitAtWithOutSelf(index, separator) : new FrozenSpan<char, char>(value, string.Empty);
         }
 
         [DebuggerStepThrough]
-        public static string[] LastSplit(this string value, char separator)
+        public static FrozenSpan<char, char> LastSplit(this ReadOnlySpan<char> value, char separator)
         {
-            return value.LastSplit(separator.ToString());
+            return value.LastSplit(MemoryMarshal.CreateSpan(ref separator, 1));
         }
 
         [DebuggerStepThrough]
-        public static string[] LastSplit(this string value, string separator)
+        public static FrozenSpan<char, char> LastSplit(this ReadOnlySpan<char> value, ReadOnlySpan<char> separator)
         {
-            return value.LastIndexOfTry(separator, out int index) ? value.SplitAtWithOutSelf(index, separator.Length) : [];
+            return value.LastIndexOfTry(separator, out int index) ? value.SplitAtWithOutSelf(index, separator) : new FrozenSpan<char, char>(value, string.Empty);
         }
 
         [DebuggerStepThrough]
-        public static string[] SplitAt(this string value, int index)
+        public static FrozenSpan<char, char> SplitAtWithOutSelf(this ReadOnlySpan<char> value, int index, ReadOnlySpan<char> separator)
         {
-            return [value[..index], value[index..]];
+            return new FrozenSpan<char, char>(value[..index], value[(index + separator.Length)..]);
         }
 
         [DebuggerStepThrough]
-        public static string[] SplitAtWithOutSelf(this string value, int index, int length = 1)
-        {
-            return [value[..index], value[(index + length)..]];
-        }
-
-        [DebuggerStepThrough]
-        public static bool IndexOfTry(this string value, string separator, out int index)
+        public static bool IndexOfTry(this ReadOnlySpan<char> value, ReadOnlySpan<char> separator, out int index)
         {
             return (index = value.IndexOf(separator)) != -1;
         }
 
         [DebuggerStepThrough]
-        public static bool LastIndexOfTry(this string value, string separator, out int index)
+        public static bool LastIndexOfTry(this ReadOnlySpan<char> value, ReadOnlySpan<char> separator, out int index)
         {
             return (index = value.LastIndexOf(separator)) != -1;
         }
 
         [DebuggerStepThrough]
-        public static char? Index(this string value, int index)
+        public static char? Index(this ReadOnlySpan<char> value, int index)
         {
             return index >= 0 && index < value.Length ? value[index] : null;
         }
 
         [DebuggerStepThrough]
-        public static bool IndexTry(this string value, int index, [NotNullWhen(true)] out char result)
+        public static bool IndexTry(this ReadOnlySpan<char> value, int index, [NotNullWhen(true)] out char result)
         {
             return index >= 0 && index < value.Length ? true.Configure(result = value[index]) : false.Configure(result = default);
         }
 
         [DebuggerStepThrough]
-        public static string Format(this string? value, params object[] args)
+        public static string Format(this string value, params object[] args)
         {
-            if (string.IsNullOrEmpty(value))
-            {
-                return string.Empty;
-            }
             try
             {
                 return string.Format(value, args);

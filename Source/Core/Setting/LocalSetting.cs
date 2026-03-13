@@ -4,6 +4,11 @@ namespace StarRailDamage.Source.Core.Setting
 {
     public static class LocalSetting
     {
-        public static string LocalPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), AppSetting.AppName);
+        public static readonly string LocalPath;
+
+        static LocalSetting()
+        {
+            LocalPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), AppSetting.AppName);
+        }
     }
 }
