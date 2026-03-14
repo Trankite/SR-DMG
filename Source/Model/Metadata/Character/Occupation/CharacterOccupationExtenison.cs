@@ -1,34 +1,23 @@
-﻿using StarRailDamage.Source.Core.Caching;
-using StarRailDamage.Source.Service.IO.Manifest;
+﻿using StarRailDamage.Source.Extension;
 using System.Diagnostics;
-using System.Diagnostics.CodeAnalysis;
-using System.IO;
-using System.Windows.Media.Imaging;
 
 namespace StarRailDamage.Source.Model.Metadata.Character.Occupation
 {
     public static class CharacterOccupationExtenison
     {
-        private static readonly ImageCache<string> ImageCache = new();
+        private static readonly Dictionary<string, CharacterOccupationModel> OccupationMap = [];
 
         [DebuggerStepThrough]
-        public static bool TryGetImage(this CharacterOccupation characterAttribute, [NotNullWhen(true)] out BitmapImage? bitmapImage)
+        public static CharacterOccupationModel GetModel(this CharacterOccupation occupation)
         {
-            return TryGetImage(characterAttribute.ToString(), out bitmapImage);
-        }
-
-        [DebuggerStepThrough]
-        public static bool TryGetImage(string target, [NotNullWhen(true)] out BitmapImage? bitmapImage)
-        {
-            return ImageCache.TryGetImage(target, out bitmapImage);
+            return OccupationMap.GetValueOrDefault(occupation.ToString()).ThrowIfNull();
         }
 
         static CharacterOccupationExtenison()
         {
-            foreach (string CharacterOccupation in Enum.GetNames<CharacterOccupation>())
+            foreach (string OccupationString in Enum.GetNames<CharacterOccupation>())
             {
-                using Stream Stream = AppManifestStream.FindAndGetStream($"Occupation_Icon_{CharacterOccupation}");
-                ImageCache.Append(CharacterOccupation, Stream);
+                OccupationMap[OccupationString] = CharacterOccupationModel.Create(OccupationString);
             }
         }
     }

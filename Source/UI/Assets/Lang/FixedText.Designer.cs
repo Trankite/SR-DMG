@@ -61,6 +61,15 @@ namespace StarRailDamage.Source.UI.Assets.Lang {
         }
         
         /// <summary>
+        ///   查找类似 丰饶 的本地化字符串。
+        /// </summary>
+        public static string AbundanceOccupation {
+            get {
+                return ResourceManager.GetString("AbundanceOccupation", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   查找类似 攻击力 的本地化字符串。
         /// </summary>
         public static string Attack {
@@ -385,6 +394,15 @@ namespace StarRailDamage.Source.UI.Assets.Lang {
         }
         
         /// <summary>
+        ///   查找类似 毁灭 的本地化字符串。
+        /// </summary>
+        public static string DestructionOccupation {
+            get {
+                return ResourceManager.GetString("DestructionOccupation", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   查找类似 效果命中 的本地化字符串。
         /// </summary>
         public static string EffectHitRate {
@@ -477,18 +495,27 @@ namespace StarRailDamage.Source.UI.Assets.Lang {
         /// <summary>
         ///   查找类似 充能效率 的本地化字符串。
         /// </summary>
-        public static string EnergyRegenerationRate {
+        public static string EnergyRegeneratRate {
             get {
-                return ResourceManager.GetString("EnergyRegenerationRate", resourceCulture);
+                return ResourceManager.GetString("EnergyRegeneratRate", resourceCulture);
             }
         }
         
         /// <summary>
         ///   查找类似 充能效率 的本地化字符串。
         /// </summary>
-        public static string EnergyRegenerationRateSimple {
+        public static string EnergyRegeneratRateSimple {
             get {
-                return ResourceManager.GetString("EnergyRegenerationRateSimple", resourceCulture);
+                return ResourceManager.GetString("EnergyRegeneratRateSimple", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 智识 的本地化字符串。
+        /// </summary>
+        public static string EruditionOccupation {
+            get {
+                return ResourceManager.GetString("EruditionOccupation", resourceCulture);
             }
         }
         
@@ -534,6 +561,15 @@ namespace StarRailDamage.Source.UI.Assets.Lang {
         public static string FireElement {
             get {
                 return ResourceManager.GetString("FireElement", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 同协 的本地化字符串。
+        /// </summary>
+        public static string HarmonyOccupation {
+            get {
+                return ResourceManager.GetString("HarmonyOccupation", resourceCulture);
             }
         }
         
@@ -682,6 +718,24 @@ namespace StarRailDamage.Source.UI.Assets.Lang {
         }
         
         /// <summary>
+        ///   查找类似 记忆 的本地化字符串。
+        /// </summary>
+        public static string MemoryOccupation {
+            get {
+                return ResourceManager.GetString("MemoryOccupation", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 虚无 的本地化字符串。
+        /// </summary>
+        public static string NihilityOccupation {
+            get {
+                return ResourceManager.GetString("NihilityOccupation", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   查找类似 基础伤害 的本地化字符串。
         /// </summary>
         public static string NormalDamage {
@@ -750,6 +804,15 @@ namespace StarRailDamage.Source.UI.Assets.Lang {
         public static string PhysicalElement {
             get {
                 return ResourceManager.GetString("PhysicalElement", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 存护 的本地化字符串。
+        /// </summary>
+        public static string PreservationOccupation {
+            get {
+                return ResourceManager.GetString("PreservationOccupation", resourceCulture);
             }
         }
         
@@ -876,6 +939,15 @@ namespace StarRailDamage.Source.UI.Assets.Lang {
         public static string SuperBreakEqualSimple {
             get {
                 return ResourceManager.GetString("SuperBreakEqualSimple", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 巡猎 的本地化字符串。
+        /// </summary>
+        public static string TheHuntOccupation {
+            get {
+                return ResourceManager.GetString("TheHuntOccupation", resourceCulture);
             }
         }
         

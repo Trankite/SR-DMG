@@ -8,7 +8,7 @@ namespace StarRailDamage.Source.Web.Request.Builder
 
         public override string ToString()
         {
-            return string.Join(';', Collection.Select(x => $"{x.Name}={x.Value}"));
+            return string.Join(';', Collection.Select(Cookie => $"{Cookie.Name}={Cookie.Value}"));
         }
     }
 }

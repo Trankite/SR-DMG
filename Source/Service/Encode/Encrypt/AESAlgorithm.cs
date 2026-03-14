@@ -41,11 +41,9 @@ namespace StarRailDamage.Source.Service.Encode.Encrypt
             Mode = mode;
         }
 
-        public byte[] Encrypt(byte[] input) => Encrypt(input, IV);
-
-        public byte[] Encrypt(byte[] input, byte[] iv)
+        public byte[] Encrypt(byte[] input)
         {
-            ICryptoTransform Encryptor = Algorithm.CreateEncryptor(Key, iv);
+            ICryptoTransform Encryptor = Algorithm.CreateEncryptor();
             using MemoryStream MemoryStream = new();
             using (CryptoStream CryptoStream = new(MemoryStream, Encryptor, CryptoStreamMode.Write))
             {
@@ -54,11 +52,9 @@ namespace StarRailDamage.Source.Service.Encode.Encrypt
             return MemoryStream.ToArray();
         }
 
-        public byte[] Decrypt(byte[] input) => Decrypt(input, IV);
-
-        public byte[] Decrypt(byte[] input, byte[] iv)
+        public byte[] Decrypt(byte[] input)
         {
-            ICryptoTransform Decryptor = Algorithm.CreateDecryptor(Key, iv);
+            ICryptoTransform Decryptor = Algorithm.CreateDecryptor();
             using MemoryStream OutMemoryStream = new();
             using MemoryStream MemoryStream = new(input);
             using (CryptoStream CryptoStream = new(MemoryStream, Decryptor, CryptoStreamMode.Read))
@@ -68,9 +64,9 @@ namespace StarRailDamage.Source.Service.Encode.Encrypt
             return OutMemoryStream.ToArray();
         }
 
-        public byte[] CreateIV()
+        public AESAlgorithm Initialize()
         {
-            return IV.Configure(x => Algorithm.GenerateIV());
+            return this.Configure(Algorithm.GenerateIV);
         }
 
         public void Dispose()

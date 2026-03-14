@@ -119,293 +119,422 @@
   </resheader>
   <data name="Attack" xml:space="preserve">
     <value>攻击力</value>
+    <comment>属性名称</comment>
   </data>
   <data name="AttackBase" xml:space="preserve">
     <value>基础攻击</value>
+    <comment>属性名称</comment>
   </data>
   <data name="AttackBaseSimple" xml:space="preserve">
     <value>基础攻击</value>
+    <comment>缩略角色属性</comment>
   </data>
   <data name="AttackSimple" xml:space="preserve">
     <value>攻击力</value>
+    <comment>缩略角色属性</comment>
   </data>
   <data name="NormalDamage" xml:space="preserve">
     <value>基础伤害</value>
+    <comment>伤害名称</comment>
   </data>
   <data name="NormalDamageSimple" xml:space="preserve">
     <value>基础值</value>
+    <comment>缩略伤害名称</comment>
   </data>
   <data name="BreakDamageBoost" xml:space="preserve">
     <value>击破增伤</value>
+    <comment>属性名称</comment>
   </data>
   <data name="BreakDamageBoostSimple" xml:space="preserve">
     <value>击破增伤</value>
+    <comment>缩略角色属性</comment>
   </data>
   <data name="BreakEfficiency" xml:space="preserve">
     <value>击破效率</value>
+    <comment>属性名称</comment>
   </data>
   <data name="BreakEfficiencySimple" xml:space="preserve">
     <value>击破效率</value>
+    <comment>缩略角色属性</comment>
   </data>
   <data name="BreakEffect" xml:space="preserve">
     <value>击破特攻</value>
+    <comment>属性名称</comment>
   </data>
   <data name="BreakEffectSimple" xml:space="preserve">
     <value>击破特攻</value>
+    <comment>缩略角色属性</comment>
   </data>
   <data name="BreakDamage" xml:space="preserve">
     <value>击破伤害</value>
+    <comment>伤害名称</comment>
   </data>
   <data name="BreakDamageSimple" xml:space="preserve">
     <value>击破</value>
+    <comment>缩略伤害名称</comment>
   </data>
   <data name="Change" xml:space="preserve">
     <value>切换</value>
+    <comment>按钮</comment>
   </data>
   <data name="CharacterElement" xml:space="preserve">
     <value>角色属性</value>
+    <comment>专有名词</comment>
   </data>
   <data name="CharacterLevel" xml:space="preserve">
     <value>角色等级</value>
+    <comment>属性名称</comment>
   </data>
   <data name="CharacterLevelSimple" xml:space="preserve">
     <value>角色等级</value>
+    <comment>缩略角色属性</comment>
   </data>
   <data name="CharacterOccupation" xml:space="preserve">
     <value>角色命途</value>
+    <comment>专有名词</comment>
   </data>
   <data name="MaxEnergy" xml:space="preserve">
     <value>能量上限</value>
+    <comment>属性名称</comment>
   </data>
   <data name="MaxEnergySimple" xml:space="preserve">
     <value>能量上限</value>
+    <comment>缩略角色属性</comment>
   </data>
   <data name="CriticalDamage" xml:space="preserve">
     <value>暴击伤害</value>
+    <comment>属性名称</comment>
   </data>
   <data name="CriticalDamageSimple" xml:space="preserve">
     <value>暴击伤害</value>
+    <comment>属性名称</comment>
   </data>
   <data name="CriticalHitRate" xml:space="preserve">
     <value>暴击率</value>
+    <comment>属性名称</comment>
   </data>
   <data name="CriticalHitRateSimple" xml:space="preserve">
     <value>暴击率</value>
+    <comment>缩略角色属性</comment>
   </data>
   <data name="CriticalHitDamage" xml:space="preserve">
     <value>全暴击伤害</value>
+    <comment>缩略伤害名称</comment>
   </data>
   <data name="CriticalHitDamageSimple" xml:space="preserve">
     <value>暴击</value>
+    <comment>缩略角色属性</comment>
   </data>
   <data name="DamageBoost" xml:space="preserve">
     <value>伤害提高</value>
+    <comment>属性名称</comment>
   </data>
   <data name="DamageBoostSimple" xml:space="preserve">
     <value>伤害提高</value>
+    <comment>缩略角色属性</comment>
   </data>
   <data name="DamageIncrease" xml:space="preserve">
     <value>易伤</value>
+    <comment>属性名称</comment>
   </data>
   <data name="DamageIncreaseSimple" xml:space="preserve">
     <value>易伤</value>
+    <comment>缩略角色属性</comment>
   </data>
   <data name="Defense" xml:space="preserve">
     <value>防御力</value>
+    <comment>属性名称</comment>
   </data>
   <data name="DefenseBase" xml:space="preserve">
     <value>基础防御</value>
+    <comment>属性名称</comment>
   </data>
   <data name="DefenseBaseSimple" xml:space="preserve">
     <value>基础防御</value>
+    <comment>缩略角色属性</comment>
   </data>
   <data name="DefenseDecrease" xml:space="preserve">
     <value>无视防御</value>
+    <comment>属性名称</comment>
   </data>
   <data name="DefenseDecreaseSimple" xml:space="preserve">
     <value>无视防御</value>
+    <comment>缩略角色属性</comment>
   </data>
   <data name="DefenseSimple" xml:space="preserve">
     <value>防御力</value>
+    <comment>缩略角色属性</comment>
   </data>
   <data name="DelayedDamage" xml:space="preserve">
     <value>持续伤害</value>
+    <comment>伤害名称</comment>
   </data>
   <data name="EffectHitRate" xml:space="preserve">
     <value>效果命中</value>
+    <comment>属性名称</comment>
   </data>
   <data name="EffectHitRateSimple" xml:space="preserve">
     <value>效果命中</value>
+    <comment>缩略角色属性</comment>
   </data>
   <data name="EffectResistance" xml:space="preserve">
     <value>效果抵抗</value>
+    <comment>属性名称</comment>
   </data>
   <data name="EffectResistanceSimple" xml:space="preserve">
     <value>效果抵抗</value>
+    <comment>缩略角色属性</comment>
   </data>
   <data name="ElementResistance" xml:space="preserve">
     <value>抗性</value>
+    <comment>属性名称</comment>
   </data>
   <data name="ElementResistanceSimple" xml:space="preserve">
     <value>抗性</value>
+    <comment>缩略角色属性</comment>
   </data>
   <data name="ExpectedDamage" xml:space="preserve">
     <value>期望伤害</value>
+    <comment>伤害名称</comment>
   </data>
   <data name="ExpectedDamageSimple" xml:space="preserve">
     <value>期望值</value>
+    <comment>缩略伤害名称</comment>
   </data>
   <data name="Export" xml:space="preserve">
     <value>导出</value>
+    <comment>按钮</comment>
   </data>
   <data name="FireDelayedDamage" xml:space="preserve">
     <value>灼烧</value>
+    <comment>击破效果</comment>
   </data>
   <data name="FireElement" xml:space="preserve">
     <value>火</value>
+    <comment>属性类型</comment>
   </data>
   <data name="Health" xml:space="preserve">
     <value>生命值</value>
+    <comment>属性名称</comment>
   </data>
   <data name="HealthBase" xml:space="preserve">
     <value>基础生命</value>
+    <comment>属性名称</comment>
   </data>
   <data name="HealthBaseSimple" xml:space="preserve">
     <value>基础生命</value>
+    <comment>缩略角色属性</comment>
   </data>
   <data name="HealthSimple" xml:space="preserve">
     <value>生命值</value>
+    <comment>缩略角色属性</comment>
   </data>
   <data name="IceDelayedDamage" xml:space="preserve">
     <value>冻结</value>
+    <comment>击破效果</comment>
   </data>
   <data name="IceElement" xml:space="preserve">
     <value>冰</value>
+    <comment>属性类型</comment>
   </data>
   <data name="ImaginaryDelayedDamage" xml:space="preserve">
     <value>禁锢</value>
+    <comment>击破效果</comment>
   </data>
   <data name="ImaginaryElement" xml:space="preserve">
     <value>虚数</value>
+    <comment>属性类型</comment>
   </data>
   <data name="Language" xml:space="preserve">
     <value>简体中文</value>
+    <comment>语言名称</comment>
   </data>
   <data name="LevelUnit" xml:space="preserve">
     <value>级</value>
+    <comment>单位</comment>
   </data>
   <data name="LightningDelayedDamage" xml:space="preserve">
     <value>触电</value>
+    <comment>击破效果</comment>
   </data>
   <data name="LightningElement" xml:space="preserve">
     <value>雷</value>
+    <comment>属性类型</comment>
   </data>
   <data name="EnemyAmount" xml:space="preserve">
     <value>怪物数量</value>
+    <comment>属性名称</comment>
   </data>
   <data name="EnemyAmountSimple" xml:space="preserve">
     <value>怪物</value>
+    <comment>缩略角色属性</comment>
   </data>
   <data name="EnemyLevel" xml:space="preserve">
     <value>怪物等级</value>
+    <comment>属性名称</comment>
   </data>
   <data name="EnemyLevelSimple" xml:space="preserve">
     <value>怪物等级</value>
+    <comment>缩略角色属性</comment>
   </data>
   <data name="NumberTextBoxTitle" xml:space="preserve">
     <value>算式</value>
+    <comment>标题</comment>
   </data>
   <data name="PercentUnit" xml:space="preserve">
     <value>%</value>
+    <comment>单位</comment>
   </data>
   <data name="PhysicalDelayedDamage" xml:space="preserve">
     <value>裂伤</value>
+    <comment>击破效果</comment>
   </data>
   <data name="PhysicalElement" xml:space="preserve">
     <value>物理</value>
+    <comment>属性类型</comment>
   </data>
   <data name="QuantumDelayedDamage" xml:space="preserve">
     <value>纠缠</value>
+    <comment>击破效果</comment>
   </data>
   <data name="QuantumElement" xml:space="preserve">
     <value>量子</value>
+    <comment>属性类型</comment>
   </data>
   <data name="ResistanceDecrease" xml:space="preserve">
     <value>抗性穿透</value>
+    <comment>属性名称</comment>
   </data>
   <data name="ResistanceDecreaseSimple" xml:space="preserve">
     <value>抗性穿透</value>
+    <comment>缩略角色属性</comment>
   </data>
   <data name="Save" xml:space="preserve">
     <value>保存</value>
+    <comment>按钮</comment>
   </data>
   <data name="Setting" xml:space="preserve">
     <value>设置</value>
+    <comment>按钮</comment>
   </data>
   <data name="HealingAmount" xml:space="preserve">
     <value>特殊数值</value>
+    <comment>属性名称</comment>
   </data>
   <data name="HealingAmountSimple" xml:space="preserve">
     <value>特殊数值</value>
+    <comment>缩略角色属性</comment>
   </data>
   <data name="Speed" xml:space="preserve">
     <value>速度</value>
+    <comment>属性名称</comment>
   </data>
   <data name="SpeedBase" xml:space="preserve">
     <value>基础速度</value>
+    <comment>属性名称</comment>
   </data>
   <data name="SpeedBaseSimple" xml:space="preserve">
     <value>基础速度</value>
+    <comment>缩略角色属性</comment>
   </data>
   <data name="SpeedSimple" xml:space="preserve">
     <value>速度</value>
+    <comment>缩略角色属性</comment>
   </data>
   <data name="SuperBreakEqual" xml:space="preserve">
     <value>超击破</value>
+    <comment>属性名称</comment>
   </data>
   <data name="SuperBreakEqualSimple" xml:space="preserve">
     <value>超击破</value>
+    <comment>缩略角色属性</comment>
   </data>
   <data name="SuperBreakDamage" xml:space="preserve">
     <value>超击破伤害</value>
+    <comment>伤害名称</comment>
   </data>
   <data name="SuperBreakDamageSimple" xml:space="preserve">
     <value>超击破</value>
+    <comment>缩略伤害名称</comment>
   </data>
   <data name="Toughness" xml:space="preserve">
     <value>韧性值</value>
+    <comment>属性名称</comment>
   </data>
   <data name="ToughnessReduced" xml:space="preserve">
     <value>削韧值</value>
+    <comment>属性名称</comment>
   </data>
   <data name="ToughnessReducedSimple" xml:space="preserve">
     <value>削韧值</value>
+    <comment>缩略角色属性</comment>
   </data>
   <data name="ToughnessSimple" xml:space="preserve">
     <value>韧性值</value>
+    <comment>缩略角色属性</comment>
   </data>
   <data name="OutgoingHealingBoost" xml:space="preserve">
     <value>治疗提高</value>
+    <comment>属性名称</comment>
   </data>
   <data name="OutgoingHealingBoostSimple" xml:space="preserve">
     <value>治疗提高</value>
+    <comment>缩略角色属性</comment>
   </data>
   <data name="WindDelayedDamage" xml:space="preserve">
     <value>风化</value>
+    <comment>击破效果</comment>
   </data>
   <data name="WindElement" xml:space="preserve">
     <value>风</value>
+    <comment>属性类型</comment>
   </data>
   <data name="DamageDecreaseSimple" xml:space="preserve">
     <value>免伤</value>
+    <comment>缩略角色属性</comment>
   </data>
   <data name="DamageDecrease" xml:space="preserve">
     <value>免伤</value>
+    <comment>属性名称</comment>
   </data>
-  <data name="EnergyRegenerationRateSimple" xml:space="preserve">
+  <data name="EnergyRegeneratRateSimple" xml:space="preserve">
     <value>充能效率</value>
+    <comment>缩略角色属性</comment>
   </data>
-  <data name="EnergyRegenerationRate" xml:space="preserve">
+  <data name="EnergyRegeneratRate" xml:space="preserve">
     <value>充能效率</value>
+    <comment>属性名称</comment>
+  </data>
+  <data name="AbundanceOccupation" xml:space="preserve">
+    <value>丰饶</value>
+    <comment>命途</comment>
+  </data>
+  <data name="DestructionOccupation" xml:space="preserve">
+    <value>毁灭</value>
+    <comment>命途</comment>
+  </data>
+  <data name="EruditionOccupation" xml:space="preserve">
+    <value>智识</value>
+    <comment>命途</comment>
+  </data>
+  <data name="HarmonyOccupation" xml:space="preserve">
+    <value>同协</value>
+    <comment>命途</comment>
+  </data>
+  <data name="MemoryOccupation" xml:space="preserve">
+    <value>记忆</value>
+    <comment>命途</comment>
+  </data>
+  <data name="NihilityOccupation" xml:space="preserve">
+    <value>虚无</value>
+    <comment>命途</comment>
+  </data>
+  <data name="PreservationOccupation" xml:space="preserve">
+    <value>存护</value>
+    <comment>命途</comment>
+  </data>
+  <data name="TheHuntOccupation" xml:space="preserve">
+    <value>巡猎</value>
+    <comment>命途</comment>
   </data>
 </root>

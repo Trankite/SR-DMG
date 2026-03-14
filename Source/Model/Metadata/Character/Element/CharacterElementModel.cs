@@ -1,49 +1,58 @@
-﻿using StarRailDamage.Source.Model.Text;
-using StarRailDamage.Source.UI.Factory.NotifyPropertyChanged;
+﻿using StarRailDamage.Source.Core.Language;
+using StarRailDamage.Source.Model.Text;
 using System.Windows.Media.Imaging;
 
 namespace StarRailDamage.Source.Model.Metadata.Character.Element
 {
-    public class CharacterElementModel(TextBinding fullName, TextBinding @break, BitmapImage element, BitmapImage damage, BitmapImage resist) : NotifyPropertyChangedFactory
+    public class CharacterElementModel
     {
-        private TextBinding _FullName = fullName;
+        public TextBinding Name { get; }
 
-        private TextBinding _Break = @break;
+        public TextBinding Break { get; }
 
-        private BitmapImage _Element = element;
+        public BitmapImage Element { get; }
 
-        private BitmapImage _Damage = damage;
+        public BitmapImage Offense { get; }
 
-        private BitmapImage _Resist = resist;
+        public BitmapImage Defense { get; }
 
-        public TextBinding FullName
+        private CharacterElementModel(TextBinding name, TextBinding @break, BitmapImage element, BitmapImage offense, BitmapImage defense)
         {
-            get => _FullName;
-            set => SetField(ref _FullName, value);
+            Name = name;
+            Break = @break;
+            Element = element;
+            Offense = offense;
+            Defense = defense;
         }
 
-        public TextBinding Break
+        public static CharacterElementModel Create(string element)
         {
-            get => _Break;
-            set => SetField(ref _Break, value);
+            return new CharacterElementModel(GetNameBinding(element), GetBreakBinding(element), GetElementImage(element), GetOffenseImage(element), GetDefenseImage(element));
         }
 
-        public BitmapImage Element
+        private static TextBinding GetNameBinding(string element)
         {
-            get => _Element;
-            set => SetField(ref _Element, value);
+            return FixedTextExtension.Binding(element + "Element");
         }
 
-        public BitmapImage Damage
+        private static TextBinding GetBreakBinding(string element)
         {
-            get => _Damage;
-            set => SetField(ref _Damage, value);
+            return FixedTextExtension.Binding(element + "DelayedDamage");
         }
 
-        public BitmapImage Resist
+        private static BitmapImage GetElementImage(string element)
         {
-            get => _Resist;
-            set => SetField(ref _Resist, value);
+            return new BitmapImage(new Uri($"/Source/UI/Assets/Icon/Element/{element}.png", UriKind.Relative));
+        }
+
+        private static BitmapImage GetOffenseImage(string element)
+        {
+            return new BitmapImage(new Uri($"/Source/UI/Assets/Icon/Element/Offense/{element}.png", UriKind.Relative));
+        }
+
+        private static BitmapImage GetDefenseImage(string element)
+        {
+            return new BitmapImage(new Uri($"/Source/UI/Assets/Icon/Element/Defense/{element}.png", UriKind.Relative));
         }
     }
 }

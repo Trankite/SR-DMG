@@ -16,6 +16,17 @@ namespace StarRailDamage.Source.UI.Model.View
 
         private int _Digits;
 
+        public LabelTextBoxModel() { }
+
+        public LabelTextBoxModel(BitmapImage? icon, TextBinding title, string text, TextBinding unit, int digits)
+        {
+            _Icon = icon;
+            _Title = title;
+            _Text = text;
+            _Unit = unit;
+            _Digits = digits;
+        }
+
         public BitmapImage? Icon
         {
             get => _Icon;

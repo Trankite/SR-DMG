@@ -13,7 +13,8 @@ namespace StarRailDamage.Source.Service.Encode.Encrypt
         public static byte[] DecryptFromBase64String(this AESAlgorithm algorithm, string data)
         {
             FrozenSpan<char, char> AesInfo = data.FirstSplit('-');
-            return algorithm.Decrypt(Convert.FromBase64String(AesInfo.Extend.ToString()), Convert.FromBase64String(AesInfo.Content.ToString()));
+            algorithm.IV = Convert.FromBase64String(AesInfo.Content.ToString());
+            return algorithm.Decrypt(Convert.FromBase64String(AesInfo.Extend.ToString()));
         }
     }
 }

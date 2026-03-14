@@ -292,7 +292,7 @@
     <value>English</value>
   </data>
   <data name="LevelUnit" xml:space="preserve">
-    <value>-</value>
+    <value>Lv</value>
   </data>
   <data name="LightningDelayedDamage" xml:space="preserve">
     <value>Shock</value>
@@ -402,10 +402,34 @@
   <data name="DamageDecrease" xml:space="preserve">
     <value>DMG Decrease</value>
   </data>
-  <data name="EnergyRegenerationRateSimple" xml:space="preserve">
+  <data name="EnergyRegeneratRateSimple" xml:space="preserve">
     <value>Energy Rate</value>
   </data>
-  <data name="EnergyRegenerationRate" xml:space="preserve">
+  <data name="EnergyRegeneratRate" xml:space="preserve">
     <value>Energy Regeneration Rate</value>
+  </data>
+  <data name="AbundanceOccupation" xml:space="preserve">
+    <value>Abundance</value>
+  </data>
+  <data name="DestructionOccupation" xml:space="preserve">
+    <value>Destruction</value>
+  </data>
+  <data name="EruditionOccupation" xml:space="preserve">
+    <value>Erudition</value>
+  </data>
+  <data name="HarmonyOccupation" xml:space="preserve">
+    <value>Harmony</value>
+  </data>
+  <data name="MemoryOccupation" xml:space="preserve">
+    <value>Memory</value>
+  </data>
+  <data name="NihilityOccupation" xml:space="preserve">
+    <value>Nihility</value>
+  </data>
+  <data name="PreservationOccupation" xml:space="preserve">
+    <value>Preservation</value>
+  </data>
+  <data name="TheHuntOccupation" xml:space="preserve">
+    <value>TheHunt</value>
   </data>
 </root>

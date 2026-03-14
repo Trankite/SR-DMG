@@ -33,7 +33,7 @@ namespace StarRailDamage.Source.Web.Hoyolab.DataSign
         private static string SortQuery(string query)
         {
             string[] queries = Uri.UnescapeDataString(query).Split('?', 2);
-            return queries.Length >= 2 ? string.Join('&', queries[1].Split('&').OrderBy(x => x)) : string.Empty;
+            return queries.Length >= 2 ? string.Join('&', queries[1].Split('&').Order()) : string.Empty;
         }
     }
 }

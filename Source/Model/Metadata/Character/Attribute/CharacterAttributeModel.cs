@@ -62,7 +62,7 @@ namespace StarRailDamage.Source.Model.Metadata.Character.Attribute
 
         private double _HealingAmount;
 
-        private double _EnergyRegenerationRate;
+        private double _EnergyRegeneratRate;
 
         private double _MaxEnergy;
 
@@ -240,10 +240,10 @@ namespace StarRailDamage.Source.Model.Metadata.Character.Attribute
             set => SetField(ref _HealingAmount, value);
         }
 
-        public double EnergyRegenerationRate
+        public double EnergyRegeneratRate
         {
-            get => _EnergyRegenerationRate;
-            set => SetField(ref _EnergyRegenerationRate, value);
+            get => _EnergyRegeneratRate;
+            set => SetField(ref _EnergyRegeneratRate, value);
         }
 
         public double MaxEnergy

@@ -10,7 +10,13 @@ namespace StarRailDamage.Source.Extension
         public static readonly BitmapImage DefaultImage;
 
         [DebuggerStepThrough]
-        public static BitmapImage GetBitmapImage(this Stream stream)
+        public static BitmapImage SetFreeze(this BitmapImage value)
+        {
+            return value.Configure(value.Freeze);
+        }
+
+        [DebuggerStepThrough]
+        public static BitmapImage GetBitmapImage(Stream stream)
         {
             stream.Position = 0;
             BitmapImage BitmapImage = new();

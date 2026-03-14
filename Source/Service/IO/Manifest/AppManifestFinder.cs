@@ -27,7 +27,7 @@ namespace StarRailDamage.Source.Service.IO.Manifest
         static AppManifestFinder()
         {
             List<string> Resources = [];
-            using Stream Stream = ManifestStream.FindAndGetStream(x => x.EndsWith(".g.resources"));
+            using Stream Stream = ManifestStream.FindAndGetStream(Str => Str.EndsWith(".g.resources"));
             using ResourceReader Reader = new(Stream);
             foreach (DictionaryEntry Entry in Reader)
             {

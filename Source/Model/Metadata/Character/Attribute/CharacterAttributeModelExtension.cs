@@ -5,7 +5,7 @@ namespace StarRailDamage.Source.Model.Metadata.Character.Attribute
 {
     public static class CharacterAttributeModelExtension
     {
-        private static readonly int[] BreakMap = new int[80];
+        private static readonly int[] BreakTable;
 
         public static CharacterDamageModel Damage(this CharacterAttributeModel model, CharacterElement element, CharacterDamageModel damage)
         {
@@ -22,7 +22,7 @@ namespace StarRailDamage.Source.Model.Metadata.Character.Attribute
             return damage;
         }
 
-        public static double GetNormalBreak(double level) => BreakMap[Math.Max(0, Math.Min(Convert.ToInt32(level), 80))];
+        public static double GetNormalBreak(double level) => BreakTable[Math.Max(1, Math.Min(Convert.ToInt32(level), 80)) - 1];
 
         public static double GetBreakEqual(CharacterElement element)
         {
@@ -31,87 +31,17 @@ namespace StarRailDamage.Source.Model.Metadata.Character.Attribute
 
         static CharacterAttributeModelExtension()
         {
-            BreakMap[0] = 0;
-            BreakMap[1] = 54;
-            BreakMap[2] = 58;
-            BreakMap[3] = 62;
-            BreakMap[4] = 68;
-            BreakMap[5] = 71;
-            BreakMap[6] = 74;
-            BreakMap[7] = 77;
-            BreakMap[8] = 80;
-            BreakMap[9] = 83;
-            BreakMap[10] = 86;
-            BreakMap[11] = 91;
-            BreakMap[12] = 97;
-            BreakMap[13] = 103;
-            BreakMap[14] = 108;
-            BreakMap[15] = 113;
-            BreakMap[16] = 119;
-            BreakMap[17] = 124;
-            BreakMap[18] = 129;
-            BreakMap[19] = 135;
-            BreakMap[20] = 140;
-            BreakMap[21] = 149;
-            BreakMap[22] = 159;
-            BreakMap[23] = 168;
-            BreakMap[24] = 177;
-            BreakMap[25] = 187;
-            BreakMap[26] = 196;
-            BreakMap[27] = 205;
-            BreakMap[28] = 214;
-            BreakMap[29] = 222;
-            BreakMap[30] = 231;
-            BreakMap[31] = 246;
-            BreakMap[32] = 261;
-            BreakMap[33] = 275;
-            BreakMap[34] = 289;
-            BreakMap[35] = 303;
-            BreakMap[36] = 316;
-            BreakMap[37] = 328;
-            BreakMap[38] = 340;
-            BreakMap[39] = 352;
-            BreakMap[40] = 364;
-            BreakMap[41] = 408;
-            BreakMap[42] = 452;
-            BreakMap[43] = 495;
-            BreakMap[44] = 537;
-            BreakMap[45] = 578;
-            BreakMap[46] = 619;
-            BreakMap[47] = 659;
-            BreakMap[48] = 698;
-            BreakMap[49] = 737;
-            BreakMap[50] = 775;
-            BreakMap[51] = 871;
-            BreakMap[52] = 965;
-            BreakMap[53] = 1056;
-            BreakMap[54] = 1146;
-            BreakMap[55] = 1233;
-            BreakMap[56] = 1318;
-            BreakMap[57] = 1402;
-            BreakMap[58] = 1483;
-            BreakMap[59] = 1563;
-            BreakMap[60] = 1640;
-            BreakMap[61] = 1752;
-            BreakMap[62] = 1862;
-            BreakMap[63] = 1969;
-            BreakMap[64] = 2074;
-            BreakMap[65] = 2177;
-            BreakMap[66] = 2277;
-            BreakMap[67] = 2376;
-            BreakMap[68] = 2472;
-            BreakMap[69] = 2567;
-            BreakMap[70] = 2660;
-            BreakMap[71] = 2780;
-            BreakMap[72] = 2899;
-            BreakMap[73] = 3015;
-            BreakMap[74] = 3128;
-            BreakMap[75] = 3240;
-            BreakMap[76] = 3349;
-            BreakMap[77] = 3457;
-            BreakMap[78] = 3562;
-            BreakMap[79] = 3666;
-            BreakMap[80] = 3768;
+            BreakTable =
+            [
+                54,     58,     62,     68,     71,     74,     77,     80,     83,     86,
+                91,     97,     103,    108,    113,    119,    124,    129,    135,    140,
+                149,    159,    168,    177,    187,    196,    205,    214,    222,    231,
+                246,    261,    275,    289,    303,    316,    328,    340,    352,    364,
+                408,    452,    495,    537,    578,    619,    659,    698,    737,    775,
+                871,    965,    1056,   1146,   1233,   1318,   1402,   1483,   1563,   1640,
+                1752,   1862,   1969,   2074,   2177,   2277,   2376,   2472,   2567,   2660,
+                2780,   2899,   3015,   3128,   3240,   3349,   3457,   3562,   3666,   3768
+            ];
         }
     }
 }

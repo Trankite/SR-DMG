@@ -70,13 +70,13 @@
 
             <UI:LabelTextBox Grid.Column="0" Grid.Row="7" Model="{Binding Converter={StaticResource CharacterAttributeConverter},ConverterParameter='CriticalHitRate'}" Text="{Binding CharacterAttributeModel.CriticalHitRate,Mode=TwoWay}"/>
             <UI:LabelTextBox Grid.Column="0" Grid.Row="8" Model="{Binding Converter={StaticResource CharacterAttributeConverter},ConverterParameter='CriticalDamage'}" Text="{Binding CharacterAttributeModel.CriticalDamage,Mode=TwoWay}"/>
-            <UI:LabelTextBox Grid.Column="0" Grid.Row="9" Model="{Binding Converter={StaticResource CharacterAttributeConverter},ConverterParameter='DamageBoost'}" Text="{Binding CharacterAttributeModel.DamageBoost,Mode=TwoWay}" Icon="{Binding CharacterElementModel.Damage}"/>
+            <UI:LabelTextBox Grid.Column="0" Grid.Row="9" Model="{Binding Converter={StaticResource CharacterAttributeConverter},ConverterParameter='DamageBoost'}" Text="{Binding CharacterAttributeModel.DamageBoost,Mode=TwoWay}" Icon="{Binding CharacterElementModel.Offense}"/>
             <UI:LabelTextBox Grid.Column="0" Grid.Row="10" Model="{Binding Converter={StaticResource CharacterAttributeConverter},ConverterParameter='DefenseDecrease'}" Text="{Binding CharacterAttributeModel.DefenseDecrease,Mode=TwoWay}"/>
-            <UI:LabelTextBox Grid.Column="0" Grid.Row="11" Model="{Binding Converter={StaticResource CharacterAttributeConverter},ConverterParameter='ResistanceDecrease'}" Text="{Binding CharacterAttributeModel.ResistanceDecrease,Mode=TwoWay}" Icon="{Binding CharacterElementModel.Resist}"/>
+            <UI:LabelTextBox Grid.Column="0" Grid.Row="11" Model="{Binding Converter={StaticResource CharacterAttributeConverter},ConverterParameter='ResistanceDecrease'}" Text="{Binding CharacterAttributeModel.ResistanceDecrease,Mode=TwoWay}" Icon="{Binding CharacterElementModel.Defense}"/>
 
             <UI:LabelTextBox Grid.Column="0" Grid.Row="13" Model="{Binding Converter={StaticResource CharacterAttributeConverter},ConverterParameter='EffectHitRate'}" Text="{Binding CharacterAttributeModel.EffectHitRate,Mode=TwoWay}"/>
             <UI:LabelTextBox Grid.Column="0" Grid.Row="14" Model="{Binding Converter={StaticResource CharacterAttributeConverter},ConverterParameter='OutgoingHealingBoost'}" Text="{Binding CharacterAttributeModel.OutgoingHealingBoost,Mode=TwoWay}"/>
-            <UI:LabelTextBox Grid.Column="0" Grid.Row="15" Model="{Binding Converter={StaticResource CharacterAttributeConverter},ConverterParameter='EnergyRegenerationRate'}" Text="{Binding CharacterAttributeModel.EnergyRegenerationRate,Mode=TwoWay}"/>
+            <UI:LabelTextBox Grid.Column="0" Grid.Row="15" Model="{Binding Converter={StaticResource CharacterAttributeConverter},ConverterParameter='EnergyRegeneratRate'}" Text="{Binding CharacterAttributeModel.EnergyRegeneratRate,Mode=TwoWay}"/>
 
             <UI:LabelTextBox Grid.Column="1" Grid.Row="2" Model="{Binding Converter={StaticResource CharacterAttributeConverter},ConverterParameter='AttackBase'}" Text="{Binding CharacterAttributeModel.AttackBase,Mode=TwoWay}"/>
             <UI:LabelTextBox Grid.Column="1" Grid.Row="3" Model="{Binding Converter={StaticResource CharacterAttributeConverter},ConverterParameter='HealthBase'}" Text="{Binding CharacterAttributeModel.HealthBase,Mode=TwoWay}"/>
@@ -85,7 +85,7 @@
 
             <UI:LabelTextBox Grid.Column="1" Grid.Row="7" Model="{Binding Converter={StaticResource CharacterAttributeConverter},ConverterParameter='SuperBreakEqual'}" Text="{Binding CharacterAttributeModel.SuperBreakEqual,Mode=TwoWay}"/>
             <UI:LabelTextBox Grid.Column="1" Grid.Row="8" Model="{Binding Converter={StaticResource CharacterAttributeConverter},ConverterParameter='BreakEffect'}" Text="{Binding CharacterAttributeModel.BreakEffect,Mode=TwoWay}"/>
-            <UI:LabelTextBox Grid.Column="1" Grid.Row="9" Model="{Binding Converter={StaticResource CharacterAttributeConverter},ConverterParameter='BreakDamageBoost'}" Text="{Binding CharacterAttributeModel.BreakDamageBoost,Mode=TwoWay}" Icon="{Binding CharacterElementModel.Damage}"/>
+            <UI:LabelTextBox Grid.Column="1" Grid.Row="9" Model="{Binding Converter={StaticResource CharacterAttributeConverter},ConverterParameter='BreakDamageBoost'}" Text="{Binding CharacterAttributeModel.BreakDamageBoost,Mode=TwoWay}" Icon="{Binding CharacterElementModel.Offense}"/>
             <UI:LabelTextBox Grid.Column="1" Grid.Row="10" Model="{Binding Converter={StaticResource CharacterAttributeConverter},ConverterParameter='BreakEfficiency'}" Text="{Binding CharacterAttributeModel.BreakEfficiency,Mode=TwoWay}"/>
             <UI:LabelTextBox Grid.Column="1" Grid.Row="11" Model="{Binding Converter={StaticResource CharacterAttributeConverter},ConverterParameter='ToughnessReduced'}" Text="{Binding CharacterAttributeModel.ToughnessReduced,Mode=TwoWay}"/>
 
@@ -203,8 +203,8 @@
                     <UI:HeadSculpture Grid.Column="0" Grid.Row="0" Grid.RowSpan="4"/>
 
                     <UI:LabelTextBox Grid.Column="2" Grid.Row="0" Model="{Binding Converter={StaticResource CharacterAttributeConverter},ConverterParameter='CharacterLevel'}" Text="{Binding CharacterAttributeModel.CharacterLevel,Mode=TwoWay}"/>
-                    <UI:LabelTextBox Grid.Column="2" Grid.Row="1" Model="{Binding Converter={StaticResource CharacterAttributeConverter},ConverterParameter='ElementResistance'}" Text="{Binding CharacterAttributeModel.ElementResistance,Mode=TwoWay}" Icon="{Binding CharacterElementModel.Resist}"/>
-                    <UI:LabelTextBox Grid.Column="2" Grid.Row="2" Model="{Binding Converter={StaticResource CharacterAttributeConverter},ConverterParameter='DamageIncrease'}" Text="{Binding CharacterAttributeModel.DamageIncrease,Mode=TwoWay}" Icon="{Binding CharacterElementModel.Damage}"/>
+                    <UI:LabelTextBox Grid.Column="2" Grid.Row="1" Model="{Binding Converter={StaticResource CharacterAttributeConverter},ConverterParameter='ElementResistance'}" Text="{Binding CharacterAttributeModel.ElementResistance,Mode=TwoWay}" Icon="{Binding CharacterElementModel.Defense}"/>
+                    <UI:LabelTextBox Grid.Column="2" Grid.Row="2" Model="{Binding Converter={StaticResource CharacterAttributeConverter},ConverterParameter='DamageIncrease'}" Text="{Binding CharacterAttributeModel.DamageIncrease,Mode=TwoWay}" Icon="{Binding CharacterElementModel.Offense}"/>
 
                     <UI:LabelTextBox Grid.Column="4" Grid.Row="0" Model="{Binding Converter={StaticResource CharacterAttributeConverter},ConverterParameter='EnemyLevel'}" Text="{Binding CharacterAttributeModel.EnemyLevel,Mode=TwoWay}"/>
                     <UI:LabelTextBox Grid.Column="4" Grid.Row="1" Model="{Binding Converter={StaticResource CharacterAttributeConverter},ConverterParameter='DamageDecrease'}" Text="{Binding CharacterAttributeModel.DamageDecrease,Mode=TwoWay}"/>

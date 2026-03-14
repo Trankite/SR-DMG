@@ -67,7 +67,14 @@ namespace StarRailDamage.Source.Web.Hoyolab
                     {
                         string? Token = reader.GetString();
                         if (string.IsNullOrEmpty(Token)) continue;
-                        HoyolabTokens[TokenType] = Encoding.GetString(Algorithm.DecryptFromBase64String(Token));
+                        try
+                        {
+                            HoyolabTokens[TokenType] = Encoding.GetString(Algorithm.DecryptFromBase64String(Token));
+                        }
+                        catch
+                        {
+                            HoyolabTokens[TokenType] = string.Empty;
+                        }
                     }
                 }
                 return HoyolabTokens;
@@ -79,7 +86,7 @@ namespace StarRailDamage.Source.Web.Hoyolab
                 using AESAlgorithm Algorithm = GetAlgorithm();
                 foreach (KeyValuePair<HoyolabTokenType, string> Token in value)
                 {
-                    writer.WriteString(Token.Key.ToString(), Algorithm.EncryptToBase64String(Encoding.GetBytes(Token.Value)));
+                    writer.WriteString(Token.Key.ToString(), Algorithm.Initialize().EncryptToBase64String(Encoding.GetBytes(Token.Value)));
                 }
                 writer.WriteEndObject();
             }

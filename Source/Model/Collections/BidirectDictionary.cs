@@ -16,7 +16,7 @@ namespace StarRailDamage.Source.Model.Collections
         public TKey this[TValue key]
         {
             get => _BidirectDictionary[key];
-            set => _BidirectDictionary[key] = value.Configure(this[value] = key);
+            set => _BidirectDictionary[key] = value.Configure(base[value] = key);
         }
 
         public bool TryGetValue(TValue key, [NotNullWhen(true)] out TKey? value)
