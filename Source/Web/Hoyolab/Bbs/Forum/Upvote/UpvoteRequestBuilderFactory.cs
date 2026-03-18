@@ -29,7 +29,7 @@ namespace StarRailDamage.Source.Web.Hoyolab.Bbs.Forum.Upvote
                 .SetReferer(HoyolabReferer.MihoyoApp)
                 .SetXrpcAppVersion(HoyolabOptions.Version)
                 .SetXrpcClientType(ClientType.Android)
-                .SetDataSign(new DataSignOptions(SaltType.K2, false, DataSignAlgorithm.Gen1))
+                .SetDataSign(DataSignOptions.Create(SaltType.K2, DataSignAlgorithm.Gen1))
                 .SetHeader(new HoyolabCookieBuilder(HoyolabToken).SetMid().SetStoken());
         }
     }

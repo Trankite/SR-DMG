@@ -1,5 +1,6 @@
 ﻿using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
+using System.Runtime.CompilerServices;
 
 namespace StarRailDamage.Source.Extension
 {
@@ -51,6 +52,7 @@ namespace StarRailDamage.Source.Extension
         }
 
         [DebuggerStepThrough]
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static TSelf Configure<TSelf, TNone>(this TSelf value, TNone? _) => value;
 
         [DebuggerStepThrough]

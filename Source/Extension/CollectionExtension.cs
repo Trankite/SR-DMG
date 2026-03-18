@@ -50,6 +50,12 @@ namespace StarRailDamage.Source.Extension
         }
 
         [DebuggerStepThrough]
+        public static int AllLength<T>(this IEnumerable<IEnumerable<T>> value)
+        {
+            return value.Sum(Arr => Arr.Count());
+        }
+
+        [DebuggerStepThrough]
         public static void Foreach<T>(this T[]? values, Action<T> action)
         {
             if (values.IsNull()) return;

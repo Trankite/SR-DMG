@@ -1,15 +1,23 @@
 ﻿namespace StarRailDamage.Source.Model.DataStruct
 {
-    public class FrozenStruct<TContent, TExtend>
+    public readonly struct FrozenStruct<TContent, TExtend>
     {
-        public TContent Content { get; }
+        public readonly TContent Content;
 
-        public TExtend Extend { get; }
+        public readonly TExtend Extend;
 
         public FrozenStruct(TContent content, TExtend extend)
         {
             Content = content;
             Extend = extend;
+        }
+    }
+
+    public static class FrozenStruct
+    {
+        public static FrozenStruct<TContent, TExtend> Create<TContent, TExtend>(TContent content, TExtend extend)
+        {
+            return new FrozenStruct<TContent, TExtend>(content, extend);
         }
     }
 }

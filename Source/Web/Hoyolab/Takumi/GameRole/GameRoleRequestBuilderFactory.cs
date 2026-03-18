@@ -19,7 +19,7 @@ namespace StarRailDamage.Source.Web.Hoyolab.Takumi.GameRole
                 .SetRequestUri(URL)
                 .SetXrpcAppVersion(HoyolabOptions.Version)
                 .SetXrpcClientType(ClientType.Android)
-                .SetDataSign(new DataSignOptions(SaltType.K2, true, DataSignAlgorithm.Gen1))
+                .SetDataSign(DataSignOptions.Create(SaltType.K2, DataSignAlgorithm.Gen1))
                 .SetHeader(new HoyolabCookieBuilder(HoyolabToken).SetMid().SetStoken());
         }
     }

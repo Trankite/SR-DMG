@@ -24,7 +24,7 @@ namespace StarRailDamage.Source.Web.Hoyolab.Takumi.Avatar
                 .SetXrpcAppVersion(HoyolabOptions.Version)
                 .SetXrpcDeviceFp(HoyolabToken.Device)
                 .SetXrpcClientType(ClientType.Other)
-                .SetDataSignWithQuery(new DataSignOptions(SaltType.X4, true, DataSignAlgorithm.Gen2))
+                .SetDataSignWithQuery(DataSignOptions.Create(SaltType.X4, DataSignAlgorithm.Gen2))
                 .SetHeader(new HoyolabCookieBuilder(HoyolabToken).SetLtuid().SetLtoken());
         }
     }

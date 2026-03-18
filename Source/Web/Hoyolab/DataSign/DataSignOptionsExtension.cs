@@ -8,13 +8,13 @@ namespace StarRailDamage.Source.Web.Hoyolab.DataSign
         public static string GetDataSign(this DataSignOptions options)
         {
             long UnixTime = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
-            string Content = $"salt={options.Salt}&t={UnixTime}&r={options.Factor}";
+            string Content = $"salt={options.Salt}&t={UnixTime}&r={options.RandomString}";
             if (options.Algorithm >= DataSignAlgorithm.Gen2)
             {
                 Content = $"{Content}&b={options.Body}&q={options.Query}";
             }
             string Check = HashMethod.ToHexStringLower(HashAlgorithmName.MD5, Content);
-            return $"{UnixTime},{options.Factor},{Check}";
+            return $"{UnixTime},{options.RandomString},{Check}";
         }
     }
 }

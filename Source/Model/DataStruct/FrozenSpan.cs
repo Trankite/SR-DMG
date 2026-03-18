@@ -2,9 +2,9 @@
 {
     public readonly ref struct FrozenSpan<TContent, TExtend>
     {
-        public ReadOnlySpan<TContent> Content { get; }
+        public readonly ReadOnlySpan<TContent> Content;
 
-        public ReadOnlySpan<TExtend> Extend { get; }
+        public readonly ReadOnlySpan<TExtend> Extend;
 
         public FrozenSpan() { }
 
