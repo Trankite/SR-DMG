@@ -62,7 +62,7 @@ namespace StarRailDamage.Source.Extension
         }
 
         [DebuggerStepThrough]
-        public static string Format(this string value, params object[] args)
+        public static string Format(string value, params object[] args)
         {
             try
             {

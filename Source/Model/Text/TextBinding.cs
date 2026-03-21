@@ -4,8 +4,6 @@ namespace StarRailDamage.Source.Model.Text
 {
     public class TextBinding : NotifyPropertyChangedFactory
     {
-        public static readonly TextBinding Default = new();
-
         private string _Text = string.Empty;
 
         public TextBinding() { }
@@ -20,5 +18,9 @@ namespace StarRailDamage.Source.Model.Text
             get => _Text;
             set => SetField(ref _Text, value);
         }
+
+        public static readonly TextBinding Default = new();
+
+        public override string ToString() => Text;
     }
 }

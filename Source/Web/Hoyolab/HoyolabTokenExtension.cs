@@ -1,17 +1,21 @@
-﻿namespace StarRailDamage.Source.Web.Hoyolab
+﻿using StarRailDamage.Source.Extension;
+using System.Diagnostics.CodeAnalysis;
+
+namespace StarRailDamage.Source.Web.Hoyolab
 {
     public static class HoyolabTokenExtension
     {
-        public static HoyolabUserRole? GetUserRole(this HoyolabToken hoyolabToken, GameType value)
+        public static bool TryGetUserRole(this HoyolabToken hoyolabToken, GameType value, [NotNullWhen(true)] out HoyolabUserRole? userRole)
         {
-            foreach (HoyolabUserRole UserRole in hoyolabToken.UserRoles)
+            for (int i = 0; i < hoyolabToken.UserRoles.Count; i++)
             {
-                if (GameTypeExtension.GameTypeMap.TryGetValue(UserRole.Game, out GameType GameType))
+                userRole = hoyolabToken.UserRoles[i];
+                if (GameTypeExtension.TryGetGameType(userRole.Game, out GameType GameType))
                 {
-                    if (GameType.HasFlag(value)) return UserRole;
+                    if (GameType.HasFlag(value)) return true;
                 }
             }
-            return null;
+            return false.Configure(userRole = default);
         }
     }
 }

@@ -8,7 +8,7 @@ namespace StarRailDamage.Source.Web.Hoyolab.Takumi.DeviceFp
     {
         public bool TryGetDeviceFp([NotNullWhen(true)] out string? deviceFp)
         {
-            return Data.IsNotNull() && !string.IsNullOrEmpty(Data.DeviceFp) ? true.Configure(deviceFp = Data.DeviceFp) : false.Configure(deviceFp = default);
+            return Content.IsNotNull() && !string.IsNullOrEmpty(Content.DeviceFp) ? true.Configure(deviceFp = Content.DeviceFp) : false.Configure(deviceFp = default);
         }
     }
 }

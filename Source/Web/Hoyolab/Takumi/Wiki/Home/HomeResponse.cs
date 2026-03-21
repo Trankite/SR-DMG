@@ -7,8 +7,8 @@ namespace StarRailDamage.Source.Web.Hoyolab.Takumi.Wiki.Home
     {
         public IEnumerator<HomeResponseCycle> GetEnumerator()
         {
-            if (Data.IsNull()) yield break;
-            foreach (HomeResponseWrapper HomeResponseData in Data.List)
+            if (Content.IsNull()) yield break;
+            foreach (HomeResponseWrapper HomeResponseData in Content.List)
             {
                 yield return GetHomeContentCycle(HomeResponseData);
             }

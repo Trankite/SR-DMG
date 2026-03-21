@@ -13,5 +13,10 @@ namespace StarRailDamage.Source.Web.Hoyolab.Takumi.Note
         {
             return builder.Configure(builder.Server = server);
         }
+
+        public static NoteRequestBuilderFactory SetUserRole(this NoteRequestBuilderFactory builder, HoyolabUserRole userRole)
+        {
+            return builder.SetServer(userRole.Server).SetUid(userRole.Uid);
+        }
     }
 }

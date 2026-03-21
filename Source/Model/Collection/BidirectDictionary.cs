@@ -1,7 +1,7 @@
 ﻿using StarRailDamage.Source.Extension;
 using System.Diagnostics.CodeAnalysis;
 
-namespace StarRailDamage.Source.Model.Collections
+namespace StarRailDamage.Source.Model.Collection
 {
     public class BidirectDictionary<TKey, TValue> : Dictionary<TKey, TValue> where TKey : notnull where TValue : notnull
     {

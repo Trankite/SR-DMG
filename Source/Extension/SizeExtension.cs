@@ -1,9 +1,11 @@
-﻿using System.Windows;
+﻿using System.Diagnostics;
+using System.Windows;
 
 namespace StarRailDamage.Source.Extension
 {
     public static class SizeExtension
     {
+        [DebuggerStepThrough]
         public static bool IsHidden(this Size size)
         {
             return size.Width == 0 || size.Height == 0;

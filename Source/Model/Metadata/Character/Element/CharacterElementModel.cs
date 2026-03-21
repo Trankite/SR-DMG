@@ -1,4 +1,4 @@
-﻿using StarRailDamage.Source.Core.Language;
+﻿using StarRailDamage.Source.Core.LocalText.Fixed;
 using StarRailDamage.Source.Model.Text;
 using System.Windows.Media.Imaging;
 
@@ -32,12 +32,12 @@ namespace StarRailDamage.Source.Model.Metadata.Character.Element
 
         private static TextBinding GetNameBinding(string element)
         {
-            return FixedTextExtension.Binding(element + "Element");
+            return FixedTextManage.Binding(element + "Element");
         }
 
         private static TextBinding GetBreakBinding(string element)
         {
-            return FixedTextExtension.Binding(element + "DelayedDamage");
+            return FixedTextManage.Binding(element + "DelayedDamage");
         }
 
         private static BitmapImage GetElementImage(string element)

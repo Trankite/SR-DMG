@@ -1,4 +1,6 @@
-﻿using System.ComponentModel;
+﻿using StarRailDamage.Source.Service.Terminal;
+using System.ComponentModel;
+using System.Net.Http;
 using System.Windows;
 
 namespace StarRailDamage
@@ -7,13 +9,18 @@ namespace StarRailDamage
     {
         public static bool IsDesignMode { get; }
 
+        public static HttpClient HttpClient { get; }
+
         [STAThread]
-        static void Main()
+        public static void Main(params string[] arguments)
         {
             DebugTest();
-            App app = new();
-            app.InitializeComponent();
-            app.Run();
+            TerminalHelper.Invoke(TerminalHelper.AllParse(arguments));
+            if (!TerminalHelper.AllocMonitor().Result)
+            {
+                App.Main();
+            }
+            ApplicationDispose();
         }
 
         private static async void DebugTest()
@@ -21,8 +28,14 @@ namespace StarRailDamage
 
         }
 
+        public static void ApplicationDispose()
+        {
+            HttpClient.Dispose();
+        }
+
         static Program()
         {
+            HttpClient = new HttpClient() { Timeout = TimeSpan.FromSeconds(15) };
             IsDesignMode = DesignerProperties.GetIsInDesignMode(new DependencyObject());
         }
     }

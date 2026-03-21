@@ -27,5 +27,10 @@ namespace StarRailDamage.Source.Web.Response
         {
             Exception = exception;
         }
+
+        public override string ToString()
+        {
+            return Exception?.SourceException.Message ?? string.Empty;
+        }
     }
 }

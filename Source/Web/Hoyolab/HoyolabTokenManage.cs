@@ -1,8 +1,11 @@
 ﻿using StarRailDamage.Source.Core.Abstraction;
 using StarRailDamage.Source.Core.Setting;
+using StarRailDamage.Source.Extension;
 using StarRailDamage.Source.Service.Encode.Encrypt;
 using StarRailDamage.Source.Service.Encode.Hashing;
 using StarRailDamage.Source.Service.IO;
+using System.Collections.Immutable;
+using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Security.Cryptography;
 using System.Text;
@@ -18,18 +21,38 @@ namespace StarRailDamage.Source.Web.Hoyolab
 
         private const string Salt = "B9176A0A08605E7EE16428AB13199AC2";
 
-        public static List<HoyolabToken> Load()
+        public static ImmutableArray<HoyolabToken> Tokens => (field.IsDefault && TryLoad(out field)).Captured(field);
+
+        public static bool TryGetTokenOrFirst(string? aid, [NotNullWhen(true)] out HoyolabToken? hoyolabToken)
         {
-            string JsonString = File.ReadAllText(GetFilePath());
-            List<HoyolabToken> HoyolabTokens = JsonSerializer.Deserialize<List<HoyolabToken>>(JsonString, JsonOptions) ?? [];
-            return HoyolabTokens;
+            return string.IsNullOrEmpty(aid) ? Tokens.TryGetFirst(out hoyolabToken) : TryGetToken(aid, out hoyolabToken);
+        }
+
+        public static bool TryGetToken(string aid, [NotNullWhen(true)] out HoyolabToken? hoyolabToken)
+        {
+            return Tokens.TryGetFirst(Token => Token.Aid == aid, out hoyolabToken);
+        }
+
+        public static bool TryLoad([NotNullWhen(true)] out ImmutableArray<HoyolabToken> tokens)
+        {
+            try
+            {
+                return true.Configure(tokens = Load());
+            }
+            catch
+            {
+                return false.Configure(tokens = default);
+            }
+        }
+
+        public static ImmutableArray<HoyolabToken> Load()
+        {
+            return JsonSerializer.Deserialize<ImmutableArray<HoyolabToken>>(File.ReadAllText(GetFilePath()), JsonOptions);
         }
 
         public static void Save(params HoyolabToken[] hoyolabTokens)
         {
-            string FilePath = FileManage.BuildFilePath(GetFilePath());
-            string JsonString = JsonSerializer.Serialize(hoyolabTokens, JsonOptions);
-            File.WriteAllText(FilePath, JsonString);
+            File.WriteAllText(FileManage.BuildFilePath(GetFilePath()), JsonSerializer.Serialize(hoyolabTokens, JsonOptions));
         }
 
         public static string GetFilePath()

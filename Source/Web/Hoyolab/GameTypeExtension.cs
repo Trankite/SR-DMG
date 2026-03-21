@@ -1,14 +1,20 @@
-﻿using StarRailDamage.Source.Model.Collections;
+﻿using StarRailDamage.Source.Model.Collection;
+using System.Diagnostics.CodeAnalysis;
 
 namespace StarRailDamage.Source.Web.Hoyolab
 {
     public static class GameTypeExtension
     {
-        public static readonly BidirectFrozenDictionary<string, GameType> GameTypeMap;
+        private static readonly BidirectFrozenDictionary<string, GameType> GameTypeTable;
+
+        public static bool TryGetGameType(string name, [NotNullWhen(true)] out GameType gameType)
+        {
+            return GameTypeTable.TryGetValue(name, out gameType);
+        }
 
         static GameTypeExtension()
         {
-            GameTypeMap = BidirectFrozenDictionary.Create([
+            GameTypeTable = BidirectFrozenDictionary.Create([
                 KeyValuePair.Create("bbs_cn",GameType.HoyolabChina),
                 KeyValuePair.Create("hk4e_cn",GameType.GenshinChina),
                 KeyValuePair.Create("hk4e_global",GameType.GenshinGlobal),

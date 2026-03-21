@@ -38,15 +38,27 @@ namespace StarRailDamage.Source.Extension
         }
 
         [DebuggerStepThrough]
-        public static bool TryGetFirst<T>(this IEnumerable<T>? value, [NotNullWhen(true)] out T? result)
+        public static bool TryGetFirst<T>(this IEnumerable<T> value, [NotNullWhen(true)] out T? result)
         {
-            return value.IsNotNull() && ObjectExtension.IsNotNull(result = value.FirstOrDefault()) || false.Configure(result = default);
+            return ObjectExtension.IsNotNull(result = value.FirstOrDefault(x => x.IsNotNull())) || false.Configure(result = default);
         }
 
         [DebuggerStepThrough]
-        public static bool TryGetLast<T>(this IEnumerable<T>? value, [NotNullWhen(true)] out T? result)
+        public static bool TryGetFirst<T>(this IEnumerable<T> value, Func<T, bool> predicate, [NotNullWhen(true)] out T? result)
         {
-            return value.IsNotNull() && ObjectExtension.IsNotNull(result = value.LastOrDefault()) || false.Configure(result = default);
+            return ObjectExtension.IsNotNull(result = value.FirstOrDefault(predicate)) || false.Configure(result = default);
+        }
+
+        [DebuggerStepThrough]
+        public static bool TryGetLast<T>(this IEnumerable<T> value, [NotNullWhen(true)] out T? result)
+        {
+            return ObjectExtension.IsNotNull(result = value.LastOrDefault()) || false.Configure(result = default);
+        }
+
+        [DebuggerStepThrough]
+        public static bool TryGetLast<T>(this IEnumerable<T> value, Func<T, bool> predicate, [NotNullWhen(true)] out T? result)
+        {
+            return ObjectExtension.IsNotNull(result = value.LastOrDefault(predicate)) || false.Configure(result = default);
         }
 
         [DebuggerStepThrough]

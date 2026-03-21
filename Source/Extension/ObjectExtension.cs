@@ -57,5 +57,8 @@ namespace StarRailDamage.Source.Extension
 
         [DebuggerStepThrough]
         public static bool OutTemp<TSelf>(this TSelf value, out TSelf self) => true.Configure(self = value);
+
+        [DebuggerStepThrough]
+        public static TSelf OutSelf<TSelf>(this TSelf value, out TSelf self) => self = value;
     }
 }

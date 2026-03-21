@@ -5,17 +5,22 @@ namespace StarRailDamage.Source.Web.Response
     public class ResponseWrapper : IResponseMessage, IResponseValidator
     {
         [JsonPropertyName("retcode")]
-        public int ReturnCode { get; set; }
+        public int Code { get; set; }
 
         [JsonPropertyName("message")]
         public string Message { get; set; } = string.Empty;
 
-        public virtual bool IsSuccess() => ReturnCode == 0;
+        public virtual bool IsSuccess() => Code == 0;
+
+        public override string ToString()
+        {
+            return $"{Message} ({Code})";
+        }
     }
 
-    public class ResponseWrapper<TData> : ResponseWrapper where TData : new()
+    public class ResponseWrapper<TContent> : ResponseWrapper
     {
         [JsonPropertyName("data")]
-        public TData Data { get; set; } = new();
+        public TContent? Content { get; set; }
     }
 }

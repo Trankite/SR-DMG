@@ -2,7 +2,7 @@
 {
     public interface IResponseMessage
     {
-        int ReturnCode { get; set; }
+        int Code { get; set; }
 
         string Message { get; set; }
     }

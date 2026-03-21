@@ -1,7 +1,7 @@
-﻿using StarRailDamage.Source.Core.Language;
+﻿using StarRailDamage.Source.Core.LocalText.Fixed;
+using StarRailDamage.Source.Core.LocalText.Fixed.Text;
 using StarRailDamage.Source.Extension;
 using StarRailDamage.Source.Model.Text;
-using StarRailDamage.Source.UI.Assets.Lang;
 using System.Collections.Frozen;
 using System.Diagnostics;
 using System.Windows.Media.Imaging;
@@ -25,8 +25,8 @@ namespace StarRailDamage.Source.Model.Metadata.Character.Attribute
 
         static CharacterAttributeExtension()
         {
-            TextBinding LevelUnit = FixedTextExtension.Binding(nameof(FixedText.LevelUnit));
-            TextBinding PercentUnit = FixedTextExtension.Binding(nameof(FixedText.PercentUnit));
+            TextBinding LevelUnit = FixedTextManage.Binding(nameof(FixedText.LevelUnit));
+            TextBinding PercentUnit = FixedTextManage.Binding(nameof(FixedText.PercentUnit));
             AttributeMap = FrozenDictionary.Create([
                 GetAttribute(nameof(FixedText.CharacterLevel),          AttributeImage.Health,      LevelUnit,              0),
                 GetAttribute(nameof(FixedText.EnemyLevel),              AttributeImage.Health,      LevelUnit,              0),
@@ -43,7 +43,7 @@ namespace StarRailDamage.Source.Model.Metadata.Character.Attribute
                 GetAttribute(nameof(FixedText.DefenseBase),             AttributeImage.Defense,     TextBinding.Default,    0),
                 GetAttribute(nameof(FixedText.Speed),                   AttributeImage.Speed,       TextBinding.Default,    0),
                 GetAttribute(nameof(FixedText.SpeedBase),               AttributeImage.Speed,       TextBinding.Default,    0),
-                GetAttribute(nameof(FixedText.CriticalHitRate),         AttributeImage.Augment,    PercentUnit,            1),
+                GetAttribute(nameof(FixedText.CriticalHitRate),         AttributeImage.Augment,     PercentUnit,            1),
                 GetAttribute(nameof(FixedText.CriticalDamage),          AttributeImage.Offense,     PercentUnit,            1),
                 GetAttribute(nameof(FixedText.DamageBoost),             AttributeImage.Unknown,     PercentUnit,            1),
                 GetAttribute(nameof(FixedText.DefenseDecrease),         AttributeImage.Defense,     PercentUnit,            1),

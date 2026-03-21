@@ -1,4 +1,4 @@
-﻿using StarRailDamage.Source.Core.Language;
+﻿using StarRailDamage.Source.Core.LocalText.Fixed;
 using StarRailDamage.Source.Model.Text;
 using System.Windows.Media.Imaging;
 
@@ -32,12 +32,12 @@ namespace StarRailDamage.Source.Model.Metadata.Character.Attribute
 
         private static TextBinding GetNameBinding(string attribute)
         {
-            return FixedTextExtension.Binding(attribute);
+            return FixedTextManage.Binding(attribute);
         }
 
         private static TextBinding GetSimpleBinding(string attribute)
         {
-            return FixedTextExtension.Binding(attribute + "Simple");
+            return FixedTextManage.Binding(attribute + "Simple");
         }
     }
 }

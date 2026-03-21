@@ -1,4 +1,4 @@
-﻿using StarRailDamage.Source.Core.Language;
+﻿using StarRailDamage.Source.Core.LocalText.Fixed;
 using StarRailDamage.Source.Model.Text;
 using System.Windows.Media.Imaging;
 
@@ -23,7 +23,7 @@ namespace StarRailDamage.Source.Model.Metadata.Character.Occupation
 
         private static TextBinding GetNameBinding(string occupation)
         {
-            return FixedTextExtension.Binding(occupation + "Occupation");
+            return FixedTextManage.Binding(occupation + "Occupation");
         }
 
         private static BitmapImage GetOccupationImage(string occupation)

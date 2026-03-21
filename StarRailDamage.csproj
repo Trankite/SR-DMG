@@ -10,7 +10,7 @@
     <NoWin32Manifest>true</NoWin32Manifest>
     <LangVersion>preview</LangVersion>
     <StartupObject>StarRailDamage.Program</StartupObject>
-    <AllowUnsafeBlocks>False</AllowUnsafeBlocks>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
 
   <ItemGroup>
@@ -83,21 +83,37 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Compile Update="Source\UI\Assets\Lang\FixedText.Designer.cs">
+    <Compile Update="Source\Core\LocalText\Fixed\Text\FixedText.Designer.cs">
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
       <DependentUpon>FixedText.resx</DependentUpon>
     </Compile>
+    <Compile Update="Source\Core\LocalText\Marked\Text\MarkedText.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>MarkedText.resx</DependentUpon>
+    </Compile>
   </ItemGroup>
 
   <ItemGroup>
-    <EmbeddedResource Update="Source\UI\Assets\Lang\FixedText.EN-US.resx">
+    <EmbeddedResource Update="Source\Core\LocalText\Fixed\Text\FixedText.EN-US.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>FixedText.Designer.cs</LastGenOutput>
     </EmbeddedResource>
-    <EmbeddedResource Update="Source\UI\Assets\Lang\FixedText.resx">
+    <EmbeddedResource Update="Source\Core\LocalText\Fixed\Text\FixedText.resx">
       <Generator>PublicResXFileCodeGenerator</Generator>
       <LastGenOutput>FixedText.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Source\Core\LocalText\Fixed\Text\MarkedText.EN-US.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>MarkedText.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Source\Core\LocalText\Marked\Text\MarkedText.EN-US.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Source\Core\LocalText\Marked\Text\MarkedText.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>MarkedText.Designer.cs</LastGenOutput>
     </EmbeddedResource>
   </ItemGroup>
 

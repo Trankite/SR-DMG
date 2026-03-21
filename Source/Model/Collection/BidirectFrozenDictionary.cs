@@ -1,7 +1,7 @@
 ﻿using System.Collections.Frozen;
 using System.Diagnostics.CodeAnalysis;
 
-namespace StarRailDamage.Source.Model.Collections
+namespace StarRailDamage.Source.Model.Collection
 {
     public static class BidirectFrozenDictionary
     {
